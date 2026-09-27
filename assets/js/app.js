@@ -425,10 +425,15 @@ const APP = {
       <div class="drawer" id="cartDrawer" role="dialog" aria-label="Your order">
         <div class="drawer-head">
           <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-            <h3>Your order</h3>
-            <button class="iconbtn" onclick="closeAll()" aria-label="Close cart">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
+            <h3 id="cartDrawerTitle">Your order</h3>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button class="iconbtn" id="cartViewToggleBtn" onclick="APP.toggleCartViewMode()" title="Switch to Table View" aria-label="Toggle table view" style="border:1px solid var(--line);border-radius:8px;padding:6px;width:34px;height:34px;display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+              </button>
+              <button class="iconbtn" onclick="closeAll()" aria-label="Close cart" style="border:1px solid var(--line);border-radius:8px;padding:6px;width:34px;height:34px;display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
           </div>
         </div>
         <div class="drawer-body" id="cartBody"></div>
@@ -1374,6 +1379,14 @@ const APP = {
 
   /* ---- Cart & Checkout Drawer (Amazon Mobile Experience) ---- */
   cartStep: "cart", // "cart" or "checkout"
+  cartViewMode: (function(){ try { return localStorage.getItem("mn_cart_view_mode") || "cards"; } catch(e){ return "cards"; } })(),
+
+  toggleCartViewMode() {
+    this.cartViewMode = (this.cartViewMode === "table" ? "cards" : "table");
+    try { localStorage.setItem("mn_cart_view_mode", this.cartViewMode); } catch(e){}
+    this.renderCartDrawer();
+    this.toast(this.cartViewMode === "table" ? "Switched to Table View" : "Switched to Cards View", "info", 1400);
+  },
 
   proceedToBuy() {
     const cart = this.getCart();
@@ -1393,10 +1406,27 @@ const APP = {
   renderCartDrawer() {
     const body = document.getElementById("cartBody");
     const foot = document.getElementById("cartFoot");
+    const toggleBtn = document.getElementById("cartViewToggleBtn");
+    const drawerTitle = document.getElementById("cartDrawerTitle");
     if (!body) return;
     const cart = this.getCart(), prods = PRODUCTS.getAll();
     const items = Object.entries(cart).map(([id, qty]) => ({ p: prods.find(x => x.id === id), qty })).filter(x => x.p);
     
+    if (toggleBtn) {
+      toggleBtn.style.display = this.cartStep === "cart" && items.length > 0 ? "flex" : "none";
+      if (this.cartViewMode === "table") {
+        toggleBtn.title = "Switch to Cards View";
+        toggleBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`;
+      } else {
+        toggleBtn.title = "Switch to Table View";
+        toggleBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`;
+      }
+    }
+
+    if (drawerTitle) {
+      drawerTitle.textContent = this.cartStep === "checkout" ? "Review & Confirm Order" : "Your order";
+    }
+
     if (!items.length) {
       this.cartStep = "cart";
       body.innerHTML = `
@@ -1420,89 +1450,109 @@ const APP = {
     const deliveryLoc = localStorage.getItem("mn_delivery_loc") || "Bangarapet Town (563114)";
 
     /* ==========================================================
-       VIEW 1: AMAZON CART REVIEW
+       VIEW 1: AMAZON CART REVIEW (CARDS OR TABLE CHOICE)
        ========================================================== */
     if (this.cartStep === "cart") {
-      body.innerHTML = `
-        <!-- Itemized Products List -->
-        <div style="display:flex;flex-direction:column;gap:12px">
-          ${items.map(({ p, qty }) => {
-            const pct = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
-            return `
-              <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:72px 1fr;gap:12px;position:relative">
-                <img src="${p.img || 'assets/img/products/gm-led-bulb-9w.jpg'}" alt="${p.name}" style="width:72px;height:72px;object-fit:contain;background:#fff;border-radius:8px;border:1px solid var(--line);padding:4px" onerror="this.onerror=null;this.src='assets/img/products/gm-led-bulb-9w.jpg'">
-                <div style="min-width:0;display:flex;flex-direction:column;justify-content:space-between">
-                  <div>
-                    <div style="font-size:13.5px;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:3px">${p.name}</div>
-                    <div style="font-size:11px;color:var(--muted)">${p.brand || 'Genuine'} • <span style="color:#15803d;font-weight:600">In Stock</span></div>
-                  </div>
-                  <div style="margin-top:6px;display:flex;align-items:baseline;gap:6px">
-                    <span style="font-size:15px;font-weight:800;color:var(--ink)">${this.inr(p.price)}</span>
-                    ${p.mrp > p.price ? `<span style="font-size:12px;color:var(--muted);text-decoration:line-through">${this.inr(p.mrp)}</span><span style="font-size:11px;font-weight:700;color:#DC2626">${pct}% OFF</span>` : ''}
-                  </div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
-                    <div class="stepper" style="height:32px">
-                      <button onclick="APP.changeQty('${p.id}',-1)">−</button>
-                      <span style="width:28px">${qty}</span>
-                      <button onclick="APP.changeQty('${p.id}',1)">+</button>
+      if (this.cartViewMode === "table") {
+        // Structured Table View Choice
+        body.innerHTML = `
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden">
+            <div style="padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:space-between">
+              <span>📋 Table Breakdown (${totalItems} items)</span>
+              <button class="btn btn-ghost btn-sm" onclick="APP.toggleCartViewMode()" style="font-size:11px;color:var(--amber);padding:2px 4px">Switch to Cards ⊞</button>
+            </div>
+            <div style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font-size:12px;text-align:left">
+                <thead>
+                  <tr style="background:var(--surface-2);color:var(--muted);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase">
+                    <th style="padding:8px 8px">Item</th>
+                    <th style="padding:8px 4px;text-align:center">Qty</th>
+                    <th style="padding:8px 6px;text-align:right">Rate</th>
+                    <th style="padding:8px 6px;text-align:right">Discount</th>
+                    <th style="padding:8px 8px;text-align:right">Total</th>
+                    <th style="padding:8px 4px;text-align:center"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${items.map(({ p, qty }, idx) => {
+                    const pct = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
+                    const lineTot = p.price * qty;
+                    return `
+                      <tr style="border-bottom:1px solid var(--line)">
+                        <td style="padding:8px 8px;color:var(--ink);font-weight:600">
+                          <div style="display:flex;align-items:center;gap:6px">
+                            <img src="${p.img || 'assets/img/products/gm-led-bulb-9w.jpg'}" style="width:28px;height:28px;object-fit:contain;background:#fff;border-radius:4px;border:1px solid var(--line);flex:none" alt="${p.name}">
+                            <div style="min-width:0">
+                              <div style="font-size:11.5px;line-height:1.2;font-weight:700">${idx + 1}. ${p.name}</div>
+                              <div style="font-size:9.5px;color:var(--muted)">${p.brand || 'Genuine'}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td style="padding:8px 4px;text-align:center">
+                          <div class="stepper" style="height:26px;display:inline-flex">
+                            <button style="width:20px;font-size:12px" onclick="APP.changeQty('${p.id}',-1)">−</button>
+                            <span style="width:20px;font-size:11px">${qty}</span>
+                            <button style="width:20px;font-size:12px" onclick="APP.changeQty('${p.id}',1)">+</button>
+                          </div>
+                        </td>
+                        <td style="padding:8px 6px;text-align:right;color:var(--muted);font-size:11px">${this.inr(p.price)}</td>
+                        <td style="padding:8px 6px;text-align:right">
+                          ${pct > 0 ? `<span style="color:#DC2626;font-weight:700;font-size:10.5px">${pct}% off</span>` : `<span style="color:var(--muted);font-size:10.5px">—</span>`}
+                        </td>
+                        <td style="padding:8px 8px;text-align:right;font-weight:800;color:var(--amber);font-size:12px">${this.inr(lineTot)}</td>
+                        <td style="padding:8px 4px;text-align:center">
+                          <button onclick="APP.changeQty('${p.id}', -${qty})" style="border:none;background:none;color:var(--danger);cursor:pointer;font-size:13px" title="Delete item">🗑️</button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+                <tfoot>
+                  <tr style="background:var(--surface-2);font-weight:800">
+                    <td colspan="4" style="padding:8px 8px;text-align:right;color:var(--ink)">Subtotal:</td>
+                    <td style="padding:8px 8px;text-align:right;color:var(--amber)">${this.inr(subTot)}</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        `;
+      } else {
+        // Amazon Cards View Choice
+        body.innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:12px">
+            ${items.map(({ p, qty }) => {
+              const pct = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
+              return `
+                <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:72px 1fr;gap:12px;position:relative">
+                  <img src="${p.img || 'assets/img/products/gm-led-bulb-9w.jpg'}" alt="${p.name}" style="width:72px;height:72px;object-fit:contain;background:#fff;border-radius:8px;border:1px solid var(--line);padding:4px" onerror="this.onerror=null;this.src='assets/img/products/gm-led-bulb-9w.jpg'">
+                  <div style="min-width:0;display:flex;flex-direction:column;justify-content:space-between">
+                    <div>
+                      <div style="font-size:13.5px;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:3px">${p.name}</div>
+                      <div style="font-size:11px;color:var(--muted)">${p.brand || 'Genuine'} • <span style="color:#15803d;font-weight:600">In Stock</span></div>
                     </div>
-                    <button class="btn btn-ghost btn-sm" style="color:var(--danger);font-size:11px;padding:4px 6px" onclick="APP.changeQty('${p.id}', -${qty})">
-                      Delete
-                    </button>
+                    <div style="margin-top:6px;display:flex;align-items:baseline;gap:6px">
+                      <span style="font-size:15px;font-weight:800;color:var(--ink)">${this.inr(p.price)}</span>
+                      ${p.mrp > p.price ? `<span style="font-size:12px;color:var(--muted);text-decoration:line-through">${this.inr(p.mrp)}</span><span style="font-size:11px;font-weight:700;color:#DC2626">${pct}% OFF</span>` : ''}
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+                      <div class="stepper" style="height:32px">
+                        <button onclick="APP.changeQty('${p.id}',-1)">−</button>
+                        <span style="width:28px">${qty}</span>
+                        <button onclick="APP.changeQty('${p.id}',1)">+</button>
+                      </div>
+                      <button class="btn btn-ghost btn-sm" style="color:var(--danger);font-size:11px;padding:4px 6px" onclick="APP.changeQty('${p.id}', -${qty})">
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-
-        <!-- Structured Itemized Table View -->
-        <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px">
-          <div style="padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:space-between">
-            <span>📊 Structured Bill Breakdown</span>
-            <span style="font-size:11px;color:var(--muted)">${totalItems} items</span>
+              `;
+            }).join("")}
           </div>
-          <div style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse;font-size:11.5px;text-align:left">
-              <thead>
-                <tr style="background:var(--surface-2);color:var(--muted);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase">
-                  <th style="padding:8px 10px">Item</th>
-                  <th style="padding:8px 6px;text-align:center">Qty</th>
-                  <th style="padding:8px 8px;text-align:right">Rate</th>
-                  <th style="padding:8px 8px;text-align:right">Discount</th>
-                  <th style="padding:8px 10px;text-align:right">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${items.map(({ p, qty }, idx) => {
-                  const pct = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
-                  const lineTot = p.price * qty;
-                  return `
-                    <tr style="border-bottom:1px solid var(--line)">
-                      <td style="padding:8px 10px;color:var(--ink);font-weight:600">
-                        <div style="line-height:1.2">${idx + 1}. ${p.name}</div>
-                        <div style="font-size:9.5px;color:var(--muted)">${p.brand || 'Genuine'}</div>
-                      </td>
-                      <td style="padding:8px 6px;text-align:center;font-weight:700;color:var(--ink)">${qty}</td>
-                      <td style="padding:8px 8px;text-align:right;color:var(--muted)">${this.inr(p.price)}</td>
-                      <td style="padding:8px 8px;text-align:right">
-                        ${pct > 0 ? `<span style="color:#DC2626;font-weight:700">${pct}% off</span>` : `<span style="color:var(--muted)">—</span>`}
-                      </td>
-                      <td style="padding:8px 10px;text-align:right;font-weight:800;color:var(--amber)">${this.inr(lineTot)}</td>
-                    </tr>
-                  `;
-                }).join("")}
-              </tbody>
-              <tfoot>
-                <tr style="background:var(--surface-2);font-weight:800">
-                  <td colspan="4" style="padding:8px 10px;text-align:right;color:var(--ink)">Subtotal:</td>
-                  <td style="padding:8px 10px;text-align:right;color:var(--amber)">${this.inr(subTot)}</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      `;
+        `;
+      }
 
       if (foot) {
         foot.innerHTML = `

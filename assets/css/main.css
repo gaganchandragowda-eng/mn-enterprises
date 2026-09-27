@@ -1789,6 +1789,24 @@ html, body {
 .drawer-foot {
   padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
 }
+#cartViewToggleBtn {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+#cartViewToggleBtn:hover {
+  background: var(--amber);
+  color: var(--amber-ink);
+  border-color: var(--amber);
+}
 
 /* 4. Real-time Customer Status Pop-up — Mobile Positioning */
 @media (max-width: 640px) {
