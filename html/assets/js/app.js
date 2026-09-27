@@ -279,7 +279,7 @@ const APP = {
           </button>
           ${user ? `
             <a href="${base}account.html" class="user-btn" title="My account">
-              <div class="user-avatar">${(user.name||"U")[0].toUpperCase()}</div>
+              ${user.photoURL ? `<img src="${user.photoURL}" class="user-avatar" style="object-fit:cover;width:28px;height:28px;border-radius:50%" alt="User">` : `<div class="user-avatar">${(user.name||"U")[0].toUpperCase()}</div>`}
               <span>${user.name||"Account"}</span>
             </a>
           ` : `<a href="${base}login.html" class="btn btn-ghost btn-sm">Sign in</a>`}
@@ -364,7 +364,7 @@ const APP = {
     <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="document.getElementById('mobileNav').classList.remove('show');this.classList.remove('show')"></div>
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
       <div class="amazon-drawer-header">
-        <div class="adh-avatar">${user ? (user.name||"U")[0].toUpperCase() : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`}</div>
+        <div class="adh-avatar">${user ? (user.photoURL ? `<img src="${user.photoURL}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" alt="User">` : (user.name||"U")[0].toUpperCase()) : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`}</div>
         <div class="adh-info">
           <div class="adh-hello">Hello, ${user ? (user.name || "Customer") : "Sign in"}</div>
           <div class="adh-sub">${user ? "M N Customer Member" : "Welcome to M N Enterprises"}</div>
