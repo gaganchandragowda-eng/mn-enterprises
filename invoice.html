@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Official GST Tax Invoice — M N Enterprises Bangarapet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0F172A;
+    --muted: #64748B;
+    --line: #E2E8F0;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --amber: #D97706;
+    --brand: #0F172A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #E2E8F0;
+    color: var(--ink);
+    padding: 24px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .invoice-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 36px 40px;
+  }
+  .no-print-bar {
+    max-width: 800px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+  }
+  .btn-print { background: var(--brand); color: #fff; }
+  .btn-wa { background: #25D366; color: #fff; }
+  .btn-back { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+
+  /* Invoice Header */
+  .inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--brand);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  .shop-brand {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--brand);
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+  }
+  .shop-sub {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--amber);
+    margin-top: 2px;
+  }
+  .shop-addr {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .inv-title-block {
+    text-align: right;
+  }
+  .inv-tag {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--brand);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .inv-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--amber);
+    margin-top: 4px;
+  }
+  .inv-date {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Bill To and Meta */
+  .inv-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .meta-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .meta-val {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .meta-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Table */
+  .inv-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  .inv-table th {
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  .inv-table th:last-child,
+  .inv-table td:last-child {
+    text-align: right;
+  }
+  .inv-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+  }
+  .inv-table tr:nth-child(even) td {
+    background: #FAFAFA;
+  }
+
+  /* Summary */
+  .inv-summary-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  .inv-calc-box {
+    width: 320px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .calc-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    border-bottom: 1px solid var(--line);
+  }
+  .calc-line.total {
+    background: var(--brand);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    border-bottom: none;
+  }
+
+  /* Footer */
+  .inv-footer {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--line);
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+  .terms-box {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .signature-box {
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--bg);
+  }
+  .seal-tag {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--brand);
+    text-transform: uppercase;
+  }
+  .seal-sub {
+    font-size: 10.5px;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .no-print-bar { display: none !important; }
+    .invoice-container { box-shadow: none; border-radius: 0; padding: 0; }
+  }
+  @media (max-width: 600px) {
+    .invoice-container { padding: 20px 16px; }
+    .inv-header { flex-direction: column; gap: 12px; }
+    .inv-title-block { text-align: left; }
+    .inv-meta-grid { grid-template-columns: 1fr; }
+    .inv-footer { grid-template-columns: 1fr; }
+    .inv-calc-box { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print-bar">
+  <a href="shop.html" class="btn btn-back">← Back to Shop</a>
+  <div style="display:flex;gap:8px">
+    <button onclick="window.print()" class="btn btn-print">🖨️ Print / Save PDF</button>
+    <button onclick="shareWhatsApp()" class="btn btn-wa">📲 Send via WhatsApp</button>
+  </div>
+</div>
+
+<div class="invoice-container" id="invoice">
+  <div class="inv-header">
+    <div>
+      <div class="shop-brand">M N Enterprises</div>
+      <div class="shop-sub">Authorized Wholesale &amp; Retail Distributor</div>
+      <div class="shop-addr">
+        APMC Road, Near Nada Prabhu Kempe Gowda Circle,<br>
+        Bangarapet, Karnataka — 563114<br>
+        <b>Phone:</b> +91 96863 11260 &nbsp;|&nbsp; <b>GSTIN:</b> 29AABCM9876C1ZV
+      </div>
+    </div>
+    <div class="inv-title-block">
+      <div class="inv-tag">Tax Invoice / Bill</div>
+      <div class="inv-num" id="invNumber">#MN-INV-2026-001</div>
+      <div class="inv-date" id="invDate">Date: 27-Sep-2026</div>
+      <div style="font-size:11px;color:#16A34A;font-weight:700;margin-top:4px">● VERIFIED GENUINE SUPPLY</div>
+    </div>
+  </div>
+
+  <div class="inv-meta-grid">
+    <div>
+      <div class="meta-title">Billed To (Customer Details)</div>
+      <div class="meta-val" id="custName">Walk-in Counter Customer</div>
+      <div class="meta-sub" id="custPhone">Phone: +91 96863 11260</div>
+      <div class="meta-sub" id="custLoc">Area: Bangarapet (563114)</div>
+    </div>
+    <div>
+      <div class="meta-title">Order &amp; Payment Details</div>
+      <div class="meta-val" id="orderStatus">Order Status: Confirmed</div>
+      <div class="meta-sub" id="payMode">Payment Mode: Cash on Delivery / Counter UPI</div>
+      <div class="meta-sub" id="deliveryMode">Fulfillment: Store Pickup / Local Delivery</div>
+    </div>
+  </div>
+
+  <table class="inv-table">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Product Description</th>
+        <th>Brand</th>
+        <th style="text-align:center">Qty</th>
+        <th style="text-align:right">Rate (₹)</th>
+        <th>Amount (₹)</th>
+      </tr>
+    </thead>
+    <tbody id="invoiceItems">
+      <!-- Injected dynamically -->
+    </tbody>
+  </table>
+
+  <div class="inv-summary-row">
+    <div class="inv-calc-box">
+      <div class="calc-line">
+        <span>Items Subtotal:</span>
+        <b id="subtotalVal">₹0</b>
+      </div>
+      <div class="calc-line">
+        <span>CGST (9% Included):</span>
+        <span id="cgstVal">₹0</span>
+      </div>
+      <div class="calc-line">
+        <span>SGST (9% Included):</span>
+        <span id="sgstVal">₹0</span>
+      </div>
+      <div class="calc-line">
+        <span>Local Delivery / Handling:</span>
+        <span style="color:#16A34A;font-weight:700">FREE</span>
+      </div>
+      <div class="calc-line total">
+        <span>Grand Total:</span>
+        <span id="grandTotalVal">₹0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="inv-footer">
+    <div class="terms-box">
+      <b>Terms &amp; Conditions:</b><br>
+      1. Goods once sold are covered under manufacturer warranty for 1 to 2 years.<br>
+      2. Keep this invoice copy for warranty claims &amp; exchanges.<br>
+      3. APMC Road Bangarapet counter open 6:30 AM to 9:00 PM daily.
+    </div>
+    <div class="signature-box">
+      <div class="seal-tag">M N ENTERPRISES</div>
+      <div style="font-size:10px;color:var(--muted)">BANGARAPET 563114</div>
+      <div class="seal-sub">Authorized Signatory / Seal</div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/products.js"></script>
+<script>
+function loadInvoice() {
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("id");
+  let orderData = null;
+
+  try {
+    const orders = JSON.parse(localStorage.getItem("mn_orders") || "[]");
+    if (orderId) {
+      orderData = orders.find(o => String(o.id) === String(orderId));
+    }
+    if (!orderData && orders.length) {
+      orderData = orders[0];
+    }
+  } catch(e){}
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" });
+  const timeStr = now.toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" });
+
+  if (orderData) {
+    document.getElementById("invNumber").textContent = "#" + (orderData.id || "MN-ORD-" + Date.now().toString().slice(-6));
+    document.getElementById("invDate").textContent = "Date: " + (orderData.date || dateStr + " " + timeStr);
+    document.getElementById("custName").textContent = orderData.name || orderData.customerName || "Valued Customer";
+    document.getElementById("custPhone").textContent = "Phone: " + (orderData.phone || "+91 96863 11260");
+    document.getElementById("custLoc").textContent = "Delivery Area: " + (orderData.address || localStorage.getItem("mn_delivery_loc") || "Bangarapet 563114");
+
+    const items = orderData.items || [];
+    let subtotal = 0;
+    const tbody = document.getElementById("invoiceItems");
+    tbody.innerHTML = items.map((item, idx) => {
+      const p = PRODUCTS.findById(item.id) || { name: item.name || "Hardware Item", brand: item.brand || "Genuine", price: item.price || 0 };
+      const price = item.price || p.price || 0;
+      const qty = item.qty || 1;
+      const total = price * qty;
+      subtotal += total;
+      return `
+        <tr>
+          <td style="color:var(--muted)">${idx + 1}</td>
+          <td><b>${item.name || p.name}</b></td>
+          <td><span style="font-size:11px;background:#F1F5F9;padding:2px 6px;border-radius:4px">${item.brand || p.brand || "Genuine"}</span></td>
+          <td style="text-align:center;font-weight:700">${qty}</td>
+          <td style="text-align:right">₹${Number(price).toLocaleString("en-IN")}</td>
+          <td style="font-weight:700">₹${Number(total).toLocaleString("en-IN")}</td>
+        </tr>
+      `;
+    }).join("");
+
+    if (!items.length) {
+      // Default sample items
+      tbody.innerHTML = `
+        <tr>
+          <td>1</td>
+          <td><b>GM 9W LED Bulb B22 Cool Daylight</b></td>
+          <td><span style="font-size:11px;background:#F1F5F9;padding:2px 6px;border-radius:4px">GM Modular</span></td>
+          <td style="text-align:center;font-weight:700">2</td>
+          <td style="text-align:right">₹50</td>
+          <td style="font-weight:700">₹100</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><b>Supreme CPVC 1 Inch Class 1 Pipe (3m)</b></td>
+          <td><span style="font-size:11px;background:#F1F5F9;padding:2px 6px;border-radius:4px">Supreme</span></td>
+          <td style="text-align:center;font-weight:700">1</td>
+          <td style="text-align:right">₹280</td>
+          <td style="font-weight:700">₹280</td>
+        </tr>
+      `;
+      subtotal = 380;
+    }
+
+    const gstAmt = Math.round(subtotal * 0.09);
+    document.getElementById("subtotalVal").textContent = "₹" + Number(subtotal).toLocaleString("en-IN");
+    document.getElementById("cgstVal").textContent = "₹" + Number(gstAmt).toLocaleString("en-IN");
+    document.getElementById("sgstVal").textContent = "₹" + Number(gstAmt).toLocaleString("en-IN");
+    document.getElementById("grandTotalVal").textContent = "₹" + Number(subtotal).toLocaleString("en-IN");
+  }
+}
+
+function shareWhatsApp() {
+  const invNum = document.getElementById("invNumber").textContent;
+  const grandTotal = document.getElementById("grandTotalVal").textContent;
+  const name = document.getElementById("custName").textContent;
+  const text = encodeURIComponent(`*M N ENTERPRISES — TAX INVOICE*\nInvoice: ${invNum}\nCustomer: ${name}\nGrand Total: ${grandTotal}\nStore: APMC Road Bangarapet 563114\nView Full Bill: ${window.location.href}`);
+  window.open(`https://wa.me/919686311260?text=${text}`, "_blank");
+}
+
+loadInvoice();
+</script>
+</body>
+</html>

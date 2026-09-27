@@ -171,6 +171,9 @@
   <div class="catnav-in" id="catNav"></div>
 </nav>
 
+<!-- Festive & Promo Banners Carousel -->
+<div id="promoBannerWrap" style="max-width:1440px;margin:10px auto 0 auto;padding:0 24px"></div>
+
 <div class="shop-layout">
   <!-- Desktop Sidebar -->
   <aside class="shop-sidebar">
@@ -428,6 +431,9 @@ function toggleWishlist(id) {
 // Initial Boot
 renderCategoryNav();
 filterAndRender();
+if (typeof APP !== 'undefined' && typeof APP.renderPromoBanners === 'function') {
+  APP.renderPromoBanners("promoBannerWrap");
+}
 </script>
 </body>
 </html>

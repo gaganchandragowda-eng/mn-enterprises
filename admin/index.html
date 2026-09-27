@@ -798,6 +798,7 @@
   <button class="active" onclick="showPanel('dashboard')">Dashboard</button>
   <button onclick="showPanel('products')">Products</button>
   <button onclick="showPanel('orders')">Orders</button>
+  <button onclick="showPanel('banners')">🎉 Banners</button>
   <button onclick="showPanel('whatsapp')" style="color:#25D366">WhatsApp AI</button>
   <button onclick="showPanel('settings')">Settings</button>
 </div>
@@ -822,6 +823,10 @@
       <a href="#" id="sn-orders" onclick="showPanel('orders',event)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         Orders
+      </a>
+      <a href="#" id="sn-banners" onclick="showPanel('banners',event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Festival &amp; Sales Banners
       </a>
       <a href="#" id="sn-whatsapp" onclick="showPanel('whatsapp',event)" style="color:#128C7E">
         <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.86L2.05 22l5.36-1.4a9.87 9.87 0 004.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.81 2 .88 2.15.07.14.12.31.02.5-.1.19-.15.31-.3.48-.14.17-.3.37-.43.5-.14.14-.29.29-.13.57.17.28.75 1.24 1.6 2 1.11.99 2.04 1.29 2.32 1.44.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.28.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.68-.16 1.36z"/></svg>
@@ -1051,6 +1056,90 @@
       <div id="ordersContainer"></div>
     </div>
 
+    <!-- ===== FESTIVAL & SALES PROMO BANNERS (AMAZON STYLE) ===== -->
+    <div class="admin-panel" id="panelBanners">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div>
+          <h1 style="display:flex;align-items:center;gap:10px">
+            <span>🎉</span> Festival &amp; Sales Promo Cards
+          </h1>
+          <p class="page-sub">Create, replace, edit, or remove Amazon-style festive sale banners, combo discounts, and seasonal offers shown on the storefront.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="resetBannersToDefault()">↺ Reset to Defaults</button>
+          <button class="btn btn-primary" onclick="openBannerModal()">+ Add New Sale Banner</button>
+        </div>
+      </div>
+
+      <!-- Quick Preset Cards -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px;margin-bottom:24px">
+        <div style="font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:8px">⚡ Quick 1-Click Festival Presets</div>
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Click any preset below to instantly add a ready-made festive sale banner:</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-sm" onclick="applyBannerPreset('ugadi')">🌸 Ugadi Maha Sale</button>
+          <button class="btn btn-secondary btn-sm" onclick="applyBannerPreset('diwali')">🪔 Deepavali Mega Offer</button>
+          <button class="btn btn-secondary btn-sm" onclick="applyBannerPreset('monsoon')">🌧️ Monsoon Plumbing Combo</button>
+          <button class="btn btn-secondary btn-sm" onclick="applyBannerPreset('cctv')">📹 Security CCTV Setup Kit</button>
+          <button class="btn btn-secondary btn-sm" onclick="applyBannerPreset('electrical')">⚡ Wiring &amp; Switch Bulk Deal</button>
+        </div>
+      </div>
+
+      <!-- Live Storefront Banners Preview & Management -->
+      <h3 style="font-size:16px;margin-bottom:14px">Active &amp; Configured Store Banners</h3>
+      <div id="adminBannersList" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:16px;margin-bottom:30px"></div>
+
+      <!-- Banner Editor Modal / Form -->
+      <div class="modal" id="bannerEditModal" role="dialog" aria-label="Edit Sale Banner" style="max-width:540px">
+        <button class="modal-close-btn" onclick="closeBannerModal()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <h3 id="bannerModalTitle" style="font-size:17px;font-weight:800;margin-bottom:14px">Add / Edit Sale Promo Card</h3>
+        <input type="hidden" id="bm-id">
+        <div class="field">
+          <label>Badge Text (e.g. FESTIVE SALE, SPECIAL OFFER, 35% OFF) <span style="color:#ef4444">*</span></label>
+          <input type="text" id="bm-badge" placeholder="e.g. UGADI MAHA SALE" required>
+        </div>
+        <div class="field">
+          <label>Headline Title <span style="color:#ef4444">*</span></label>
+          <input type="text" id="bm-title" placeholder="e.g. ⚡ GM Switches & KEI Copper Wires Combo" required>
+        </div>
+        <div class="field">
+          <label>Subtitle / Discount Description</label>
+          <input type="text" id="bm-sub" placeholder="e.g. Flat 35% OFF on wholesale counter billing in Bangarapet">
+        </div>
+        <div class="field">
+          <label>Target Destination Link</label>
+          <select id="bm-link" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font-weight:600">
+            <option value="shop.html">Shop All Products (shop.html)</option>
+            <option value="shop.html?cat=electrical">Electrical Category (Wires &amp; Switches)</option>
+            <option value="shop.html?cat=plumbing">Plumbing Category (Pipes &amp; Fittings)</option>
+            <option value="shop.html?cat=pumps">Pumps &amp; Motors</option>
+            <option value="shop.html?cat=cctv">CCTV &amp; Security</option>
+            <option value="shop.html?cat=hardware">Hardware &amp; Tools</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Background Theme Gradient</label>
+          <select id="bm-bg" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font-weight:600">
+            <option value="linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)">Deep Indigo Royal (Ugadi &amp; Festivities)</option>
+            <option value="linear-gradient(135deg, #064E3B 0%, #047857 100%)">Emerald Green (Plumbing &amp; Water Deals)</option>
+            <option value="linear-gradient(135deg, #701A75 0%, #86198F 100%)">Magenta Purple (CCTV &amp; Tech Security)</option>
+            <option value="linear-gradient(135deg, #7C2D12 0%, #EA580C 100%)">Warm Amber Fire (Diwali &amp; Big Sales)</option>
+            <option value="linear-gradient(135deg, #0F172A 0%, #1E293B 100%)">Midnight Slate (Modern Dark)</option>
+            <option value="linear-gradient(135deg, #831843 0%, #BE185D 100%)">Rose Crimson (Special Promo)</option>
+          </select>
+        </div>
+        <div class="field" style="display:flex;align-items:center;gap:10px;margin-top:10px">
+          <input type="checkbox" id="bm-active" style="width:18px;height:18px;cursor:pointer" checked>
+          <label for="bm-active" style="cursor:pointer;font-weight:600;font-size:13.5px">Active on Storefront</label>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button class="btn btn-secondary btn-full" onclick="closeBannerModal()">Cancel</button>
+          <button class="btn btn-primary btn-full" onclick="saveBannerFromForm()">Save Banner</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== SETTINGS ===== -->
     <div class="admin-panel" id="panelSettings">
       <h1>Settings</h1>
@@ -1254,11 +1343,11 @@ document.addEventListener("DOMContentLoaded", () => {
 const inr = n => APP.inr(n);
 
 /* ---- Panel switching ---- */
-const panels = ["dashboard","products","orders","whatsapp","settings"];
+const panels = ["dashboard","products","orders","banners","whatsapp","settings"];
 function showPanel(name, e) {
   if (e) e.preventDefault();
   panels.forEach(p=>{
-    document.getElementById("panel"+capitalize(p)).classList.toggle("active", p===name);
+    document.getElementById("panel"+capitalize(p))?.classList.toggle("active", p===name);
     const sn=document.getElementById("sn-"+p); if(sn) sn.classList.toggle("active", p===name);
   });
   // Mobile bar
@@ -1268,9 +1357,247 @@ function showPanel(name, e) {
   if(name==="dashboard")  renderDashboard();
   if(name==="products")   renderProductsTable();
   if(name==="orders")     renderOrders();
+  if(name==="banners")    renderBannersManager();
   if(name==="whatsapp")   renderWAHub();
 }
 function capitalize(s){ return s[0].toUpperCase()+s.slice(1); }
+
+/* ---- Festival & Promo Banners Controller ---- */
+function getAdminBanners() {
+  if (typeof APP !== 'undefined' && typeof APP.getPromoBanners === 'function') {
+    return APP.getPromoBanners();
+  }
+  try {
+    return JSON.parse(localStorage.getItem("mn_promo_banners") || "[]");
+  } catch(e){ return []; }
+}
+
+function saveAdminBanners(list) {
+  if (typeof APP !== 'undefined' && typeof APP.savePromoBanners === 'function') {
+    APP.savePromoBanners(list);
+  } else {
+    localStorage.setItem("mn_promo_banners", JSON.stringify(list));
+  }
+}
+
+function renderBannersManager() {
+  const container = document.getElementById("adminBannersList");
+  if (!container) return;
+  const list = getAdminBanners();
+  if (!list.length) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px 20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg)">
+        <p style="color:var(--muted);margin-bottom:12px">No sale banners configured currently.</p>
+        <button class="btn btn-primary" onclick="openBannerModal()">+ Add Your First Sale Banner</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = list.map((b, idx) => `
+    <div style="background:var(--surface);border:1px solid ${b.active === false ? 'var(--line)' : 'var(--amber)'};border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);opacity:${b.active === false ? '0.65' : '1'}">
+      <!-- Live Card Preview (Same as storefront) -->
+      <div style="padding:14px;background:${b.bg || 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)'};color:#fff;min-height:90px;position:relative">
+        <span style="font-size:10px;font-weight:800;letter-spacing:0.06em;background:rgba(255,255,255,0.22);padding:3px 8px;border-radius:12px;text-transform:uppercase;display:inline-block;margin-bottom:6px">${b.badge || 'PROMO'}</span>
+        <div style="font-size:14px;font-weight:800;line-height:1.25;margin-bottom:4px">${b.title}</div>
+        <div style="font-size:11.5px;opacity:0.88;line-height:1.3">${b.sub || ''}</div>
+        <div style="position:absolute;top:10px;right:10px">
+          <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:${b.active === false ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)'};color:#fff">
+            ${b.active === false ? 'Hidden' : 'Live on Store'}
+          </span>
+        </div>
+      </div>
+      
+      <!-- Management Controls -->
+      <div style="padding:12px 14px;background:var(--surface-2);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between">
+          <span>Link: <b>${b.link || 'shop.html'}</b></span>
+          <span>Order: #${idx + 1}</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="editBanner('${b.id}')">✏️ Edit</button>
+          <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="toggleBannerActive('${b.id}')">
+            ${b.active === false ? '👁️ Activate' : '🚫 Hide'}
+          </button>
+          <button class="btn btn-danger btn-sm" style="justify-content:center" onclick="deleteBanner('${b.id}')">🗑️ Remove</button>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;font-size:11px" onclick="moveBanner('${b.id}', -1)" ${idx === 0 ? 'disabled' : ''}>⬆️ Move Up</button>
+          <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;font-size:11px" onclick="moveBanner('${b.id}', 1)" ${idx === list.length - 1 ? 'disabled' : ''}>⬇️ Move Down</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function openBannerModal(id) {
+  document.getElementById("overlay")?.classList.add("show");
+  const modal = document.getElementById("bannerEditModal");
+  if (!modal) return;
+  modal.classList.add("show");
+  
+  if (id) {
+    const list = getAdminBanners();
+    const b = list.find(x => x.id === id);
+    if (b) {
+      document.getElementById("bannerModalTitle").textContent = "Edit Promo Banner";
+      document.getElementById("bm-id").value = b.id;
+      document.getElementById("bm-badge").value = b.badge || "";
+      document.getElementById("bm-title").value = b.title || "";
+      document.getElementById("bm-sub").value = b.sub || "";
+      document.getElementById("bm-link").value = b.link || "shop.html";
+      document.getElementById("bm-bg").value = b.bg || "linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)";
+      document.getElementById("bm-active").checked = b.active !== false;
+      return;
+    }
+  }
+  
+  document.getElementById("bannerModalTitle").textContent = "Add New Festive Sale Banner";
+  document.getElementById("bm-id").value = "";
+  document.getElementById("bm-badge").value = "FESTIVE SALE";
+  document.getElementById("bm-title").value = "";
+  document.getElementById("bm-sub").value = "";
+  document.getElementById("bm-link").value = "shop.html";
+  document.getElementById("bm-bg").value = "linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)";
+  document.getElementById("bm-active").checked = true;
+}
+
+function closeBannerModal() {
+  document.getElementById("bannerEditModal")?.classList.remove("show");
+  document.getElementById("overlay")?.classList.remove("show");
+}
+
+function saveBannerFromForm() {
+  const badge = document.getElementById("bm-badge").value.trim();
+  const title = document.getElementById("bm-title").value.trim();
+  const sub = document.getElementById("bm-sub").value.trim();
+  const link = document.getElementById("bm-link").value;
+  const bg = document.getElementById("bm-bg").value;
+  const active = document.getElementById("bm-active").checked;
+  const existingId = document.getElementById("bm-id").value;
+
+  if (!title) {
+    alert("Please enter a headline title for the banner");
+    return;
+  }
+
+  let list = getAdminBanners();
+  if (existingId) {
+    const idx = list.findIndex(x => x.id === existingId);
+    if (idx !== -1) {
+      list[idx] = { ...list[idx], badge, title, sub, link, bg, active };
+    }
+  } else {
+    const newId = "b_" + Date.now();
+    list.unshift({ id: newId, badge: badge || "DEAL", title, sub, link, bg, active });
+  }
+
+  saveAdminBanners(list);
+  closeBannerModal();
+  renderBannersManager();
+  APP.toast("Sale banner saved successfully!", "success");
+}
+
+function editBanner(id) {
+  openBannerModal(id);
+}
+
+function toggleBannerActive(id) {
+  let list = getAdminBanners();
+  const item = list.find(x => x.id === id);
+  if (item) {
+    item.active = item.active === false ? true : false;
+    saveAdminBanners(list);
+    renderBannersManager();
+    APP.toast(`Banner ${item.active ? 'activated' : 'hidden'}`, "success");
+  }
+}
+
+function deleteBanner(id) {
+  if (!confirm("Are you sure you want to remove this promo banner?")) return;
+  let list = getAdminBanners();
+  list = list.filter(x => x.id !== id);
+  saveAdminBanners(list);
+  renderBannersManager();
+  APP.toast("Banner removed", "success");
+}
+
+function moveBanner(id, dir) {
+  let list = getAdminBanners();
+  const idx = list.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  const targetIdx = idx + dir;
+  if (targetIdx < 0 || targetIdx >= list.length) return;
+  const temp = list[idx];
+  list[idx] = list[targetIdx];
+  list[targetIdx] = temp;
+  saveAdminBanners(list);
+  renderBannersManager();
+}
+
+function resetBannersToDefault() {
+  if (!confirm("Reset all banners to store defaults (Ugadi, Plumbing, CCTV)?")) return;
+  localStorage.removeItem("mn_promo_banners");
+  renderBannersManager();
+  APP.toast("Banners reset to store presets", "success");
+}
+
+function applyBannerPreset(key) {
+  const presets = {
+    ugadi: {
+      id: "b_ugadi_" + Date.now(),
+      badge: "UGADI SPECIAL",
+      title: "🌸 Ugadi Mega Sale — Flat 35% OFF",
+      sub: "GM Modular Switches & KEI Copper Wires at Counter Prices",
+      link: "shop.html?cat=electrical",
+      bg: "linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)",
+      active: true
+    },
+    diwali: {
+      id: "b_diwali_" + Date.now(),
+      badge: "DEEPAVALI DHAMAKA",
+      title: "🪔 Festive Lighting & Switchboard Mega Deals",
+      sub: "LED Spotlights, Concealed Lights & GM Plates with Free Tester",
+      link: "shop.html?cat=electrical",
+      bg: "linear-gradient(135deg, #7C2D12 0%, #EA580C 100%)",
+      active: true
+    },
+    monsoon: {
+      id: "b_monsoon_" + Date.now(),
+      badge: "WHOLESALE COMBO",
+      title: "🌧️ Supreme CPVC & Finolex Pipe Monsoon Pack",
+      sub: "Borewell Submersible Pipes & Solvent Cement Discount Bundles",
+      link: "shop.html?cat=plumbing",
+      bg: "linear-gradient(135deg, #064E3B 0%, #047857 100%)",
+      active: true
+    },
+    cctv: {
+      id: "b_cctv_" + Date.now(),
+      badge: "SECURITY PACK",
+      title: "📹 Hikvision 4-Camera HD Surveillance Kit",
+      sub: "Complete 2MP Dome + Bullet + DVR + Cable Security Package",
+      link: "shop.html?cat=cctv",
+      bg: "linear-gradient(135deg, #701A75 0%, #86198F 100%)",
+      active: true
+    },
+    electrical: {
+      id: "b_elec_" + Date.now(),
+      badge: "CONTRACTOR DEAL",
+      title: "⚡ Building Wiring Bundle: KEI 90m + GM Switches",
+      sub: "Complete Electrical Fitting Packages for Houses in Bangarapet",
+      link: "shop.html?cat=electrical",
+      bg: "linear-gradient(135deg, #0F172A 0%, #1E293B 100%)",
+      active: true
+    }
+  };
+
+  const preset = presets[key];
+  if (!preset) return;
+  let list = getAdminBanners();
+  list.unshift(preset);
+  saveAdminBanners(list);
+  renderBannersManager();
+  APP.toast(`Added "${preset.badge}" banner!`, "success");
+}
 
 /* ---- Dashboard ---- */
 function renderDashboard(){

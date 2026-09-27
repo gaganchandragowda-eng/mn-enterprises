@@ -312,11 +312,11 @@ const APP = {
       </div>
 
       <!-- Amazon App Style Mobile Deliver To Strip -->
-      <div class="mobile-deliver-strip" onclick="APP.openAskExpertModal()">
+      <div class="mobile-deliver-strip" onclick="APP.openDeliveryModal()">
         <svg class="mds-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
         </svg>
-        <span class="mds-text">Deliver to <b>Bangarapet 563114</b></span>
+        <span class="mds-text">Deliver to <b id="hdrDeliverLoc">${localStorage.getItem("mn_delivery_loc") || "Bangarapet 563114"}</b></span>
         <svg class="mds-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"/>
         </svg>
@@ -487,7 +487,7 @@ const APP = {
           </div>
           <span>Shop</span>
         </a>
-        <button type="button" class="mbb-item" onclick="const m=document.getElementById('mobileNav');m&&m.classList.toggle('show')" aria-label="Menu">
+        <button type="button" class="mbb-item" onclick="const m=document.getElementById('mobileNav');const b=document.getElementById('mobileNavBackdrop');if(m){m.classList.toggle('show');b&&b.classList.toggle('show',m.classList.contains('show'))}" aria-label="Menu">
           <div class="mbb-icon-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
@@ -497,7 +497,7 @@ const APP = {
         </button>
       </nav>
 
-      <!-- Order Confirmation Success Modal with Bill Image Preview -->
+      <!-- Order Confirmation Success Modal with Bill Image & Full Invoice Link -->
       <div class="modal" id="successModal" role="dialog" aria-label="Order sent" style="max-width:440px">
         <button class="modal-close-btn" onclick="closeAll()" aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -505,27 +505,61 @@ const APP = {
         <div class="success-check">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
           <h3 id="successModalTitle" style="margin-top:8px">Order Placed Successfully!</h3>
-          <p id="successModalDesc" style="font-size:13px;color:var(--muted);margin-top:6px">Your order has been notified to M N Enterprises counter. You can download or copy the official receipt image below.</p>
+          <p id="successModalDesc" style="font-size:13px;color:var(--muted);margin-top:6px">Your order has been notified to M N Enterprises counter. You can view your full GST invoice below.</p>
         </div>
         <div id="successReceiptPreview" style="margin:14px 0;text-align:center"></div>
         <div id="successList" style="margin-top:10px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+        
+        <a id="btnViewFullInvoice" class="btn btn-primary btn-full" style="justify-content:center;margin-top:12px;font-weight:700" href="invoice.html" target="_blank">
+          📄 View &amp; Print Full Tax Invoice ↗
+        </a>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
           <button id="btnDlBill" class="btn btn-secondary btn-sm" style="justify-content:center" onclick="APP.downloadLastBillImage()">
             🖼️ Save Bill Image
           </button>
-          <button id="btnCopyBill" class="btn btn-secondary btn-sm" style="justify-content:center" onclick="APP.copyLastBillImage()">
-            📋 Copy Image
+          <button class="btn btn-sm" style="justify-content:center;background:#25D366;color:#fff;border:none" onclick="APP.shareLastOrderWhatsApp()">
+            📲 WhatsApp Bill
           </button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-          <button class="btn btn-sm" style="justify-content:center;background:#25D366;color:#fff;border:none" onclick="APP.shareLastOrderWhatsApp()">
-            📲 Send WhatsApp Bill
-          </button>
           <a href="account.html" class="btn btn-sm btn-secondary" style="justify-content:center;text-decoration:none;display:inline-flex;align-items:center">
             📦 Track in Account
           </a>
+          <button class="btn btn-secondary btn-sm" style="justify-content:center" onclick="closeAll()">Close</button>
         </div>
-        <button class="btn btn-primary btn-full mt-12" style="justify-content:center" onclick="closeAll()">Done</button>
+      </div>
+
+      <!-- Delivery Location Selector Modal -->
+      <div class="customer-modal" id="deliveryModal" role="dialog" aria-label="Select Delivery Location">
+        <div class="cmodal-header">
+          <h3>📍 Select Delivery Location</h3>
+          <button class="modal-close-btn" onclick="closeAll()" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="cmodal-body" id="deliveryModalContent">
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Choose your delivery area in Bangarapet for fast store pickup or local fulfillment:</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-secondary btn-full" style="justify-content:flex-start;text-align:left;padding:10px 12px" onclick="APP.setDeliveryLocation('Bangarapet Town (563114)')">
+              🏢 <b>Bangarapet Town</b> <span style="font-size:11px;color:var(--muted);margin-left:auto">Main Town</span>
+            </button>
+            <button class="btn btn-secondary btn-full" style="justify-content:flex-start;text-align:left;padding:10px 12px" onclick="APP.setDeliveryLocation('APMC Market Yard (563114)')">
+              🛒 <b>APMC Market Yard &amp; Kempegowda Circle</b> <span style="font-size:11px;color:var(--muted);margin-left:auto">Local Area</span>
+            </button>
+            <button class="btn btn-secondary btn-full" style="justify-content:flex-start;text-align:left;padding:10px 12px" onclick="APP.setDeliveryLocation('KGF Road, Bangarapet (563114)')">
+              🛣️ <b>KGF Road / Station Area</b> <span style="font-size:11px;color:var(--muted);margin-left:auto">Bangarapet</span>
+            </button>
+            <button class="btn btn-secondary btn-full" style="justify-content:flex-start;text-align:left;padding:10px 12px" onclick="APP.setDeliveryLocation('Desihalli, Bangarapet (563114)')">
+              🏡 <b>Desihalli Extension</b> <span style="font-size:11px;color:var(--muted);margin-left:auto">Town Area</span>
+            </button>
+          </div>
+          <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
+            <label style="font-size:12px;font-weight:700">Or Enter Specific Address / Site:</label>
+            <input type="text" id="customDeliveryInput" class="mas-input" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin:8px 0;background:var(--surface-2)" placeholder="e.g. Near Bus Stand, Bangarapet">
+            <button class="btn btn-primary btn-full" onclick="APP.setCustomDeliveryLocation()">Apply Custom Address</button>
+          </div>
+        </div>
       </div>
 
       <!-- Real-Time Customer Order Status Pop-up Notification -->
@@ -782,6 +816,94 @@ const APP = {
     this.toast(`Added ${qty} to your order`, "success");
     closeAll();
     openCart();
+  },
+
+  /* ---- Delivery Location Controller ---- */
+  openDeliveryModal() {
+    closeAll();
+    document.getElementById("overlay")?.classList.add("show");
+    document.getElementById("deliveryModal")?.classList.add("show");
+  },
+
+  setDeliveryLocation(loc) {
+    if (!loc) return;
+    try {
+      localStorage.setItem("mn_delivery_loc", loc);
+    } catch(e){}
+    const el = document.getElementById("hdrDeliverLoc");
+    if (el) el.textContent = loc;
+    this.toast(`Delivery set to: ${loc}`, "success");
+    closeAll();
+  },
+
+  setCustomDeliveryLocation() {
+    const val = (document.getElementById("customDeliveryInput")?.value || "").trim();
+    if (!val) {
+      this.toast("Please enter your delivery street or landmark", "error");
+      return;
+    }
+    this.setDeliveryLocation(val);
+  },
+
+  /* ---- Festival & Sale Promo Banners Controller ---- */
+  getPromoBanners() {
+    try {
+      const stored = JSON.parse(localStorage.getItem("mn_promo_banners") || "[]");
+      if (stored && stored.length) return stored;
+    } catch(e){}
+    return [
+      {
+        id: "b1",
+        badge: "FESTIVE SALE",
+        title: "⚡ Ugadi Maha Sale — Flat 35% OFF",
+        sub: "GM Modular Switches & KEI Copper Wires at Counter Prices",
+        link: "shop.html?cat=electrical",
+        bg: "linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)",
+        active: true
+      },
+      {
+        id: "b2",
+        badge: "WHOLESALE COMBO",
+        title: "🚰 Supreme & Finolex Pipe Mega Offer",
+        sub: "CPVC & PVC Pipes with Solvent & Fittings Free Delivery",
+        link: "shop.html?cat=plumbing",
+        bg: "linear-gradient(135deg, #064E3B 0%, #047857 100%)",
+        active: true
+      },
+      {
+        id: "b3",
+        badge: "SECURITY PACK",
+        title: "📹 CCTV 4-Camera HD Setup Combo",
+        sub: "Complete Dome + DVR + 500GB HDD Security Package",
+        link: "shop.html?cat=cctv",
+        bg: "linear-gradient(135deg, #701A75 0%, #86198F 100%)",
+        active: true
+      }
+    ];
+  },
+
+  savePromoBanners(list) {
+    try {
+      localStorage.setItem("mn_promo_banners", JSON.stringify(list));
+    } catch(e){}
+  },
+
+  renderPromoBanners(containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const banners = this.getPromoBanners().filter(b => b.active !== false);
+    if (!banners.length) { el.style.display = "none"; return; }
+    el.innerHTML = `
+      <div class="promo-banner-carousel">
+        ${banners.map(b => `
+          <a href="${b.link || 'shop.html'}" class="promo-banner-card" style="background:${b.bg || 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)'} !important">
+            <span class="pbc-badge">${b.badge || 'SPECIAL DEAL'}</span>
+            <div class="pbc-title">${b.title}</div>
+            <div class="pbc-sub">${b.sub}</div>
+          </a>
+        `).join("")}
+      </div>
+    `;
   },
 
   /* ---- WhatsApp Monospace Table & Canvas Bill Generator (No AI) ---- */

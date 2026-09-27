@@ -117,14 +117,17 @@
       </div>
       <div class="trust-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        <div><b>Ask on WhatsApp</b><span>Send a photo, get the right answer</span></div>
-      </div>
     </div>
   </div>
 </section>
 
+<!-- FESTIVE PROMO BANNERS (AMAZON APP STYLE) -->
+<section style="padding:14px 0 0 0">
+  <div class="wrap" id="promoBannerWrap"></div>
+</section>
+
 <!-- CATEGORIES -->
-<section class="section" id="categories">
+<section class="section" id="categories" style="padding-top:28px">
   <div class="wrap">
     <div class="sec-head">
       <h2>Everything under one roof</h2>
@@ -145,6 +148,75 @@
       <a href="shop.html" class="btn btn-secondary">View all products →</a>
     </div>
     <div class="product-grid mt-20" id="featuredGrid"></div>
+  </div>
+</section>
+
+<!-- FREQUENTLY BOUGHT TOGETHER / COMPANION HARDWARE PACKS -->
+<section class="section" style="background:var(--surface-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:44px 0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div style="font-size:11px;font-weight:800;color:var(--amber);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">FREQUENTLY BOUGHT TOGETHER</div>
+      <h2>Recommended Hardware Combos (ಜೊತೆ ಖರೀದಿಸುವ ಸಾಮಗ್ರಿಗಳು)</h2>
+      <p>Save time &amp; avoid multiple trips by ordering matching fittings, holders, solvent cements, and wires together.</p>
+    </div>
+    <div id="comboHardwareWrap" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:18px">
+      <!-- Combo 1: Lighting Combo -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-sm)">
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <span style="font-size:10.5px;font-weight:700;background:rgba(217,119,6,0.15);color:var(--amber);padding:2px 8px;border-radius:12px">LIGHTING KIT</span>
+            <span style="font-size:11.5px;color:var(--muted)">Most popular for rooms</span>
+          </div>
+          <h3 style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px">💡 GM 9W LED Bulb + Batten Holder + PVC Tape</h3>
+          <p style="font-size:12.5px;color:var(--muted);line-height:1.4">Complete lighting setup pack ready for instant fixture replacement in homes and shops.</p>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <span style="font-size:15px;font-weight:800;color:var(--ink)">₹195</span>
+            <span style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:6px">₹260</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="APP.changeQty('gm-led-9w',1);APP.toast('Added GM 9W Bulb to order!','success')">+ Add Combo Items</button>
+        </div>
+      </div>
+
+      <!-- Combo 2: Plumbing Combo -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-sm)">
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <span style="font-size:10.5px;font-weight:700;background:rgba(16,185,129,0.15);color:#059669;padding:2px 8px;border-radius:12px">PLUMBING FIX</span>
+            <span style="font-size:11.5px;color:var(--muted)">Zero leakage pack</span>
+          </div>
+          <h3 style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px">🚰 Supreme CPVC Pipe + 90° Elbow + Solvent Cement</h3>
+          <p style="font-size:12.5px;color:var(--muted);line-height:1.4">High pressure hot &amp; cold water plumbing line essentials with industrial strength bonding.</p>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <span style="font-size:15px;font-weight:800;color:var(--ink)">₹490</span>
+            <span style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:6px">₹610</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="APP.changeQty('supreme-cpvc-1in',1);APP.toast('Added Supreme CPVC pipe to order!','success')">+ Add Combo Items</button>
+        </div>
+      </div>
+
+      <!-- Combo 3: Electrical Switchboard Combo -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-sm)">
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <span style="font-size:10.5px;font-weight:700;background:rgba(99,102,241,0.15);color:#4F46E5;padding:2px 8px;border-radius:12px">SWITCHBOARD KIT</span>
+            <span style="font-size:11.5px;color:var(--muted)">Contractor favourite</span>
+          </div>
+          <h3 style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px">⚡ GM Modular 6A Switches + 3-Pin Socket + Cover Plate</h3>
+          <p style="font-size:12.5px;color:var(--muted);line-height:1.4">Flame-retardant polycarbonate GM G-Home modular electrical accessories bundle.</p>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <span style="font-size:15px;font-weight:800;color:var(--ink)">₹380</span>
+            <span style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:6px">₹485</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="APP.changeQty('gm-switch-6a',2);APP.toast('Added 2x GM Switches to order!','success')">+ Add Combo Items</button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -443,6 +515,9 @@ function renderProducts() {
 }
 
 renderFeatured();
+if (typeof APP !== 'undefined' && typeof APP.renderPromoBanners === 'function') {
+  APP.renderPromoBanners("promoBannerWrap");
+}
 </script>
 </body>
 </html>

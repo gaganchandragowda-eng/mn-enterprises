@@ -315,7 +315,7 @@ h1.hero-title{font-size:clamp(22px,3.8vw,36px);font-weight:700;line-height:1.2;m
 .empty-state svg{width:48px;height:48px;margin:0 auto 14px;opacity:.35}
 
 /* ---- Product Details Modal (Amazon / Flipkart Style) ---------- */
-.product-detail-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:65;background:var(--surface);border-radius:var(--radius-xl);padding:24px;width:min(840px,95vw);max-height:88vh;overflow-y:auto;border:1px solid var(--line);box-shadow:var(--shadow-xl);display:none}
+.product-detail-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--surface);border-radius:var(--radius-xl);padding:24px;width:min(840px,95vw);max-height:88vh;overflow-y:auto;border:1px solid var(--line);box-shadow:var(--shadow-xl);display:none}
 .product-detail-modal.show{display:block;animation:fadeInUp .22s ease}
 .pdm-layout{display:grid;grid-template-columns:320px 1fr;gap:24px}
 @media(max-width:740px){
@@ -371,9 +371,9 @@ h1.hero-title{font-size:clamp(22px,3.8vw,36px);font-weight:700;line-height:1.2;m
 .search-wrap input:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,.15)}
 
 /* ---- Overlay / Drawer / Modal ------------------------------ */
-.overlay{position:fixed;inset:0;background:rgba(10,15,14,.58);z-index:60;display:none;backdrop-filter:blur(2px)}
+.overlay{position:fixed;inset:0;background:rgba(10,15,14,.68);z-index:998;display:none;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .overlay.show{display:block;animation:fadeIn .2s ease}
-.drawer{position:fixed;right:0;top:0;bottom:0;width:min(400px,100%);background:var(--surface);z-index:61;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;box-shadow:var(--shadow-xl)}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(400px,100%);background:var(--surface);z-index:1000;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;box-shadow:var(--shadow-xl)}
 .drawer.show{transform:translateX(0)}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--line);flex:none}
 .drawer-head h3{font-size:18px}
@@ -386,7 +386,7 @@ h1.hero-title{font-size:clamp(22px,3.8vw,36px);font-weight:700;line-height:1.2;m
 .empty-cart{color:var(--muted);font-size:13.5px;padding:48px 0;text-align:center}
 .empty-cart svg{width:42px;height:42px;margin:0 auto 12px;opacity:.35}
 
-.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:62;background:var(--surface);border-radius:var(--radius-xl);padding:26px;width:min(480px,94vw);max-height:88vh;overflow-y:auto;border:1px solid var(--line);box-shadow:var(--shadow-xl);display:none}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:var(--surface);border-radius:var(--radius-xl);padding:26px;width:min(480px,94vw);max-height:88vh;overflow-y:auto;border:1px solid var(--line);box-shadow:var(--shadow-xl);display:none}
 .modal.show{display:block;animation:fadeInUp .25s ease}
 .modal-close-btn{position:absolute;top:14px;right:14px;background:var(--surface-2);border:none;cursor:pointer;color:var(--muted);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center}
 .modal-close-btn:hover{background:var(--line)}
@@ -2136,29 +2136,59 @@ html, body {
 }
 
 @media (max-width: 768px) {
-  /* Mobile Header Container */
+  /* Mobile Header Container — Sticky so products scroll underneath */
   .site-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 900 !important;
     height: auto !important;
+    background: var(--surface) !important;
     padding-top: env(safe-area-inset-top, 0px) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06) !important;
   }
   .header-inner {
     height: 52px !important;
     padding: 0 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+  .brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+    flex: 1 !important;
   }
   .brand-mark {
     width: 32px !important;
     height: 32px !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
   }
   .brand-name {
-    font-size: 14px !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
     line-height: 1.15 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
   .brand-sub {
     font-size: 9.5px !important;
+    color: var(--muted) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
   .header-actions {
-    gap: 4px !important;
+    gap: 6px !important;
+    display: flex !important;
+    align-items: center !important;
   }
+  /* Remove top cart button and favorite (wishlist) button on mobile since they are in the bottom bar */
+  .header-actions #cartBtn,
+  .header-actions #wishlistBtn,
   .header-actions .user-btn {
     display: none !important;
   }
@@ -2269,12 +2299,12 @@ html, body {
     flex-shrink: 0 !important;
   }
 
-  /* Amazon App Style Horizontal Category Strip */
+  /* Amazon App Style Horizontal Category Strip — Clean & Spacious */
   .mobile-cat-pill-strip {
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
-    padding: 8px 12px 10px 12px !important;
+    gap: 14px !important;
+    padding: 10px 14px 12px 14px !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: none !important;
@@ -2292,7 +2322,7 @@ html, body {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 4px !important;
+    gap: 5px !important;
     text-decoration: none !important;
     color: var(--ink) !important;
     flex-shrink: 0 !important;
@@ -2303,35 +2333,90 @@ html, body {
     transform: scale(0.92) !important;
   }
   .mc-pill-icon {
-    width: 44px !important;
-    height: 44px !important;
+    width: 48px !important;
+    height: 48px !important;
     border-radius: 50% !important;
     background: var(--surface-2) !important;
-    border: 1px solid var(--line) !important;
+    border: 1.5px solid var(--line) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 20px !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+    font-size: 22px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
   }
   [data-theme="dark"] .mc-pill-icon {
     background: rgba(255, 255, 255, 0.06) !important;
-    border-color: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.14) !important;
   }
   .mc-pill span {
-    font-size: 10.5px !important;
+    font-size: 11px !important;
     font-weight: 600 !important;
-    color: var(--muted) !important;
+    color: var(--ink) !important;
     letter-spacing: -0.1px !important;
     white-space: nowrap !important;
   }
   .mc-pill.active .mc-pill-icon {
     border-color: var(--amber) !important;
-    background: rgba(217, 119, 6, 0.12) !important;
+    background: rgba(217, 119, 6, 0.14) !important;
   }
   .mc-pill.active span {
     color: var(--amber) !important;
     font-weight: 700 !important;
+  }
+
+  /* Amazon Festival & Sale Promo Cards Carousel */
+  .promo-banner-carousel {
+    display: flex !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    scrollbar-width: none !important;
+    padding: 10px 14px 14px 14px !important;
+    margin-bottom: 8px !important;
+  }
+  .promo-banner-carousel::-webkit-scrollbar {
+    display: none !important;
+  }
+  .promo-banner-card {
+    flex: 0 0 88% !important;
+    scroll-snap-align: center !important;
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    text-decoration: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 104px !important;
+  }
+  .pbc-badge {
+    align-self: flex-start !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    padding: 2px 7px !important;
+    border-radius: 4px !important;
+    background: var(--amber) !important;
+    color: var(--amber-ink) !important;
+    margin-bottom: 6px !important;
+  }
+  .pbc-title {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    margin-bottom: 3px !important;
+    color: #FFFFFF !important;
+  }
+  .pbc-sub {
+    font-size: 11.5px !important;
+    opacity: 0.85 !important;
+    line-height: 1.3 !important;
   }
 
   /* Amazon App Style Side Drawer Navigation */
