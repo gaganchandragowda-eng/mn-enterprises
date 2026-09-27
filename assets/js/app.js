@@ -295,6 +295,32 @@ const APP = {
           </button>
         </div>
       </div>
+
+      <!-- Amazon App Style Mobile Search Bar -->
+      <div class="mobile-app-search-wrap">
+        <form class="mobile-app-search-box" action="${base}shop.html" method="GET" onsubmit="if(!this.search.value.trim()){window.location.href='${base}shop.html';return false;}">
+          <svg class="mas-icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="search" name="search" class="mas-input" placeholder="Search M N Enterprises..." autocomplete="off" aria-label="Search products">
+          <button type="button" class="mas-icon-btn" onclick="APP.openPhotoModal()" title="Identify by Photo" aria-label="Photo search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Amazon App Style Mobile Deliver To Strip -->
+      <div class="mobile-deliver-strip" onclick="APP.openAskExpertModal()">
+        <svg class="mds-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span class="mds-text">Deliver to <b>Bangarapet 563114</b></span>
+        <svg class="mds-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
     </header>
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
       ${links.map(l=>`<a href="${base}${l.href}" class="${l.id===page?'active':''}">${l.label}</a>`).join("")}
@@ -357,19 +383,23 @@ const APP = {
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.86L2.05 22l5.36-1.4a9.87 9.87 0 004.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.81 2 .88 2.15.07.14.12.31.02.5-.1.19-.15.31-.3.48-.14.17-.3.37-.43.5-.14.14-.29.29-.13.57.17.28.75 1.24 1.6 2 1.11.99 2.04 1.29 2.32 1.44.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.28.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.68-.16 1.36z"/></svg>
       </button>
 
-      <!-- Native Mobile App Bottom Navigation Bar -->
+      <!-- Amazon App Style Symmetrical 5-Icon Bottom Navigation Bar -->
       <nav class="mobile-bottom-bar" id="mobileBottomBar" aria-label="Mobile Navigation">
         <a href="${base}index.html" class="mbb-item ${page==='home'?'active':''}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
+          <div class="mbb-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
           <span>Home</span>
         </a>
-        <a href="${base}shop.html" class="mbb-item ${page==='shop'?'active':''}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-          </svg>
-          <span>Shop</span>
+        <a href="${base}${user ? 'account.html' : 'login.html'}" class="mbb-item ${page==='account'||page==='login'?'active':''}">
+          <div class="mbb-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span>You</span>
         </a>
         <button type="button" class="mbb-item mbb-cart-btn" onclick="openCart()" aria-label="View Cart">
           <div class="mbb-icon-wrap">
@@ -381,18 +411,23 @@ const APP = {
           </div>
           <span>Cart</span>
         </button>
-        <a href="${base}account.html#orders" class="mbb-item ${page==='account'?'active':''}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
-          </svg>
-          <span>Orders</span>
+        <a href="${base}shop.html" class="mbb-item ${page==='shop'?'active':''}">
+          <div class="mbb-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
+            </svg>
+          </div>
+          <span>Shop</span>
         </a>
-        <a href="${base}${user ? 'account.html' : 'login.html'}" class="mbb-item ${page==='login'?'active':''}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-          <span>${user ? 'Account' : 'Sign in'}</span>
-        </a>
+        <button type="button" class="mbb-item" onclick="const m=document.getElementById('mobileNav');m&&m.classList.toggle('show')" aria-label="Menu">
+          <div class="mbb-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+            </svg>
+          </div>
+          <span>Menu</span>
+        </button>
       </nav>
 
       <!-- Order Confirmation Success Modal with Bill Image Preview -->
