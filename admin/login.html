@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-page="admin-login" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Sign In — M N Enterprises</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/main.css?v=4">
+<style>
+body {
+  background: #0B0F19;
+  color: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 24px 16px;
+  margin: 0;
+  font-family: var(--font-body);
+}
+.admin-login-wrap {
+  width: 100%;
+  max-width: 420px;
+}
+.admin-login-card {
+  background: #131C2E;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+.admin-login-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #D97706, #F59E0B, #D97706);
+}
+.admin-badge-hdr {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(217, 119, 6, 0.15);
+  border: 1px solid rgba(217, 119, 6, 0.35);
+  color: #F59E0B;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.admin-login-hdr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.admin-logo-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #D97706;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
+}
+.admin-title-box h1 {
+  font-size: 19px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  font-family: var(--font-head);
+}
+.admin-title-box p {
+  font-size: 12.5px;
+  color: #94A3B8;
+  margin: 3px 0 0;
+}
+.form-field {
+  margin-bottom: 18px;
+}
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #CBD5E1;
+  margin-bottom: 7px;
+}
+.form-field input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  background: #1E2A42;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  transition: border-color .15s, box-shadow .15s;
+}
+.form-field input:focus {
+  outline: none;
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+.pass-wrap {
+  position: relative;
+}
+.pass-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 12px;
+}
+.pass-toggle-btn:hover {
+  color: #FFFFFF;
+}
+.btn-admin-submit {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: #D97706;
+  color: #FFFFFF;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  transition: background .15s, transform .1s;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
+}
+.btn-admin-submit:hover {
+  background: #B45309;
+}
+.btn-admin-submit:active {
+  transform: scale(0.98);
+}
+.err-alert {
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: #FCA5A5;
+  margin-top: 12px;
+  display: none;
+}
+.admin-card-foot {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #64748B;
+}
+.admin-card-foot a {
+  color: #94A3B8;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color .15s;
+}
+.admin-card-foot a:hover {
+  color: #F59E0B;
+}
+@media (max-width: 480px) {
+  .admin-login-card {
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="admin-login-wrap">
+  <div class="admin-login-card">
+    <div class="admin-badge-hdr">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Admin &amp; Staff Access
+    </div>
+
+    <div class="admin-login-hdr">
+      <div class="admin-logo-box">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 7l3 3-8 8H6v-3l8-8z"/><path d="M17 4l3 3"/>
+        </svg>
+      </div>
+      <div class="admin-title-box">
+        <h1>M N Enterprises</h1>
+        <p>Store Management &amp; Billing Panel</p>
+      </div>
+    </div>
+
+    <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+      <div class="form-field">
+        <label for="admUser">Admin Username</label>
+        <input id="admUser" type="text" required placeholder="admin" autocomplete="username" autofocus>
+      </div>
+
+      <div class="form-field">
+        <label for="admPass">Admin Password</label>
+        <div class="pass-wrap">
+          <input id="admPass" type="password" required placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="pass-toggle-btn" onclick="togglePassVisibility()">Show</button>
+        </div>
+      </div>
+
+      <div class="err-alert" id="adminLoginErr"></div>
+
+      <button type="submit" class="btn-admin-submit" id="submitBtn">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Sign in to Admin Dashboard
+      </button>
+    </form>
+
+    <div class="admin-card-foot">
+      <span>Authorized personnel only</span>
+      <a href="../index.html">← Customer Store</a>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK & App Scripts -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="../assets/js/firebase-config.js"></script>
+<script src="../assets/js/products.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/firebase-db.js"></script>
+<script>
+// If already logged in as Admin, redirect straight to dashboard
+if (AUTH.isAdminLoggedIn()) {
+  window.location.replace("index.html");
+}
+
+function togglePassVisibility() {
+  const inp = document.getElementById("admPass");
+  const btn = event.target;
+  if (inp.type === "password") {
+    inp.type = "text";
+    btn.textContent = "Hide";
+  } else {
+    inp.type = "password";
+    btn.textContent = "Show";
+  }
+}
+
+async function handleAdminLogin(e) {
+  e.preventDefault();
+  const u = document.getElementById("admUser").value.trim();
+  const p = document.getElementById("admPass").value;
+  const errEl = document.getElementById("adminLoginErr");
+  const btn = document.getElementById("submitBtn");
+
+  errEl.style.display = "none";
+  btn.disabled = true;
+  btn.innerHTML = `<span style="opacity:0.8">Verifying…</span>`;
+
+  try {
+    let res = null;
+    if (typeof MN_DB !== "undefined" && MN_DB.auth) {
+      res = await MN_DB.auth.signInAdmin(u, p);
+    } else {
+      res = AUTH.loginAdmin(u, p);
+    }
+
+    if (res && res.ok) {
+      btn.innerHTML = `✓ Access Granted`;
+      btn.style.background = "#16A34A";
+      setTimeout(() => {
+        window.location.replace("index.html");
+      }, 300);
+    } else {
+      errEl.textContent = (res && res.msg) || "Invalid admin username or password.";
+      errEl.style.display = "block";
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Sign in to Admin Dashboard`;
+    }
+  } catch(err) {
+    errEl.textContent = "Sign-in error: " + err.message;
+    errEl.style.display = "block";
+    btn.disabled = false;
+    btn.innerHTML = `Sign in to Admin Dashboard`;
+  }
+}
+</script>
+</body>
+</html>

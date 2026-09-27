@@ -354,25 +354,15 @@
 <script>
 APP.init();
 
-// Protect page
-if (!AUTH.requireAuth("login.html")) throw new Error("Not logged in");
+// Protect page - Customer only
+if (!AUTH.requireCustomer("login.html")) throw new Error("Not logged in as customer");
 
-const user = AUTH.getSession();
+const user = AUTH.getCustomerSession();
 
 // Populate header
 document.getElementById("profileAv").textContent    = (user.name||"U")[0].toUpperCase();
 document.getElementById("profileName").textContent  = user.name || "Customer";
 document.getElementById("profileEmail").textContent = user.email || "";
-
-// Show admin link if admin
-if (user.role==="admin") {
-  const nav = document.querySelector(".account-nav");
-  const adminLink = document.createElement("a");
-  adminLink.href = "admin/index.html";
-  adminLink.style.color = "var(--amber-dark)";
-  adminLink.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin Dashboard`;
-  nav.insertBefore(adminLink, nav.firstChild);
-}
 
 // Populate profile form
 if (document.getElementById("p-name"))  document.getElementById("p-name").value  = user.name||"";

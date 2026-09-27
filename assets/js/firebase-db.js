@@ -219,25 +219,24 @@ const MN_DB = (() => {
       if (!username || !password)
         return { ok: false, msg: "Username and password are required." };
 
+      const adminSession = { userId: "admin_root", name: "Store Administrator", role: "admin", loggedInAt: new Date().toISOString() };
+
       if (USE_FIREBASE()) {
-        // Admin auth via a special Firestore doc with hashed check
         try {
           const adminDoc = await db().collection("config").doc("admin").get();
           const stored   = adminDoc.exists ? adminDoc.data() : {};
           const uOk  = username === (stored.username || _AUTH_ADMIN_USER);
           const pOk  = password === (stored.password || _AUTH_ADMIN_PASS);
           if (uOk && pOk) {
-            const session = { userId: "admin_root", name: "Admin", role: "admin", loggedInAt: new Date().toISOString() };
-            LS.set("mn_session", session);
+            LS.set("mn_admin_session", adminSession);
             return { ok: true };
           }
           return { ok: false, msg: "Incorrect admin credentials." };
         } catch(e) {
-          // Fallback to hardcoded creds if Firestore fails
           const uOk = username === _AUTH_ADMIN_USER;
           const pOk = password === _AUTH_ADMIN_PASS;
           if (uOk && pOk) {
-            LS.set("mn_session", { userId: "admin_root", name: "Admin", role: "admin", loggedInAt: new Date().toISOString() });
+            LS.set("mn_admin_session", adminSession);
             return { ok: true };
           }
           return { ok: false, msg: "Incorrect admin credentials." };
@@ -245,7 +244,7 @@ const MN_DB = (() => {
       } else {
         const ap  = localStorage.getItem("mn_admin_pass") || _AUTH_ADMIN_PASS;
         if (username === _AUTH_ADMIN_USER && password === ap) {
-          LS.set("mn_session", { userId: "admin_root", name: "Admin", role: "admin", loggedInAt: new Date().toISOString() });
+          LS.set("mn_admin_session", adminSession);
           return { ok: true };
         }
         return { ok: false, msg: "Incorrect admin credentials." };
@@ -254,17 +253,35 @@ const MN_DB = (() => {
 
     /* Sign out */
     async signOut() {
-      if (USE_FIREBASE()) {
-        try { await auth().signOut(); } catch(e) {}
+      const isAdm = document.documentElement.dataset.page === "admin";
+      if (isAdm) {
+        LS.del("mn_admin_session");
+      } else {
+        if (USE_FIREBASE()) {
+          try { await auth().signOut(); } catch(e) {}
+        }
+        LS.del("mn_customer_session");
+        const s = LS.get("mn_session", null);
+        if (s && s.role !== "admin") LS.del("mn_session");
       }
-      LS.del("mn_session");
     },
 
-    /* Get current session (sync, from localStorage) */
-    currentUser() { return LS.get("mn_session", null); },
-    getSession()  { return LS.get("mn_session", null); },
-    isLoggedIn()  { return !!LS.get("mn_session", null); },
-    isAdmin()     { const s = LS.get("mn_session", null); return !!(s && s.role === "admin"); },
+    /* Get current session (sync, context-aware) */
+    currentUser() {
+      const isAdm = document.documentElement.dataset.page === "admin";
+      if (isAdm) return LS.get("mn_admin_session", null);
+      return LS.get("mn_customer_session", null) || LS.get("mn_session", null);
+    },
+    getSession() {
+      return this.currentUser();
+    },
+    isLoggedIn() {
+      return !!this.currentUser();
+    },
+    isAdmin() {
+      const s = LS.get("mn_admin_session", null);
+      return !!(s && s.role === "admin");
+    },
 
     /* Listen for Firebase auth state changes */
     onUserChange(callback) {
@@ -278,21 +295,20 @@ const MN_DB = (() => {
             } catch(e){}
             const session = {
               userId: fbUser.uid, name: fbUser.displayName || fbUser.email,
-              email: fbUser.email, role, loggedInAt: new Date().toISOString()
+              email: fbUser.email, role: "customer", loggedInAt: new Date().toISOString()
             };
+            LS.set("mn_customer_session", session);
             LS.set("mn_session", session);
             callback(session);
           } else {
-            // Don't clear admin sessions managed separately
+            LS.del("mn_customer_session");
             const s = LS.get("mn_session", null);
-            if (s && s.role !== "admin") {
-              LS.del("mn_session");
-              callback(null);
-            }
+            if (s && s.role !== "admin") LS.del("mn_session");
+            callback(null);
           }
         });
       }
-      callback(LS.get("mn_session", null));
+      callback(this.currentUser());
       return () => {};
     },
 
@@ -303,11 +319,18 @@ const MN_DB = (() => {
     logout() {
       this.signOut().then(() => {
         const isAdmin = document.documentElement.dataset.page === "admin";
-        window.location.href = isAdmin ? "../login.html" : "login.html";
+        window.location.href = isAdmin ? "login.html" : "login.html";
       });
     },
     requireAuth(redirect="login.html")  { if (!this.isLoggedIn()) { window.location.href = redirect; return false; } return true; },
-    requireAdmin(redirect="login.html") { if (!this.isAdmin())    { window.location.href = redirect; return false; } return true; }
+    requireAdmin(redirect="admin/login.html") {
+      if (!this.isAdmin()) {
+        const isAdm = document.documentElement.dataset.page === "admin";
+        window.location.href = isAdm ? "login.html" : redirect;
+        return false;
+      }
+      return true;
+    }
   };
 
   /* ================================================================

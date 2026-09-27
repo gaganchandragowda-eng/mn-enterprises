@@ -1877,20 +1877,35 @@ html, body {
 }
 
 /* 7. Drawer and Modals Mobile Adaptations */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .drawer {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     width: 100% !important;
+    max-height: 88vh !important;
+    max-height: 88dvh !important;
+    border-radius: 20px 20px 0 0 !important;
+    transform: translateY(100%) !important;
+    border-top: 1px solid var(--line) !important;
+    box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.28) !important;
+  }
+  .drawer.open {
+    transform: translateY(0) !important;
   }
   .modal {
     width: 95vw !important;
     padding: 20px 16px !important;
     max-height: 90vh !important;
     max-height: 90dvh !important;
+    border-radius: 18px !important;
   }
   .customer-modal {
     width: 96% !important;
     max-height: 92vh !important;
     max-height: 92dvh !important;
+    border-radius: 18px !important;
   }
   .cmodal-header {
     padding: 12px 16px !important;
@@ -1899,6 +1914,296 @@ html, body {
     padding: 14px 16px !important;
   }
 }
+
+/* ================================================================
+   8. DEDICATED ADMIN TOP BAR STYLES
+   ================================================================ */
+.admin-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 64px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+[data-theme="dark"] .admin-top-bar {
+  background: #131C2E !important;
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+.atb-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.atb-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--amber);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35);
+  flex: none;
+}
+.atb-logo svg {
+  width: 20px;
+  height: 20px;
+}
+.atb-brand {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.atb-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+.atb-live-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #16A34A;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.atb-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.atb-store-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  transition: all .15s;
+}
+.atb-store-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+.atb-admin-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 5px;
+  border-radius: 100px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.atb-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--amber);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+.atb-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  color: #DC2626;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all .15s;
+}
+.atb-logout-btn:hover {
+  background: #DC2626;
+  color: #fff;
+}
+@media (max-width: 640px) {
+  .admin-top-bar {
+    padding: 0 12px;
+    height: 56px;
+  }
+  .atb-sub, .atb-live-badge {
+    display: none;
+  }
+  .atb-admin-pill {
+    display: none;
+  }
+}
+
+/* ================================================================
+   9. NATIVE MOBILE APP BOTTOM NAVIGATION BAR
+   App-like experience on phones & mobile browsers
+   ================================================================ */
+.mobile-bottom-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-bar {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(62px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-top: 1px solid var(--line) !important;
+    z-index: 950 !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08) !important;
+  }
+  [data-theme="dark"] .mobile-bottom-bar {
+    background: rgba(19, 28, 46, 0.94) !important;
+    border-top-color: rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.45) !important;
+  }
+  .mbb-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    flex: 1 !important;
+    height: 100% !important;
+    color: var(--muted) !important;
+    text-decoration: none !important;
+    border: none !important;
+    background: transparent !important;
+    cursor: pointer !important;
+    font-family: var(--font-body) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.2px !important;
+    transition: color 0.15s, transform 0.1s !important;
+    -webkit-tap-highlight-color: transparent !important;
+    padding: 4px 0 !important;
+  }
+  .mbb-item:active {
+    transform: scale(0.92) !important;
+  }
+  .mbb-item svg {
+    width: 22px !important;
+    height: 22px !important;
+    transition: transform 0.15s, stroke 0.15s !important;
+  }
+  .mbb-item.active {
+    color: var(--amber) !important;
+  }
+  .mbb-item.active svg {
+    stroke: var(--amber) !important;
+    transform: translateY(-1px) !important;
+  }
+  .mbb-icon-wrap {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .mbb-badge {
+    position: absolute !important;
+    top: -5px !important;
+    right: -9px !important;
+    background: var(--amber) !important;
+    color: var(--amber-ink) !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    min-width: 17px !important;
+    height: 17px !important;
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 4px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+  }
+  .mbb-badge.hidden {
+    display: none !important;
+  }
+
+  /* Extra bottom padding on customer pages so bottom nav does not obscure buttons or footers */
+  body:not([data-page="admin"]) {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* WhatsApp button and Sticky Cart Bar sit cleanly above the mobile bottom bar */
+  .wa-float {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 14px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .cartbar {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 10px !important;
+    right: 10px !important;
+    border-radius: 14px !important;
+  }
+
+  /* Mobile App Top Header optimization */
+  .site-header {
+    height: 58px !important;
+  }
+  .header-inner {
+    padding: 0 14px !important;
+  }
+  .brand-mark {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .brand-name {
+    font-size: 14px !important;
+  }
+  .brand-sub {
+    font-size: 10px !important;
+  }
+  /* In mobile view, hide the desktop user-btn in top header because Account is in bottom bar */
+  .header-actions .user-btn {
+    display: none !important;
+  }
+}
+
+/* ================================================================
+   10. DESKTOP VIEW PRESERVATION
+   Ensures desktop and "Desktop site" mode display pristine layout
+   ================================================================ */
+@media (min-width: 769px) {
+  .mobile-bottom-bar {
+    display: none !important;
+  }
+  body:not([data-page="admin"]) {
+    padding-bottom: 0 !important;
+  }
+}
+
 
 
 

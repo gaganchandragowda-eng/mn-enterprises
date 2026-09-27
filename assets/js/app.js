@@ -224,26 +224,28 @@ const APP = {
     APP.toast(delta>0?"Added to order":"Removed from order", "success", 1600);
   },
   _updateCartUI() {
-    const n=this.cartCount();
-    const badge=document.getElementById("cartBadge");
-    if(badge){ badge.textContent=n; badge.classList.toggle("hidden",n===0); }
-    const bar=document.getElementById("cartBar");
-    if(bar){
-      bar.classList.toggle("show", n>0);
-      const ce=document.getElementById("cartBarCount"), te=document.getElementById("cartBarTotal");
-      if(ce) ce.textContent=n+(n===1?" item":" items");
-      if(te) te.textContent=this.inr(this.cartTotal());
+    const n = this.cartCount();
+    const badge = document.getElementById("cartBadge");
+    if (badge) { badge.textContent = n; badge.classList.toggle("hidden", n === 0); }
+    const mbbBadge = document.getElementById("mbbCartBadge");
+    if (mbbBadge) { mbbBadge.textContent = n; mbbBadge.classList.toggle("hidden", n === 0); }
+    const bar = document.getElementById("cartBar");
+    if (bar) {
+      bar.classList.toggle("show", n > 0);
+      const ce = document.getElementById("cartBarCount"), te = document.getElementById("cartBarTotal");
+      if (ce) ce.textContent = n + (n === 1 ? " item" : " items");
+      if (te) te.textContent = this.inr(this.cartTotal());
     }
   },
 
   /* ---- Header injection ---- */
   injectHeader() {
     const el = document.getElementById("app-header");
-    if(!el) return;
-    const page = document.documentElement.dataset.page||"";
-    const isAdmin = page==="admin";
-    const base = isAdmin ? "../" : "";
-    const user = AUTH.getSession();
+    if (!el) return;
+    const page = document.documentElement.dataset.page || "";
+    if (page === "admin") return; // Admin panel has its own dedicated top bar
+    const base = "";
+    const user = AUTH.getCustomerSession();
     const links = [
       {href:"index.html",  id:"home",    label:"Home"},
       {href:"shop.html",   id:"shop",    label:"Shop"},
@@ -266,7 +268,6 @@ const APP = {
         </a>
         <nav class="nav-links" aria-label="Main navigation">
           ${links.map(l=>`<a href="${base}${l.href}" class="${l.id===page?'active':''}">${l.label}</a>`).join("")}
-          ${isAdmin ? `<a href="${base}admin/index.html" class="active" style="color:var(--amber)">Admin</a>` : ""}
         </nav>
         <div class="header-actions">
           <button class="iconbtn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
@@ -277,9 +278,9 @@ const APP = {
             <span class="badge hidden" id="wishlistBadge">0</span>
           </button>
           ${user ? `
-            <a href="${base}${user.role==="admin" ? "admin/index.html" : "account.html"}" class="user-btn" title="${user.role==="admin" ? "Admin Dashboard" : "My account"}">
-              <div class="user-avatar" style="${user.role==="admin" ? "background:var(--amber);color:var(--amber-ink)" : ""}">${(user.name||"U")[0].toUpperCase()}</div>
-              <span>${user.role==="admin" ? "Admin Panel" : (user.name||"Account")}</span>
+            <a href="${base}account.html" class="user-btn" title="My account">
+              <div class="user-avatar">${(user.name||"U")[0].toUpperCase()}</div>
+              <span>${user.name||"Account"}</span>
             </a>
           ` : `<a href="${base}login.html" class="btn btn-ghost btn-sm">Sign in</a>`}
           <button class="iconbtn" id="cartBtn" aria-label="Open cart" title="View order">
@@ -304,9 +305,7 @@ const APP = {
       <a href="#" onclick="APP.openAskExpertModal();return false;">👨🔧 Ask Shop Expert</a>
       <div class="mobile-nav-sep"></div>
       ${user
-        ? (user.role==="admin"
-            ? `<a href="${base}admin/index.html">Admin Dashboard</a><a href="#" id="mobileLogout">Sign out</a>`
-            : `<a href="${base}account.html">My Account</a><a href="#" id="mobileLogout">Sign out</a>`)
+        ? `<a href="${base}account.html">My Account</a><a href="#" id="mobileLogout">Sign out</a>`
         : `<a href="${base}login.html">Sign in / Register</a>`}
     </nav>`;
 
@@ -321,21 +320,28 @@ const APP = {
     const cartBtn = document.getElementById("cartBtn");
     cartBtn && (cartBtn.onclick = openCart);
     const mLogout = document.getElementById("mobileLogout");
-    mLogout && (mLogout.onclick = (e) => { e.preventDefault(); AUTH.logout(); });
+    mLogout && (mLogout.onclick = (e) => { e.preventDefault(); AUTH.logoutCustomer(); });
   },
 
   /* ---- Shared UI ---- */
   injectSharedUI() {
     const el = document.getElementById("shared-ui");
     if (!el) return;
+    const page = document.documentElement.dataset.page || "";
+    if (page === "admin") return;
+    const base = "";
+    const user = AUTH.getCustomerSession();
+
     el.innerHTML = `
       <div class="overlay" id="overlay" onclick="closeAll()"></div>
       <div class="drawer" id="cartDrawer" role="dialog" aria-label="Your order">
         <div class="drawer-head">
-          <h3>Your order</h3>
-          <button class="iconbtn" onclick="closeAll()" aria-label="Close cart">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
+          <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+            <h3>Your order</h3>
+            <button class="iconbtn" onclick="closeAll()" aria-label="Close cart">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
         </div>
         <div class="drawer-body" id="cartBody"></div>
         <div class="drawer-foot" id="cartFoot"></div>
@@ -350,6 +356,44 @@ const APP = {
       <button class="wa-float" onclick="window.open('${APP.WA_HREF}','_blank')" title="Chat on WhatsApp" aria-label="WhatsApp">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.86L2.05 22l5.36-1.4a9.87 9.87 0 004.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.81 2 .88 2.15.07.14.12.31.02.5-.1.19-.15.31-.3.48-.14.17-.3.37-.43.5-.14.14-.29.29-.13.57.17.28.75 1.24 1.6 2 1.11.99 2.04 1.29 2.32 1.44.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.28.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.68-.16 1.36z"/></svg>
       </button>
+
+      <!-- Native Mobile App Bottom Navigation Bar -->
+      <nav class="mobile-bottom-bar" id="mobileBottomBar" aria-label="Mobile Navigation">
+        <a href="${base}index.html" class="mbb-item ${page==='home'?'active':''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Home</span>
+        </a>
+        <a href="${base}shop.html" class="mbb-item ${page==='shop'?'active':''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          <span>Shop</span>
+        </a>
+        <button type="button" class="mbb-item mbb-cart-btn" onclick="openCart()" aria-label="View Cart">
+          <div class="mbb-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
+              <path d="M2 3h2l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.6L21 7H6"/>
+            </svg>
+            <span class="mbb-badge hidden" id="mbbCartBadge">0</span>
+          </div>
+          <span>Cart</span>
+        </button>
+        <a href="${base}account.html#orders" class="mbb-item ${page==='account'?'active':''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+          </svg>
+          <span>Orders</span>
+        </a>
+        <a href="${base}${user ? 'account.html' : 'login.html'}" class="mbb-item ${page==='login'?'active':''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>${user ? 'Account' : 'Sign in'}</span>
+        </a>
+      </nav>
 
       <!-- Order Confirmation Success Modal with Bill Image Preview -->
       <div class="modal" id="successModal" role="dialog" aria-label="Order sent" style="max-width:440px">
