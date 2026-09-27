@@ -2382,23 +2382,24 @@ html, body {
     flex: 0 0 92% !important;
     scroll-snap-align: center !important;
     border-radius: 16px !important;
-    padding: 16px 18px !important;
+    padding: 14px 16px !important;
     color: #FFFFFF !important;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
     position: relative !important;
     overflow: hidden !important;
     text-decoration: none !important;
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
+    align-items: center !important;
     justify-content: space-between !important;
-    min-height: 118px !important;
+    min-height: 112px !important;
     transition: transform 0.15s ease !important;
   }
   .promo-banner-card::after {
     content: "" !important;
     position: absolute !important;
     inset: 0 !important;
-    background: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 100%) !important;
+    background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.05) 100%) !important;
     pointer-events: none !important;
     z-index: 1 !important;
   }

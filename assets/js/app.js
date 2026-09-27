@@ -845,7 +845,7 @@ const APP = {
     this.setDeliveryLocation(val);
   },
 
-  /* ---- Festival & Sale Promo Banners Controller ---- */
+  /* ---- Festival & Sale Promo Banners Controller (Amazon Style with Product Images) ---- */
   getPromoBanners() {
     try {
       const stored = JSON.parse(localStorage.getItem("mn_promo_banners") || "[]");
@@ -854,29 +854,35 @@ const APP = {
     return [
       {
         id: "b1",
-        badge: "FESTIVE SALE",
-        title: "⚡ Ugadi Maha Sale — Flat 35% OFF",
-        sub: "GM Modular Switches & KEI Copper Wires at Counter Prices",
+        badge: "⚡ 35% OFF • FESTIVAL SALE",
+        title: "Ugadi Maha Sale — Flat 35% OFF",
+        sub: "GM Modular Switches & KEI 90m Copper Wires at Counter Rates",
         link: "shop.html?cat=electrical",
         bg: "linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)",
+        img: "assets/img/products/gm-led-bulb-9w.jpg",
+        off: "35% OFF",
         active: true
       },
       {
         id: "b2",
-        badge: "WHOLESALE COMBO",
-        title: "🚰 Supreme & Finolex Pipe Mega Offer",
-        sub: "CPVC & PVC Pipes with Solvent & Fittings Free Delivery",
+        badge: "🚰 40% OFF • FESTIVE SALE",
+        title: "Supreme & Finolex Pipe Combo Offer",
+        sub: "CPVC & PVC Pipes with Solvent & Fittings Free Delivery in Bangarapet",
         link: "shop.html?cat=plumbing",
         bg: "linear-gradient(135deg, #064E3B 0%, #047857 100%)",
+        img: "assets/img/products/supreme-cpvc-pipe-1in.jpg",
+        off: "40% OFF",
         active: true
       },
       {
         id: "b3",
-        badge: "SECURITY PACK",
-        title: "📹 CCTV 4-Camera HD Setup Combo",
-        sub: "Complete Dome + DVR + 500GB HDD Security Package",
+        badge: "📹 30% OFF • SECURITY PACK",
+        title: "HD CCTV 4-Camera Security Pack",
+        sub: "Complete Dome + DVR + 500GB HDD Security Package with Store Guarantee",
         link: "shop.html?cat=cctv",
         bg: "linear-gradient(135deg, #701A75 0%, #86198F 100%)",
+        img: "assets/img/products/hikvision-2mp-dome.jpg",
+        off: "30% OFF",
         active: true
       }
     ];
@@ -897,9 +903,21 @@ const APP = {
       <div class="promo-banner-carousel">
         ${banners.map(b => `
           <a href="${b.link || 'shop.html'}" class="promo-banner-card" style="background:${b.bg || 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)'} !important">
-            <span class="pbc-badge">${b.badge || 'SPECIAL DEAL'}</span>
-            <div class="pbc-title">${b.title}</div>
-            <div class="pbc-sub">${b.sub}</div>
+            <div style="flex:1;min-width:0;padding-right:10px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <span class="pbc-badge">${b.badge || 'FESTIVAL SALE'}</span>
+                <div class="pbc-title">${b.title}</div>
+                <div class="pbc-sub">${b.sub}</div>
+              </div>
+              <div style="margin-top:8px;display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:var(--amber)">
+                Shop Deals →
+              </div>
+            </div>
+            ${b.img ? `
+            <div style="flex:none;position:relative;width:90px;height:90px;background:#ffffff;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:6px;box-shadow:0 4px 12px rgba(0,0,0,0.25)">
+              <img src="${b.img}" alt="${b.title}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px" onerror="this.onerror=null;this.src='assets/img/products/gm-led-bulb-9w.jpg'">
+              ${b.off ? `<span style="position:absolute;bottom:-4px;right:-4px;background:#EF4444;color:#fff;font-size:9px;font-weight:800;padding:2px 5px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.3)">${b.off}</span>` : ''}
+            </div>` : ''}
           </a>
         `).join("")}
       </div>
@@ -1348,119 +1366,218 @@ const APP = {
     window.open("https://wa.me/" + this.WA + "?text=" + encodeURIComponent(msg), "_blank");
   },
 
-  /* ---- Cart Drawer ---- */
+  /* ---- Cart & Checkout Drawer (Amazon Mobile Experience) ---- */
+  cartStep: "cart", // "cart" or "checkout"
+
+  proceedToBuy() {
+    const cart = this.getCart();
+    if (!Object.keys(cart).length) {
+      this.toast("Your cart is empty", "error");
+      return;
+    }
+    this.cartStep = "checkout";
+    this.renderCartDrawer();
+  },
+
+  backToCart() {
+    this.cartStep = "cart";
+    this.renderCartDrawer();
+  },
+
   renderCartDrawer() {
     const body = document.getElementById("cartBody");
     const foot = document.getElementById("cartFoot");
     if (!body) return;
-    const cart=this.getCart(), prods=PRODUCTS.getAll();
-    const items=Object.entries(cart).map(([id,qty])=>({p:prods.find(x=>x.id===id),qty})).filter(x=>x.p);
+    const cart = this.getCart(), prods = PRODUCTS.getAll();
+    const items = Object.entries(cart).map(([id, qty]) => ({ p: prods.find(x => x.id === id), qty })).filter(x => x.p);
+    
     if (!items.length) {
-      body.innerHTML=`<div class="empty-cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M2 3h2l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.6L21 7H6"/></svg><p style="font-weight:600">Your order is empty</p><p style="margin-top:4px">Add products from the catalogue.</p></div>`;
-      if(foot) foot.innerHTML="";
+      this.cartStep = "cart";
+      body.innerHTML = `
+        <div class="empty-cart" style="text-align:center;padding:40px 16px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:56px;height:56px;color:var(--muted);margin-bottom:12px"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M2 3h2l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.6L21 7H6"/></svg>
+          <h3 style="font-size:16px;font-weight:700;color:var(--ink)">Your Amazon Cart is empty</h3>
+          <p style="font-size:13px;color:var(--muted);margin:6px 0 16px">Explore our wholesale electrical and plumbing catalogue.</p>
+          <a href="shop.html" class="btn btn-primary" onclick="closeAll()" style="justify-content:center">Shop Today's Deals</a>
+        </div>`;
+      if (foot) foot.innerHTML = "";
       return;
     }
-    body.innerHTML=items.map(({p,qty})=>`
-      <div class="cart-item" style="gap:10px">
-        <img src="${p.img||'assets/img/products/gm-led-bulb-9w.jpg'}" alt="${p.name}" style="width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);flex:none" onerror="this.onerror=null;this.src='assets/img/products/gm-led-bulb-9w.jpg'">
-        <div style="flex:1;min-width:0">
-          <div class="ci-name">${p.name}</div>
-          <div class="ci-sub">${APP.inr(p.price)} × ${qty} = <strong>${APP.inr(p.price*qty)}</strong></div>
-        </div>
-        <div class="stepper">
-          <button onclick="APP.changeQty('${p.id}',-1)">−</button>
-          <span>${qty}</span>
-          <button onclick="APP.changeQty('${p.id}',1)">+</button>
-        </div>
-      </div>`).join("");
 
+    const totalItems = items.reduce((sum, x) => sum + x.qty, 0);
+    const subTot = this.cartTotal();
+    const gstRate = this.getGSTRate();
+    const gstData = this.calcGST(subTot, gstRate);
     const userObj = (typeof AUTH !== "undefined" && typeof AUTH.currentUser === "function") ? AUTH.currentUser() : ((typeof AUTH !== "undefined" && typeof AUTH.getSession === "function") ? AUTH.getSession() : null);
     const savedName = localStorage.getItem("mn_customer_name") || userObj?.name || "";
     const savedPhone = localStorage.getItem("mn_customer_phone") || userObj?.phone || "";
+    const deliveryLoc = localStorage.getItem("mn_delivery_loc") || "Bangarapet Town (563114)";
 
-    const gstRate = this.getGSTRate();
-    const subTot = this.cartTotal();
-    const gstData = this.calcGST(subTot, gstRate);
+    /* ==========================================================
+       VIEW 1: AMAZON CART REVIEW
+       ========================================================== */
+    if (this.cartStep === "cart") {
+      body.innerHTML = `
+        <!-- Amazon Top Subtotal Bar -->
+        <div style="background:var(--surface-2);border-bottom:1px solid var(--line);padding:14px;margin:-14px -14px 14px -14px">
+          <div style="font-size:16px;font-weight:800;color:var(--ink);margin-bottom:3px">
+            Subtotal (${totalItems} item${totalItems === 1 ? '' : 's'}): <span style="color:var(--amber)">${this.inr(subTot)}</span>
+          </div>
+          <div style="font-size:12px;color:#15803d;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:12px">
+            <span>✓</span> Your order qualifies for <b>FREE store fulfillment</b> in Bangarapet
+          </div>
+          <button class="btn btn-amber btn-full" style="justify-content:center;font-weight:800;font-size:14.5px;padding:12px;box-shadow:var(--shadow-sm)" onclick="APP.proceedToBuy()">
+            Proceed to Buy (${totalItems} item${totalItems === 1 ? '' : 's'})
+          </button>
+        </div>
 
-    if (foot) foot.innerHTML=`
-      <div class="total-row" style="flex-direction:column;align-items:stretch;gap:4px">
-        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted)">
-          <span>Subtotal (excl. GST)</span><span>${this.inr(subTot)}</span>
+        <!-- Amazon Itemized Products List -->
+        <div style="display:flex;flex-direction:column;gap:12px">
+          ${items.map(({ p, qty }) => {
+            const pct = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
+            return `
+              <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:72px 1fr;gap:12px;position:relative">
+                <img src="${p.img || 'assets/img/products/gm-led-bulb-9w.jpg'}" alt="${p.name}" style="width:72px;height:72px;object-fit:contain;background:#fff;border-radius:8px;border:1px solid var(--line);padding:4px" onerror="this.onerror=null;this.src='assets/img/products/gm-led-bulb-9w.jpg'">
+                <div style="min-width:0;display:flex;flex-direction:column;justify-content:space-between">
+                  <div>
+                    <div style="font-size:13.5px;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:3px">${p.name}</div>
+                    <div style="font-size:11px;color:var(--muted)">${p.brand || 'Genuine'} • <span style="color:#15803d;font-weight:600">In Stock</span></div>
+                  </div>
+                  <div style="margin-top:6px;display:flex;align-items:baseline;gap:6px">
+                    <span style="font-size:15px;font-weight:800;color:var(--ink)">${this.inr(p.price)}</span>
+                    ${p.mrp > p.price ? `<span style="font-size:12px;color:var(--muted);text-decoration:line-through">${this.inr(p.mrp)}</span><span style="font-size:11px;font-weight:700;color:#DC2626">${pct}% OFF</span>` : ''}
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+                    <div class="stepper" style="height:32px">
+                      <button onclick="APP.changeQty('${p.id}',-1)">−</button>
+                      <span style="width:28px">${qty}</span>
+                      <button onclick="APP.changeQty('${p.id}',1)">+</button>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" style="color:var(--danger);font-size:11px;padding:4px 6px" onclick="APP.changeQty('${p.id}', -${qty})">
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")}
         </div>
-        ${gstRate > 0 ? `
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)">
-          <span>CGST (${gstRate/2}%)</span><span>${this.inr(gstData.cgst)}</span>
+      `;
+
+      if (foot) {
+        foot.innerHTML = `
+          <button class="btn btn-amber btn-full" style="justify-content:center;font-weight:800;font-size:14.5px;padding:12px" onclick="APP.proceedToBuy()">
+            Proceed to Buy (${totalItems} item${totalItems === 1 ? '' : 's'})
+          </button>
+        `;
+      }
+      return;
+    }
+
+    /* ==========================================================
+       VIEW 2: AMAZON PROCEED TO BUY / ORDER CONFIRMATION
+       ========================================================== */
+    body.innerHTML = `
+      <!-- Back to Cart Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)">
+        <button class="btn btn-ghost btn-sm" onclick="APP.backToCart()" style="font-size:12.5px;font-weight:700;padding:4px 0">
+          ← Back to Cart
+        </button>
+        <span style="font-size:12px;font-weight:700;color:var(--muted)">Step 2 of 2: Checkout</span>
+      </div>
+
+      <!-- Sign-In Identity Check -->
+      ${userObj ? `
+        <div style="background:rgba(34,197,94,0.1);border:1.5px solid rgba(34,197,94,0.3);border-radius:10px;padding:10px 12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:12.5px;color:#15803d;display:flex;align-items:center;gap:6px">
+            <span style="font-size:14px">✓</span>
+            <div>
+              <div style="font-weight:800">Signed in with Google</div>
+              <div style="font-size:11px;opacity:0.85">${this.escapeHtml(userObj.name)} (${this.escapeHtml(userObj.email)})</div>
+            </div>
+          </div>
+          <a href="login.html" style="font-size:11px;font-weight:700;color:var(--amber)">Switch</a>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)">
-          <span>SGST (${gstRate/2}%)</span><span>${this.inr(gstData.sgst)}</span>
-        </div>` : `<div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between"><span>GST</span><span>Exempted</span></div>`}
-        <div style="display:flex;justify-content:space-between;font-weight:800;font-size:15px;padding-top:6px;border-top:1px solid var(--line);margin-top:4px">
-          <span style="color:var(--ink)">Total (incl. GST)</span><span style="color:var(--amber)">${this.inr(gstData.total)}</span>
+      ` : `
+        <div style="background:var(--surface-2);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px">
+          <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:4px">Sign in for 1-Tap Checkout</div>
+          <p style="font-size:11.5px;color:var(--muted);margin-bottom:10px">Sign in with Google to save orders & track fulfillment automatically:</p>
+          <button type="button" class="btn btn-full btn-secondary" style="justify-content:center;font-weight:700;font-size:13px;padding:9px 12px;gap:8px" onclick="AUTH.signInWithGoogle().then(()=>{ APP.renderCartDrawer(); APP.toast('Signed in with Google!','success'); })">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex:none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continue with Google
+          </button>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-          <label style="font-size:11px;color:var(--muted);white-space:nowrap">GST Rate:</label>
-          <select id="gstRateSelect" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-size:12px;font-weight:600" onchange="APP.setGSTRate(parseInt(this.value))">
-            ${this.GST_RATES.map(r => `<option value="${r.rate}" ${r.rate === gstRate ? 'selected' : ''}>${r.label}</option>`).join('')}
+      `}
+
+      <!-- Delivery / Store Fulfillment Details -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px">
+        <div style="font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+          <span>📍 Delivery / Pickup Area:</span>
+          <button class="btn btn-ghost btn-sm" onclick="APP.openDeliveryModal()" style="font-size:11px;color:var(--amber)">Change ▾</button>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:var(--ink);background:var(--surface-2);padding:8px 10px;border-radius:8px;border:1px solid var(--line);margin-bottom:10px">
+          ${deliveryLoc}
+        </div>
+        <div class="field" style="margin-bottom:8px">
+          <label style="font-size:11.5px">Time Slot Preference</label>
+          <select id="custSlot" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-weight:600;font-size:12px">
+            <option value="Store Pickup: Morning (7:00 AM – 11:00 AM)">🏬 Store Pickup: Morning (7:00 AM – 11:00 AM)</option>
+            <option value="Store Pickup: Afternoon (11:00 AM – 4:00 PM)">🏬 Store Pickup: Afternoon (11:00 AM – 4:00 PM)</option>
+            <option value="Store Pickup: Evening (4:00 PM – 8:30 PM)" selected>🏬 Store Pickup: Evening (4:00 PM – 8:30 PM)</option>
+            <option value="Urgent Pickup: Within 1 Hour">⚡ Urgent Pickup: Within 1 Hour</option>
+            <option value="Local Delivery: Bangarapet Town">🚚 Local Delivery: Bangarapet Town</option>
           </select>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">GSTIN: ${this.GSTIN}</div>
-      </div>
-      
-      ${!userObj ? `
-      <div style="background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <span style="font-size:12px;color:var(--muted)">Have a Google account?</span>
-        <button type="button" class="btn btn-sm btn-secondary" style="font-weight:700;font-size:11.5px;gap:6px;padding:5px 10px" onclick="AUTH.signInWithGoogle().then(()=>{ APP.renderCartDrawer(); APP.toast('Signed in with Google!','success'); })">
-          <svg viewBox="0 0 24 24" style="width:14px;height:14px;flex:none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-          Google Sign-In
-        </button>
-      </div>` : `
-      <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:6px 10px;margin:8px 0;font-size:11.5px;color:#15803d;display:flex;align-items:center;gap:6px">
-        <span>✓</span> <b>Signed in as ${this.escapeHtml(userObj.name || userObj.email)}</b>
-      </div>`}
-
-      <div class="field">
-        <label>Pickup / Delivery Preference</label>
-        <select id="custSlot" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;font-size:12.5px">
-          <option value="Store Pickup: Morning (7:00 AM – 11:00 AM)">🏬 Store Pickup: Morning (7:00 AM – 11:00 AM)</option>
-          <option value="Store Pickup: Afternoon (11:00 AM – 4:00 PM)">🏬 Store Pickup: Afternoon (11:00 AM – 4:00 PM)</option>
-          <option value="Store Pickup: Evening (4:00 PM – 8:30 PM)" selected>🏬 Store Pickup: Evening (4:00 PM – 8:30 PM)</option>
-          <option value="Urgent Pickup: Within 1 Hour">⚡ Urgent Pickup: Within 1 Hour</option>
-          <option value="Local Delivery: Bangarapet Town">🚚 Local Delivery: Bangarapet Town</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Your Name <span style="color:#ef4444">*</span></label>
-        <input id="custName" value="${this.escapeHtml(savedName)}" placeholder="e.g. Ramesh" autocomplete="name">
-      </div>
-      <div class="field">
-        <label>WhatsApp / Mobile Number <span style="color:#ef4444">*</span></label>
-        <div style="display:flex;gap:6px">
-          <span style="padding:8px 11px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center">+91</span>
-          <input type="tel" id="custPhone" value="${this.escapeHtml(savedPhone)}" placeholder="10-digit mobile number" maxlength="10" autocomplete="tel" style="flex:1">
+        <div class="field" style="margin-bottom:8px">
+          <label style="font-size:11.5px">Your Name <span style="color:#ef4444">*</span></label>
+          <input id="custName" value="${this.escapeHtml(savedName)}" placeholder="e.g. Ramesh" autocomplete="name" style="padding:8px 10px;font-size:13px">
         </div>
-        <span style="font-size:11px;color:var(--muted);margin-top:3px;display:block">For order notification & pickup ready alert</span>
+        <div class="field" style="margin-bottom:8px">
+          <label style="font-size:11.5px">WhatsApp / Phone Number <span style="color:#ef4444">*</span></label>
+          <div style="display:flex;gap:6px">
+            <span style="padding:8px 10px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;font-size:12.5px;font-weight:600;color:var(--muted)">+91</span>
+            <input type="tel" id="custPhone" value="${this.escapeHtml(savedPhone)}" placeholder="10-digit mobile number" maxlength="10" autocomplete="tel" style="flex:1;padding:8px 10px;font-size:13px">
+          </div>
+        </div>
+        <div class="field"><label style="font-size:11.5px">Delivery note (optional)</label><input id="custNote" placeholder="e.g. call before store pickup" style="padding:8px 10px;font-size:12.5px"></div>
       </div>
-      <div class="field"><label>Pickup / delivery note (optional)</label><input id="custNote" placeholder="e.g. deliver to Kalyan Nagar / call before loading"></div>
-      
-      <!-- Customer Choice: Order via App or Order via WhatsApp -->
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
-        <button class="btn btn-primary btn-full" style="justify-content:center;font-weight:700;padding:12px;font-size:13.5px" onclick="APP.placeAppOrder()">
-          ⚡ Place Order via App (Instant Notification)
-        </button>
-        <button class="btn btn-full" style="justify-content:center;background:#25D366;color:#fff;border:none;font-weight:700;padding:12px;font-size:13.5px" onclick="APP.sendOrder()">
-          <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;flex:none"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.86L2.05 22l5.36-1.4a9.87 9.87 0 004.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.81 2 .88 2.15.07.14.12.31.02.5-.1.19-.15.31-.3.48-.14.17-.3.37-.43.5-.14.14-.29.29-.13.57.17.28.75 1.24 1.6 2 1.11.99 2.04 1.29 2.32 1.44.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.28.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.68-.16 1.36z"/></svg>
-          Order via WhatsApp (Send Table Bill)
-        </button>
+
+      <!-- Full Cost Breakdown (Amazon Style) -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:8px">Order Summary</div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:4px">
+          <span>Items Subtotal (${totalItems} items)</span><span>${this.inr(subTot)}</span>
+        </div>
+        ${gstRate > 0 ? `
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px">
+            <span>CGST (${gstRate/2}%)</span><span>${this.inr(gstData.cgst)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px">
+            <span>SGST (${gstRate/2}%)</span><span>${this.inr(gstData.sgst)}</span>
+          </div>
+        ` : `<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px"><span>GST</span><span>Exempted</span></div>`}
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#15803d;font-weight:600;margin-bottom:4px">
+          <span>Store Fulfillment / Delivery</span><span>FREE</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-weight:800;font-size:16px;padding-top:8px;border-top:1px solid var(--line);margin-top:6px">
+          <span style="color:var(--ink)">Order Total:</span><span style="color:var(--amber)">${this.inr(gstData.total)}</span>
+        </div>
       </div>
-      
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-        <button class="btn btn-secondary btn-sm" style="justify-content:center" onclick="APP.downloadCartBillImage()">
-          🖼️ Save Bill Image
-        </button>
-        <button class="btn btn-secondary btn-sm" style="justify-content:center" onclick="APP.copyCartBillImage()">
-          📋 Copy Image
-        </button>
-      </div>`;
+    `;
+
+    if (foot) {
+      foot.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-amber btn-full" style="justify-content:center;font-weight:800;font-size:14px;padding:13px" onclick="APP.placeAppOrder()">
+            ⚡ Confirm &amp; Place Order via App
+          </button>
+          <button class="btn btn-full" style="justify-content:center;background:#25D366;color:#fff;border:none;font-weight:700;font-size:13.5px;padding:12px" onclick="APP.sendOrder()">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;flex:none"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.86L2.05 22l5.36-1.4a9.87 9.87 0 004.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.81 2 .88 2.15.07.14.12.31.02.5-.1.19-.15.31-.3.48-.14.17-.3.37-.43.5-.14.14-.29.29-.13.57.17.28.75 1.24 1.6 2 1.11.99 2.04 1.29 2.32 1.44.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.28.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.68-.16 1.36z"/></svg>
+            Order via WhatsApp (Send Bill)
+          </button>
+        </div>
+      `;
+    }
   },
 
   /* Place Order directly from App — notifies Admin instantly */
