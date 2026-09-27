@@ -318,39 +318,7 @@ const AUTH = {
       }
     }
 
-    // 2. Real Google Identity Services (GSI) OAuth2 Token Client popup (triggers Google Account Chooser)
-    this._setupGSI();
-    if (this._tokenClient) {
-      try {
-        return new Promise((resolve) => {
-          this._currentGoogleResolve = resolve;
-          // Timeout fallback to chooser if popup is blocked or takes long
-          const timer = setTimeout(() => {
-            if (this._currentGoogleResolve === resolve) {
-              this.signInWithGoogleChooser().then(resolve);
-            }
-          }, 4500);
-
-          try {
-            this._tokenClient.requestAccessToken({ prompt: "select_account" });
-          } catch(e) {
-            clearTimeout(timer);
-            this.signInWithGoogleChooser().then(resolve);
-          }
-        });
-      } catch (err) {
-        console.warn("GSI token request error:", err);
-      }
-    }
-
-    // 3. One Tap Prompt trigger if available
-    if (window.google && window.google.accounts && window.google.accounts.id) {
-      try {
-        window.google.accounts.id.prompt();
-      } catch(e){}
-    }
-
-    // 4. Instant 1-Tap Google Account Chooser Fallback
+    // 2. Direct 1-Tap Google Account Chooser (No Google Cloud Console setup required)
     return this.signInWithGoogleChooser();
   },
 
