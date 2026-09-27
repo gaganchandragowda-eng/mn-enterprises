@@ -1940,8 +1940,9 @@ html, body {
   }
 }
 
-/* 7. Drawer and Modals Mobile Adaptations */
-@media (max-width: 768px) {
+  .overlay {
+    z-index: 998 !important;
+  }
   .drawer {
     top: auto !important;
     bottom: 0 !important;
@@ -1954,8 +1955,11 @@ html, body {
     transform: translateY(100%) !important;
     border-top: 1px solid var(--line) !important;
     box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.28) !important;
+    z-index: 999 !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
-  .drawer.open {
+  .drawer.open,
+  .drawer.show {
     transform: translateY(0) !important;
   }
   .modal {
