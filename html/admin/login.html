@@ -7,8 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/main.css?v=34">
+<link rel="stylesheet" href="/assets/css/main.css?v=35">
 <style>
 body {
   background: #0B0F19;
@@ -253,15 +252,14 @@ body {
 <!-- Firebase SDK & App Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="../assets/js/firebase-config.js"></script>
-<script src="../assets/js/products.js"></script>
-<script src="../assets/js/auth.js"></script>
-<script src="../assets/js/firebase-db.js"></script>
+<script src="/assets/js/firebase-config.js"></script>
+<script src="/assets/js/products.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/firebase-db.js"></script>
 <script>
 // If already logged in as Admin, redirect straight to dashboard
 if (AUTH.isAdminLoggedIn()) {
-  window.location.replace("index.html");
+  window.location.replace("/admin/index.html");
 }
 
 function togglePassVisibility() {
@@ -299,7 +297,7 @@ async function handleAdminLogin(e) {
       btn.innerHTML = `✓ Access Granted`;
       btn.style.background = "#16A34A";
       setTimeout(() => {
-        window.location.replace("index.html");
+        window.location.replace("/admin/index.html");
       }, 300);
     } else {
       errEl.textContent = (res && res.msg) || "Invalid admin username or password.";
