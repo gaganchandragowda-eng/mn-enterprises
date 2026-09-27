@@ -161,28 +161,20 @@ const AUTH = {
   },
 
   _setupGSI() {
-    if (typeof window === "undefined" || !window.google || !window.google.accounts) return;
+    // Only initialize if a custom valid client ID is provided in localStorage
+    const customClientId = localStorage.getItem("mn_google_client_id");
+    if (!customClientId || typeof window === "undefined" || !window.google || !window.google.accounts) return;
     try {
       if (window.google.accounts.id) {
         window.google.accounts.id.initialize({
-          client_id: this.GOOGLE_CLIENT_ID,
+          client_id: customClientId,
           callback: (res) => this.handleGoogleCredentialResponse(res),
           auto_select: false,
           cancel_on_tap_outside: true
         });
       }
-
-      if (window.google.accounts.oauth2) {
-        this._tokenClient = window.google.accounts.oauth2.initTokenClient({
-          client_id: this.GOOGLE_CLIENT_ID,
-          scope: "email profile openid",
-          callback: (tokenRes) => this.handleGoogleTokenResponse(tokenRes)
-        });
-      }
       this._gsiInitialized = true;
-    } catch (e) {
-      console.warn("GSI setup notice:", e);
-    }
+    } catch (e) {}
   },
 
   parseJwt(token) {
