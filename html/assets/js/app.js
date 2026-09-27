@@ -321,26 +321,93 @@ const APP = {
           <polyline points="6 9 12 15 18 9"/>
         </svg>
       </div>
+
+      <!-- Amazon App Style Horizontal Category Strip -->
+      <div class="mobile-cat-pill-strip" id="mobileCatPillStrip">
+        <a href="${base}shop.html?cat=lighting" class="mc-pill">
+          <div class="mc-pill-icon">💡</div>
+          <span>Lighting</span>
+        </a>
+        <a href="${base}shop.html?cat=plumbing" class="mc-pill">
+          <div class="mc-pill-icon">🚰</div>
+          <span>Plumbing</span>
+        </a>
+        <a href="${base}shop.html?cat=electrical" class="mc-pill">
+          <div class="mc-pill-icon">⚡</div>
+          <span>Wires</span>
+        </a>
+        <a href="${base}shop.html?cat=pumps" class="mc-pill">
+          <div class="mc-pill-icon">💧</div>
+          <span>Pumps</span>
+        </a>
+        <a href="${base}shop.html?cat=cctv" class="mc-pill">
+          <div class="mc-pill-icon">📹</div>
+          <span>CCTV</span>
+        </a>
+        <a href="${base}shop.html?cat=network" class="mc-pill">
+          <div class="mc-pill-icon">🌐</div>
+          <span>WiFi</span>
+        </a>
+        <a href="#" onclick="APP.openRequirementModal();return false;" class="mc-pill">
+          <div class="mc-pill-icon">📋</div>
+          <span>Custom</span>
+        </a>
+        <a href="#" onclick="APP.openPhotoModal();return false;" class="mc-pill">
+          <div class="mc-pill-icon">📷</div>
+          <span>Identify</span>
+        </a>
+      </div>
     </header>
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="document.getElementById('mobileNav').classList.remove('show');this.classList.remove('show')"></div>
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
-      ${links.map(l=>`<a href="${base}${l.href}" class="${l.id===page?'active':''}">${l.label}</a>`).join("")}
-      <div class="mobile-nav-sep"></div>
-      <a href="#" onclick="APP.openWishlistModal();return false;">❤️ Saved Items (<span id="mobWishlistCount">0</span>)</a>
-      <a href="#" onclick="APP.openRequirementModal();return false;">📋 Build My Requirement</a>
-      <a href="#" onclick="APP.openPhotoModal();return false;">📷 Send Photo to Identify</a>
-      <a href="#" onclick="APP.openAskExpertModal();return false;">👨🔧 Ask Shop Expert</a>
-      <div class="mobile-nav-sep"></div>
-      ${user
-        ? `<a href="${base}account.html">My Account</a><a href="#" id="mobileLogout">Sign out</a>`
-        : `<a href="${base}login.html">Sign in / Register</a>`}
+      <div class="amazon-drawer-header">
+        <div class="adh-avatar">${user ? (user.name||"U")[0].toUpperCase() : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`}</div>
+        <div class="adh-info">
+          <div class="adh-hello">Hello, ${user ? (user.name || "Customer") : "Sign in"}</div>
+          <div class="adh-sub">${user ? "M N Customer Member" : "Welcome to M N Enterprises"}</div>
+        </div>
+        <button type="button" class="adh-close-btn" onclick="document.getElementById('mobileNav').classList.remove('show');const b=document.getElementById('mobileNavBackdrop');b&&b.classList.remove('show')" aria-label="Close menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="amazon-drawer-body">
+        <div class="adh-section-title">Trending &amp; Fast Actions</div>
+        <a href="${base}index.html" class="${page==='home'?'active':''}">🏠 Home</a>
+        <a href="${base}shop.html" class="${page==='shop'?'active':''}">🛍️ Browse All Products</a>
+        <a href="#" onclick="APP.openWishlistModal();return false;">❤️ Saved Items (<span id="mobWishlistCount">0</span>)</a>
+        <a href="#" onclick="APP.openRequirementModal();return false;">📋 Build My Requirement</a>
+        <a href="#" onclick="APP.openPhotoModal();return false;">📷 Send Photo to Identify</a>
+        <a href="#" onclick="APP.openAskExpertModal();return false;">👨🔧 Ask Shop Expert</a>
+        
+        <div class="adh-section-title" style="margin-top:14px">Shop by Category</div>
+        <a href="${base}shop.html?cat=lighting">💡 Lighting &amp; Bulbs</a>
+        <a href="${base}shop.html?cat=plumbing">🚰 Pipes &amp; Fittings</a>
+        <a href="${base}shop.html?cat=electrical">⚡ Wires, Switches &amp; MCB</a>
+        <a href="${base}shop.html?cat=pumps">💧 Pumps &amp; Water Tanks</a>
+        <a href="${base}shop.html?cat=cctv">📹 CCTV &amp; Security</a>
+        <a href="${base}shop.html?cat=network">🌐 WiFi &amp; Networking</a>
+
+        <div class="adh-section-title" style="margin-top:14px">Your Account &amp; Orders</div>
+        ${user
+          ? `<a href="${base}account.html">👤 My Account &amp; Orders</a>
+             <a href="#" id="mobileLogout">🚪 Sign out</a>`
+          : `<a href="${base}login.html">🔑 Sign in / Register</a>`}
+
+        <div class="adh-section-title" style="margin-top:14px">Store Information</div>
+        <a href="tel:+919686311260">📞 Call: +91 96863 11260</a>
+        <a href="https://wa.me/919686311260" target="_blank">💬 Chat on WhatsApp</a>
+        <a href="${base}contact.html">📍 APMC Road, Bangarapet 563114</a>
+      </div>
     </nav>`;
 
     document.getElementById("themeToggle").onclick = () => this.toggleTheme();
     this._updateThemeIcon();
     const ham = document.getElementById("hamburger");
     const mob = document.getElementById("mobileNav");
+    const backdrop = document.getElementById("mobileNavBackdrop");
     ham && mob && (ham.onclick = () => {
       mob.classList.toggle("show");
+      backdrop && backdrop.classList.toggle("show", mob.classList.contains("show"));
       ham.setAttribute("aria-expanded", mob.classList.contains("show"));
     });
     const cartBtn = document.getElementById("cartBtn");

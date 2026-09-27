@@ -1804,31 +1804,44 @@ html, body {
   }
 }
 
-/* 5. Mobile 2-Column Product Grid for High-Impact Gripping Storefront */
-@media (max-width: 580px) {
+/* 5. Mobile 2-Column Product Grid — Amazon Mobile App Experience */
+@media (max-width: 768px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
     padding-right: 0 !important;
-    padding-bottom: 120px !important;
+    padding-bottom: 90px !important;
   }
   .product-card {
-    border-radius: 12px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05) !important;
   }
   .card-img-wrap {
-    height: 130px !important;
+    height: 140px !important;
+    background: var(--surface-2) !important;
   }
   .card-img-wrap img {
     padding: 8px !important;
+    object-fit: contain !important;
   }
   .card-body {
     padding: 8px 10px 10px !important;
     gap: 4px !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
   }
   .card-title {
     font-size: 12px !important;
     min-height: 30px !important;
     line-height: 1.25 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
   }
   .card-brand-badge {
     font-size: 9px !important;
@@ -1840,9 +1853,13 @@ html, body {
   }
   .price {
     font-size: 15px !important;
+    font-weight: 800 !important;
   }
   .mrp {
     font-size: 11px !important;
+  }
+  .card-foot {
+    margin-top: auto !important;
   }
   .card-foot .btn-quick-view {
     display: none !important;
@@ -1852,6 +1869,7 @@ html, body {
     height: 32px !important;
     padding: 0 6px !important;
     font-size: 11px !important;
+    font-weight: 700 !important;
     justify-content: center !important;
   }
   .card-foot .btn-quick-wa {
@@ -2107,7 +2125,9 @@ html, body {
    ================================================================ */
 .mobile-bottom-bar,
 .mobile-app-search-wrap,
-.mobile-deliver-strip {
+.mobile-deliver-strip,
+.mobile-cat-pill-strip,
+.mobile-nav-backdrop {
   display: none;
 }
 
@@ -2245,6 +2265,202 @@ html, body {
     flex-shrink: 0 !important;
   }
 
+  /* Amazon App Style Horizontal Category Strip */
+  .mobile-cat-pill-strip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 8px 12px 10px 12px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    border-top: 1px solid var(--line) !important;
+    background: var(--surface) !important;
+  }
+  .mobile-cat-pill-strip::-webkit-scrollbar {
+    display: none !important;
+  }
+  [data-theme="dark"] .mobile-cat-pill-strip {
+    background: var(--surface) !important;
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .mc-pill {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+    text-decoration: none !important;
+    color: var(--ink) !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  .mc-pill:active {
+    transform: scale(0.92) !important;
+  }
+  .mc-pill-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: var(--surface-2) !important;
+    border: 1px solid var(--line) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  }
+  [data-theme="dark"] .mc-pill-icon {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+  }
+  .mc-pill span {
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    color: var(--muted) !important;
+    letter-spacing: -0.1px !important;
+    white-space: nowrap !important;
+  }
+  .mc-pill.active .mc-pill-icon {
+    border-color: var(--amber) !important;
+    background: rgba(217, 119, 6, 0.12) !important;
+  }
+  .mc-pill.active span {
+    color: var(--amber) !important;
+    font-weight: 700 !important;
+  }
+
+  /* Amazon App Style Side Drawer Navigation */
+  .mobile-nav-backdrop {
+    display: none;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    z-index: 998 !important;
+  }
+  .mobile-nav-backdrop.show {
+    display: block !important;
+  }
+  .mobile-nav {
+    display: flex !important;
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    width: 84vw !important;
+    max-width: 320px !important;
+    height: 100vh !important;
+    background: var(--surface) !important;
+    z-index: 999 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25) !important;
+    padding: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-direction: column !important;
+  }
+  .mobile-nav.show {
+    transform: translateX(0) !important;
+  }
+  .amazon-drawer-header {
+    background: var(--brand) !important;
+    color: #FFFFFF !important;
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 16px 16px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  .adh-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: var(--amber) !important;
+    color: var(--amber-ink) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    flex-shrink: 0 !important;
+  }
+  .adh-avatar svg {
+    width: 20px !important;
+    height: 20px !important;
+    stroke: var(--amber-ink) !important;
+  }
+  .adh-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .adh-hello {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #FFFFFF !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .adh-sub {
+    font-size: 11px !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+  .adh-close-btn {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+  }
+  .adh-close-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .amazon-drawer-body {
+    padding: 12px 14px 40px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+  .adh-section-title {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--muted) !important;
+    padding: 8px 10px 4px 10px !important;
+  }
+  .amazon-drawer-body a {
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: var(--ink) !important;
+    text-decoration: none !important;
+    transition: background 0.15s !important;
+  }
+  .amazon-drawer-body a:hover,
+  .amazon-drawer-body a:active {
+    background: var(--surface-2) !important;
+  }
+  .amazon-drawer-body a.active {
+    background: var(--surface-2) !important;
+    color: var(--amber) !important;
+    font-weight: 700 !important;
+  }
+
   /* Amazon App Style Symmetrical 5-Icon Bottom Bar */
   .mobile-bottom-bar {
     display: flex !important;
@@ -2364,7 +2580,9 @@ html, body {
 @media (min-width: 769px) {
   .mobile-bottom-bar,
   .mobile-app-search-wrap,
-  .mobile-deliver-strip {
+  .mobile-deliver-strip,
+  .mobile-cat-pill-strip,
+  .mobile-nav-backdrop {
     display: none !important;
   }
   body:not([data-page="admin"]) {
