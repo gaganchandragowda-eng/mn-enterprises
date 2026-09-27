@@ -6,7 +6,7 @@
 <title>Admin Dashboard — M N Enterprises</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="/assets/css/main.css?v=39">
+<link rel="stylesheet" href="/assets/css/main.css?v=41">
 <style>
 /* Admin mobile top bar */
 .admin-mobile-bar{display:none;align-items:center;gap:12px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto}
@@ -1477,6 +1477,19 @@
         <button class="btn btn-primary" onclick="changeAdminPass()">Update password</button>
       </div>
 
+      <div class="add-panel" style="max-width:480px">
+        <h3>Google Cloud OAuth API Credentials</h3>
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;line-height:1.45">To enable authentic device account chooser via Google's OAuth2 API, enter your Web Client ID from <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:var(--amber);font-weight:700">Google Cloud Console ↗</a>.</p>
+        <div class="field">
+          <label>Google OAuth 2.0 Web Client ID</label>
+          <input id="set-gclient" placeholder="e.g. 123456789-abcdef.apps.googleusercontent.com">
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="saveGoogleOAuthSettings()">Save &amp; Activate Google API</button>
+          <button class="btn btn-secondary" onclick="testGoogleOAuth()">Test Live Sign-In</button>
+        </div>
+      </div>
+
       <div class="section-divider"></div>
 
       <div class="add-panel" style="max-width:480px">
@@ -1680,7 +1693,7 @@
 <script src="/assets/js/products.js"></script>
 <script src="/assets/js/auth.js"></script>
 <script src="/assets/js/firebase-db.js"></script>
-<script src="/assets/js/app.js?v=39"></script>
+<script src="/assets/js/app.js?v=41"></script>
 <script src="/assets/js/whatsapp-engine.js"></script>
 <script>
 APP.init();
@@ -3473,6 +3486,41 @@ function checkForUnseenOrders() {
 setTimeout(checkForUnseenOrders, 1000);
 // Check periodically every 3 seconds for background orders
 setInterval(checkForUnseenOrders, 3000);
+
+function saveGoogleOAuthSettings() {
+  const inp = document.getElementById("set-gclient");
+  const val = (inp?.value || "").trim();
+  if (val) {
+    localStorage.setItem("mn_google_client_id", val);
+    if (typeof AUTH !== "undefined") {
+      AUTH.GOOGLE_CLIENT_ID = val;
+      AUTH._gsiInitialized = false;
+      AUTH._setupGSI();
+    }
+    APP.toast("Google OAuth Client ID saved & activated!", "success");
+  } else {
+    localStorage.removeItem("mn_google_client_id");
+    APP.toast("Reset to default Google client ID", "info");
+  }
+}
+
+function testGoogleOAuth() {
+  if (typeof AUTH !== "undefined") {
+    AUTH.signInWithGoogle().then(res => {
+      if (res && res.ok) {
+        APP.toast(`Google Sign-In verified: ${res.user.name} (${res.user.email})`, "success");
+      }
+    });
+  }
+}
+
+// Load existing client ID into settings input
+document.addEventListener("DOMContentLoaded", () => {
+  const inp = document.getElementById("set-gclient");
+  if (inp) {
+    inp.value = localStorage.getItem("mn_google_client_id") || "";
+  }
+});
 
 /* ---- Init ---- */
 renderDashboard();

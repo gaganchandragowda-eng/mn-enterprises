@@ -160,21 +160,36 @@ const AUTH = {
     }
   },
 
+  getGoogleClientId() {
+    return localStorage.getItem("mn_google_client_id") || this.GOOGLE_CLIENT_ID;
+  },
+
   _setupGSI() {
-    // Only initialize if a custom valid client ID is provided in localStorage
-    const customClientId = localStorage.getItem("mn_google_client_id");
-    if (!customClientId || typeof window === "undefined" || !window.google || !window.google.accounts) return;
+    if (typeof window === "undefined" || !window.google || !window.google.accounts) return;
+    const clientId = this.getGoogleClientId();
+    if (!clientId) return;
+
     try {
       if (window.google.accounts.id) {
         window.google.accounts.id.initialize({
-          client_id: customClientId,
+          client_id: clientId,
           callback: (res) => this.handleGoogleCredentialResponse(res),
           auto_select: false,
           cancel_on_tap_outside: true
         });
       }
+
+      if (window.google.accounts.oauth2) {
+        this._tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: "email profile openid",
+          callback: (tokenRes) => this.handleGoogleTokenResponse(tokenRes)
+        });
+      }
       this._gsiInitialized = true;
-    } catch (e) {}
+    } catch (e) {
+      console.warn("GSI setup notice:", e);
+    }
   },
 
   parseJwt(token) {
@@ -303,7 +318,39 @@ const AUTH = {
       }
     }
 
-    // 2. Direct 1-Tap Google Account Chooser (No 401 invalid_client errors)
+    // 2. Real Google Identity Services (GSI) OAuth2 Token Client popup (triggers Google Account Chooser)
+    this._setupGSI();
+    if (this._tokenClient) {
+      try {
+        return new Promise((resolve) => {
+          this._currentGoogleResolve = resolve;
+          // Timeout fallback to chooser if popup is blocked or takes long
+          const timer = setTimeout(() => {
+            if (this._currentGoogleResolve === resolve) {
+              this.signInWithGoogleChooser().then(resolve);
+            }
+          }, 4500);
+
+          try {
+            this._tokenClient.requestAccessToken({ prompt: "select_account" });
+          } catch(e) {
+            clearTimeout(timer);
+            this.signInWithGoogleChooser().then(resolve);
+          }
+        });
+      } catch (err) {
+        console.warn("GSI token request error:", err);
+      }
+    }
+
+    // 3. One Tap Prompt trigger if available
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      try {
+        window.google.accounts.id.prompt();
+      } catch(e){}
+    }
+
+    // 4. Instant 1-Tap Google Account Chooser Fallback
     return this.signInWithGoogleChooser();
   },
 
