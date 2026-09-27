@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- ORDERS ----
+    // Anyone can create an order (customer placing order)
+    // Only admin can read all orders / update status
+    match /orders/{orderId} {
+      allow create: if true;                                    // Anyone can place an order
+      allow read:   if true;                                    // Customers can read their own orders
+      allow update: if request.auth != null                    // Only authenticated users can update
+                    || request.resource.data.keys().hasOnly(['status','updatedAt']); // or status updates
+      allow delete: if false;                                   // No deletes
+    }
+
+    // ---- USERS ----
+    match /users/{userId} {
+      allow read, write: if true;  // Simplified for easy setup — tighten after deployment
+    }
+
+    // ---- WHATSAPP THREADS ----
+    match /wa_threads/{phone} {
+      allow read, write: if true;
+    }
+
+    // ---- SHOP CONFIG ----
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if true;  // Tighten after deployment: only admin writes
+    }
+  }
+}

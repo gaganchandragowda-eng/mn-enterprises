@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" data-page="account">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Account — M N Enterprises</title>
+<meta name="description" content="Manage your M N Enterprises account — view order history and update profile.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css?v=3">
+<style>
+/* Order History Dropdown Table */
+.order-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+  transition: all .2s ease;
+}
+.order-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.order-id {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: .5px;
+}
+.order-date {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.order-total-block {
+  text-align: right;
+}
+.order-total-val {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--amber);
+}
+.order-badge-status {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  margin-top: 4px;
+}
+.order-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.order-item-count {
+  font-size: 13.5px;
+  color: var(--muted);
+  font-weight: 500;
+}
+.btn-order-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: var(--font-body);
+}
+.btn-order-toggle:hover {
+  background: var(--amber);
+  color: var(--amber-ink);
+  border-color: var(--amber);
+}
+.btn-order-toggle svg {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  max-width: 14px !important;
+  flex: none !important;
+  transition: transform .2s ease;
+}
+.btn-order-toggle.open svg {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Table Panel */
+.order-dropdown-panel {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+  animation: orderSlideDown .2s ease-out;
+}
+.order-dropdown-panel.open {
+  display: block;
+}
+@keyframes orderSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Table Style */
+.order-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  margin-bottom: 14px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+}
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.order-table th {
+  background: color-mix(in srgb, var(--surface) 70%, var(--surface-2));
+  padding: 11px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--line);
+  text-align: left;
+}
+.order-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  vertical-align: middle;
+}
+.order-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--amber) 5%, var(--surface-2));
+}
+.order-table tr:last-child td {
+  border-bottom: none;
+}
+.order-table tfoot td {
+  background: color-mix(in srgb, var(--surface) 85%, var(--surface-2));
+  padding: 12px 14px;
+  border-top: 2px solid var(--line);
+  font-weight: 700;
+}
+
+/* Dark mode explicit overrides */
+[data-theme="dark"] .order-item {
+  background: #131C2E !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+[data-theme="dark"] .order-id {
+  color: #FFFFFF !important;
+}
+[data-theme="dark"] .order-date {
+  color: #CBD5E1 !important;
+}
+[data-theme="dark"] .order-total-val {
+  color: #F59E0B !important;
+}
+[data-theme="dark"] .order-summary-row {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+[data-theme="dark"] .order-item-count {
+  color: #CBD5E1 !important;
+}
+[data-theme="dark"] .btn-order-toggle {
+  background: #1E2A42 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+}
+[data-theme="dark"] .btn-order-toggle:hover {
+  background: #F59E0B !important;
+  color: #0F172A !important;
+  border-color: #F59E0B !important;
+}
+[data-theme="dark"] .order-dropdown-panel {
+  border-top-color: rgba(255, 255, 255, 0.12) !important;
+}
+[data-theme="dark"] .order-table-wrap {
+  background: #1E2A42 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+[data-theme="dark"] .order-table th {
+  background: #182236 !important;
+  color: #CBD5E1 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+[data-theme="dark"] .order-table td {
+  color: #FFFFFF !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+[data-theme="dark"] .order-table tfoot td {
+  background: #182236 !important;
+  border-top-color: rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+}
+
+/* ---- Customer Status Notification Pop-up ---- */
+.cust-status-alert {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  background: var(--surface);
+  border: 2px solid var(--amber);
+  border-radius: 16px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.22);
+  width: 320px;
+  overflow: hidden;
+  animation: slideUpIn 0.4s cubic-bezier(0.16,1,0.3,1);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.cust-status-alert.hiding {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+}
+.csa-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.csa-body {
+  padding: 14px 16px;
+}
+.csa-progress {
+  height: 3px;
+  background: var(--amber);
+  animation: csaTimer 6s linear forwards;
+  transform-origin: left;
+}
+@keyframes slideUpIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes csaTimer {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+[data-theme="dark"] .cust-status-alert {
+  background: #131C2E !important;
+  border-color: rgba(245, 158, 11, 0.6) !important;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5) !important;
+}
+</style>
+</head>
+<body>
+<div id="app-header"></div>
+
+<div class="account-layout">
+  <!-- Sidebar -->
+  <aside class="account-sidebar">
+    <div class="profile-card">
+      <div class="profile-av" id="profileAv">U</div>
+      <div class="profile-name" id="profileName">Loading…</div>
+      <div class="profile-email" id="profileEmail"></div>
+    </div>
+    <nav class="account-nav" style="background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:8px;margin-top:12px;box-shadow:var(--shadow-sm)">
+      <a href="#" class="active" id="navOrders" onclick="showTab('orders',event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M2 3h2l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.6L21 7H6"/></svg>
+        Order history
+      </a>
+      <a href="#" id="navProfile" onclick="showTab('profile',event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile settings
+      </a>
+      <a href="index.html#categories">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Specialties
+      </a>
+      <a href="#" onclick="AUTH.logout();return false;" style="color:var(--danger)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Sign out
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main>
+    <!-- ORDER HISTORY -->
+    <div class="account-panel-wrap" id="panelOrders">
+      <h2>Order history</h2>
+      <div id="orderList"></div>
+    </div>
+
+    <!-- PROFILE SETTINGS -->
+    <div class="account-panel-wrap hidden" id="panelProfile">
+      <h2>Profile settings</h2>
+      <form onsubmit="saveProfile(event)">
+        <div class="field"><label>Full name</label><input id="p-name" placeholder="Your name" autocomplete="name"></div>
+        <div class="field"><label>Email address</label><input id="p-email" type="email" placeholder="your@email.com" autocomplete="email" disabled style="opacity:.6"></div>
+        <div style="height:1px;background:var(--line);margin:16px 0"></div>
+        <h3 style="font-size:16px;margin-bottom:14px">Change password</h3>
+        <div class="field"><label>Current password</label><input id="p-cur" type="password" placeholder="Current password" autocomplete="current-password"></div>
+        <div class="field"><label>New password</label><input id="p-new" type="password" placeholder="New password (min 6 chars)" autocomplete="new-password"></div>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </form>
+    </div>
+
+    <!-- Mobile quick nav (shown when sidebar hidden on mobile) -->
+    <div style="display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:12px;margin-bottom:16px;box-shadow:var(--shadow-sm)" id="mobileAccountNav">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="showTab('orders',event)">Orders</button>
+        <button class="btn btn-ghost btn-sm" onclick="showTab('profile',event)">Profile</button>
+        <button class="btn btn-ghost btn-sm" onclick="AUTH.logout()">Sign out</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-bottom">
+      <span>&copy; <span id="yr"></span> M N Enterprises, Bangarapet.</span>
+      <a href="index.html">← Home</a>
+    </div>
+  </div>
+</footer>
+
+<div id="shared-ui"></div>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/products.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/firebase-db.js"></script>
+<script src="assets/js/app.js?v=4"></script>
+<script>
+APP.init();
+
+// Protect page
+if (!AUTH.requireAuth("login.html")) throw new Error("Not logged in");
+
+const user = AUTH.getSession();
+
+// Populate header
+document.getElementById("profileAv").textContent    = (user.name||"U")[0].toUpperCase();
+document.getElementById("profileName").textContent  = user.name || "Customer";
+document.getElementById("profileEmail").textContent = user.email || "";
+
+// Show admin link if admin
+if (user.role==="admin") {
+  const nav = document.querySelector(".account-nav");
+  const adminLink = document.createElement("a");
+  adminLink.href = "admin/index.html";
+  adminLink.style.color = "var(--amber-dark)";
+  adminLink.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin Dashboard`;
+  nav.insertBefore(adminLink, nav.firstChild);
+}
+
+// Populate profile form
+if (document.getElementById("p-name"))  document.getElementById("p-name").value  = user.name||"";
+if (document.getElementById("p-email")) document.getElementById("p-email").value = user.email||"";
+
+// Mobile nav toggle
+if (window.innerWidth<=720) {
+  document.getElementById("mobileAccountNav").style.display="block";
+}
+
+function showTab(tab, e) {
+  if (e) e.preventDefault();
+  const isOrders = tab==="orders";
+  document.getElementById("panelOrders").classList.toggle("hidden", !isOrders);
+  document.getElementById("panelProfile").classList.toggle("hidden", isOrders);
+  document.getElementById("navOrders").classList.toggle("active", isOrders);
+  document.getElementById("navProfile").classList.toggle("active", !isOrders);
+}
+
+function renderOrders() {
+  const el = document.getElementById("orderList");
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem("mn_orders")||"[]"); } catch(e){}
+
+  if (!orders.length) {
+    el.innerHTML=`<div style="text-align:center;padding:48px 0;color:var(--muted)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin:0 auto 12px;opacity:.35"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M2 3h2l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.6L21 7H6"/></svg>
+      <p style="font-weight:600">No orders yet</p>
+      <p style="margin-top:6px;font-size:13.5px">Your WhatsApp orders will appear here after you place them.</p>
+      <a href="index.html#categories" class="btn btn-primary mt-16">View Specialties</a>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = orders.map((o, idx)=>{
+    const d = new Date(o.date);
+    const dateStr = d.toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+    const timeStr = d.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
+    const items = o.items || [];
+    const totalQty = items.reduce((sum, item) => sum + (Number(item.qty) || 1), 0);
+    const orderNum = o.id ? "#" + o.id.slice(-6).toUpperCase() : `#${idx+1}`;
+
+    // Item table rows with product thumbnails
+    const itemRows = items.map((item, i) => {
+      const price = Number(item.price) || 0;
+      const qty = Number(item.qty) || 1;
+      const sub = price * qty;
+      const prodObj = (typeof PRODUCTS !== "undefined" && typeof PRODUCTS.findById === "function")
+        ? PRODUCTS.findById(item.id || item.productId)
+        : null;
+      const prodFromAll = (typeof PRODUCTS !== "undefined" && typeof PRODUCTS.getAll === "function")
+        ? PRODUCTS.getAll().find(p => p.name === item.name || p.id === item.id)
+        : null;
+      const imgSrc = item.img || (prodObj && prodObj.img) || (prodFromAll && prodFromAll.img) || "assets/img/products/gm-led-bulb-9w.jpg";
+
+      return `<tr>
+        <td style="text-align:center;color:var(--muted);font-weight:600">${i + 1}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(item.name)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);flex:none" onerror="this.src='assets/img/products/gm-led-bulb-9w.jpg'">
+            <div>
+              <div style="font-weight:600;color:var(--ink)">${escapeHtml(item.name)}</div>
+              ${item.brand ? `<div style="font-size:11.5px;color:var(--muted)">${escapeHtml(item.brand)}</div>` : ''}
+            </div>
+          </div>
+        </td>
+        <td style="text-align:right;white-space:nowrap">${price ? APP.inr(price) : "—"}</td>
+        <td style="text-align:center;font-weight:700">×${qty}</td>
+        <td style="text-align:right;font-weight:700;color:var(--ink);white-space:nowrap">${sub ? APP.inr(sub) : "—"}</td>
+      </tr>`;
+    }).join("");
+
+    const st = o.status || "placed";
+    const isCancelled = st === "cancelled";
+    const isPlaced = !isCancelled;
+    const isConfirmed = !isCancelled && (st === "confirmed" || st === "ready" || st === "collected");
+    const isReady = !isCancelled && (st === "ready" || st === "collected");
+    const isCollected = !isCancelled && (st === "collected");
+
+    return `<div class="order-item" id="order-card-${o.id}">
+      <div class="order-head">
+        <div>
+          <div class="order-id">${orderNum}</div>
+          <div class="order-date">${dateStr} at ${timeStr}${o.name ? " · " + escapeHtml(o.name) : ""}</div>
+          ${o.slot ? `<div style="font-size:12px;color:var(--amber);margin-top:3px;font-weight:600">🕒 ${escapeHtml(o.slot)}</div>` : ""}
+        </div>
+        <div class="order-total-block">
+          <div class="order-total-val">₹${Number(o.total).toLocaleString("en-IN")}</div>
+          <span class="order-badge-status" style="${isCancelled ? 'background:rgba(239,68,68,0.15);color:#EF4444;border-color:rgba(239,68,68,0.3)' : (isReady?'background:rgba(16,185,129,0.15);color:#10B981;border-color:rgba(16,185,129,0.3)':(isConfirmed?'background:rgba(59,130,246,0.15);color:#3B82F6;border-color:rgba(59,130,246,0.3)':''))}">${isCancelled ? 'Cancelled' : (isCollected ? 'Collected' : (isReady ? 'Ready for Pickup' : (isConfirmed ? 'Confirmed' : 'Placed')))}</span>
+        </div>
+      </div>
+
+      ${isCancelled ? `<div style="font-size:12.5px;color:#EF4444;background:rgba(239,68,68,0.08);padding:8px 12px;border-radius:8px;margin-bottom:12px;border:1px solid rgba(239,68,68,0.2)">This order has been cancelled. Please message the shop on WhatsApp if you need assistance.</div>` : ''}
+
+      <!-- Order Tracking Timeline -->
+      <div class="order-tracker" style="${isCancelled?'opacity:0.45;filter:grayscale(0.8)':''}">
+        <div class="ot-step ${isPlaced ? (isConfirmed ? 'done' : 'active') : ''}">
+          <div class="ot-dot">${isConfirmed ? '✓' : '1'}</div>
+          <span class="ot-label">Placed</span>
+        </div>
+        <div style="flex:1;height:2px;background:${isConfirmed?'#10B981':'var(--line)'};margin:0 4px 14px"></div>
+        <div class="ot-step ${isConfirmed ? (isReady ? 'done' : 'active') : ''}">
+          <div class="ot-dot">${isReady ? '✓' : '2'}</div>
+          <span class="ot-label">Confirmed</span>
+        </div>
+        <div style="flex:1;height:2px;background:${isReady?'#10B981':'var(--line)'};margin:0 4px 14px"></div>
+        <div class="ot-step ${isReady ? (isCollected ? 'done' : 'active') : ''}">
+          <div class="ot-dot">${isCollected ? '✓' : '3'}</div>
+          <span class="ot-label">Ready for Pickup</span>
+        </div>
+        <div style="flex:1;height:2px;background:${isCollected?'#10B981':'var(--line)'};margin:0 4px 14px"></div>
+        <div class="ot-step ${isCollected ? 'active done' : ''}">
+          <div class="ot-dot">${isCollected ? '✓' : '4'}</div>
+          <span class="ot-label">Collected</span>
+        </div>
+      </div>
+
+      <div class="order-summary-row">
+        <div class="order-item-count">
+          <strong>${totalQty} ${totalQty === 1 ? 'item' : 'items'}</strong> (${items.length} ${items.length === 1 ? 'product' : 'products'})
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-sm btn-amber" onclick="APP.reorderOrder('${o.id}')" title="Reorder all items from this order into your cart" style="cursor:pointer">
+            🔁 Reorder Items
+          </button>
+          <button class="btn-order-toggle" onclick="toggleOrderDropdown('${o.id}')" id="btn-toggle-${o.id}" title="View full table details">
+            <span id="btn-toggle-text-${o.id}">View Details (Table)</span>
+            <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;min-width:14px;max-width:14px;flex:none"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dropdown Table Panel -->
+      <div class="order-dropdown-panel" id="order-dropdown-${o.id}">
+        <div class="order-table-wrap">
+          <table class="order-table">
+            <thead>
+              <tr>
+                <th style="width:40px;text-align:center">#</th>
+                <th>Product Description</th>
+                <th style="text-align:right;width:105px">Unit Price</th>
+                <th style="text-align:center;width:65px">Qty</th>
+                <th style="text-align:right;width:115px">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemRows || '<tr><td colspan="5" style="text-align:center;padding:12px;color:var(--muted)">No item breakdown available</td></tr>'}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" style="text-align:right;font-weight:700">Total Order Amount:</td>
+                <td style="text-align:right;font-weight:800;color:var(--amber);font-size:14px">₹${Number(o.total).toLocaleString("en-IN")}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        ${o.note ? `<div style="font-size:12.5px;color:var(--muted);margin-bottom:12px;padding:8px 12px;background:var(--surface-2);border-radius:8px;border:1px solid var(--line)"><strong>Note / Delivery details:</strong> ${escapeHtml(o.note)}</div>` : ""}
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-primary" onclick="shareOrderBill('${o.id}')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.86L2.05 22l5.36-1.4a9.87 9.87 0 004.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.15-4.9-4.34-.14-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.81 2 .88 2.15.07.14.12.31.02.5-.1.19-.15.31-.3.48-.14.17-.3.37-.43.5-.14.14-.29.29-.13.57.17.28.75 1.24 1.6 2 1.11.99 2.04 1.29 2.32 1.44.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.28.38-.24.64-.14.26.1 1.66.78 1.94.93.29.14.48.21.55.33.07.12.07.68-.16 1.36z"/></svg>
+            Send Table Bill
+          </button>
+          <button class="btn btn-sm btn-secondary" onclick="downloadOrderBillImage('${o.id}')" style="cursor:pointer">
+            🖼️ Save Receipt
+          </button>
+          <button class="btn btn-sm btn-secondary" onclick="copyOrderBillImage('${o.id}')" style="cursor:pointer">
+            📋 Copy Receipt
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function toggleOrderDropdown(id) {
+  const panel = document.getElementById("order-dropdown-" + id);
+  const btn = document.getElementById("btn-toggle-" + id);
+  const text = document.getElementById("btn-toggle-text-" + id);
+  if (!panel || !btn) return;
+  const isOpen = panel.classList.contains("open");
+  if (isOpen) {
+    panel.classList.remove("open");
+    btn.classList.remove("open");
+    if (text) text.textContent = "View Details (Table)";
+  } else {
+    panel.classList.add("open");
+    btn.classList.add("open");
+    if (text) text.textContent = "Hide Details";
+  }
+}
+
+function escapeHtml(s) {
+  if (!s) return "";
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function shareOrderBill(orderId) {
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem("mn_orders")||"[]"); } catch(e){}
+  const o = orders.find(x => x.id === orderId);
+  if (!o) return;
+  const msg = APP.formatWhatsAppBill({
+    orderId: o.id,
+    date: o.date,
+    name: o.name,
+    note: o.note,
+    items: o.items || [],
+    total: o.total
+  });
+  window.open("https://wa.me/" + APP.WA + "?text=" + encodeURIComponent(msg), "_blank");
+}
+
+function downloadOrderBillImage(orderId) {
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem("mn_orders")||"[]"); } catch(e){}
+  const o = orders.find(x => x.id === orderId);
+  if (!o) return;
+  APP.downloadBillImage(o);
+}
+
+function copyOrderBillImage(orderId) {
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem("mn_orders")||"[]"); } catch(e){}
+  const o = orders.find(x => x.id === orderId);
+  if (!o) return;
+  APP.copyBillImage(o);
+}
+
+function saveProfile(e) {
+  e.preventDefault();
+  const name = document.getElementById("p-name").value.trim();
+  const curPass = document.getElementById("p-cur").value;
+  const newPass = document.getElementById("p-new").value;
+  if (!name) { APP.toast("Name cannot be empty","error"); return; }
+  // Update session name
+  const session = AUTH.getSession();
+  session.name = name;
+  AUTH.saveSession(session);
+  // Update in users array
+  const users = AUTH.getUsers();
+  const idx = users.findIndex(u=>u.id===session.userId);
+  if (idx>=0) {
+    users[idx].name = name;
+    if (curPass && newPass) {
+      if (users[idx].password !== curPass) { APP.toast("Current password is incorrect","error"); return; }
+      if (newPass.length < 6) { APP.toast("New password must be at least 6 characters","error"); return; }
+      users[idx].password = newPass;
+    }
+    AUTH.saveUsers(users);
+  }
+  document.getElementById("profileName").textContent = name;
+  document.getElementById("profileAv").textContent   = name[0].toUpperCase();
+  APP.toast("Profile updated","success");
+}
+
+renderOrders();
+
+/* ---- Real-time Customer Order Status Notification ---- */
+const STATUS_META = {
+  placed:    { label: "Order Placed",        emoji: "🟡", color: "#D97706", bg: "rgba(245,158,11,0.12)" },
+  confirmed: { label: "Order Confirmed",     emoji: "🔵", color: "#2563EB", bg: "rgba(59,130,246,0.12)" },
+  ready:     { label: "Ready for Pickup! 🎉",emoji: "🟢", color: "#059669", bg: "rgba(16,185,129,0.12)" },
+  collected: { label: "Order Collected",     emoji: "⚪", color: "#475569", bg: "rgba(100,116,139,0.12)" },
+  cancelled: { label: "Order Cancelled",     emoji: "🔴", color: "#DC2626", bg: "rgba(239,68,68,0.12)" }
+};
+
+let _statusAlertTimer = null;
+let _lastSeenStatuses = {};
+
+// Initialize from current orders
+try {
+  const cur = JSON.parse(localStorage.getItem("mn_orders") || "[]");
+  cur.forEach(o => { _lastSeenStatuses[o.id] = o.status || "placed"; });
+} catch(e){}
+
+function showCustomerStatusAlert(orderId, newStatus) {
+  // Remove any existing alert
+  const existing = document.getElementById("custStatusAlert");
+  if (existing) existing.remove();
+  if (_statusAlertTimer) clearTimeout(_statusAlertTimer);
+
+  const meta = STATUS_META[newStatus] || STATUS_META.placed;
+  const orderNum = "#" + orderId.slice(-6).toUpperCase();
+
+  const el = document.createElement("div");
+  el.id = "custStatusAlert";
+  el.className = "cust-status-alert";
+  el.innerHTML = `
+    <div class="csa-progress"></div>
+    <div class="csa-header" style="background:${meta.bg}">
+      <span style="font-size:22px">${meta.emoji}</span>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:13.5px;color:${meta.color}">${meta.label}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:1px">Order ${orderNum} has been updated</div>
+      </div>
+      <button onclick="document.getElementById('custStatusAlert').remove()" style="border:none;background:none;font-size:18px;color:var(--muted);cursor:pointer;padding:2px 4px;line-height:1">×</button>
+    </div>
+    <div class="csa-body">
+      <p style="font-size:13px;color:var(--ink);margin-bottom:12px;line-height:1.5">
+        ${newStatus === 'ready' ? '<strong>Your items are packed and ready!</strong> Please visit M N Enterprises at your convenience.' :
+          newStatus === 'confirmed' ? 'Your order has been confirmed and is being prepared for you.' :
+          newStatus === 'collected' ? 'Thank you for shopping with M N Enterprises!' :
+          newStatus === 'cancelled' ? 'Your order has been cancelled. Contact us on WhatsApp if you have questions.' :
+          'Your order status has been updated by our team.'}
+      </p>
+      <button onclick="showTab('orders');document.getElementById('custStatusAlert').remove()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;background:var(--amber);color:var(--amber-ink);border:none;font-weight:700;font-size:12.5px;cursor:pointer;font-family:var(--font-body)">
+        📋 View My Orders
+      </button>
+    </div>
+  `;
+  document.body.appendChild(el);
+
+  // Auto-dismiss after 6 seconds
+  _statusAlertTimer = setTimeout(() => {
+    const a = document.getElementById("custStatusAlert");
+    if (a) {
+      a.classList.add("hiding");
+      setTimeout(() => a.remove(), 400);
+    }
+  }, 6000);
+
+  // Also refresh the order list so the new status shows
+  renderOrders();
+}
+
+// Listen for status changes via localStorage (from admin page)
+window.addEventListener("storage", (e) => {
+  if (e.key === "mn_orders" && e.newValue) {
+    try {
+      const orders = JSON.parse(e.newValue);
+      orders.forEach(o => {
+        const prev = _lastSeenStatuses[o.id];
+        const cur = o.status || "placed";
+        if (prev !== undefined && prev !== cur) {
+          // Status changed! Show notification
+          showCustomerStatusAlert(o.id, cur);
+        }
+        _lastSeenStatuses[o.id] = cur;
+      });
+    } catch(err) {}
+  }
+});
+</script>
+</body>
+</html>

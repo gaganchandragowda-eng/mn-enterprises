@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setup — M N Enterprises</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--amber:#F59E0B;--green:#10B981;--red:#EF4444;--blue:#3B82F6;--bg:#0B0F19;--surface:#131C2E;--surface2:#1E2A42;--ink:#F1F5F9;--muted:#64748B;--line:rgba(255,255,255,0.08)}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px}
+  .logo{font-family:'Archivo',sans-serif;font-size:22px;font-weight:800;color:var(--amber);margin-bottom:6px;letter-spacing:-.5px}
+  .subtitle{font-size:13px;color:var(--muted);margin-bottom:36px}
+  .wizard{width:100%;max-width:700px;display:flex;flex-direction:column;gap:20px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative}
+  .card-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .step-badge{width:32px;height:32px;border-radius:50%;background:var(--amber);color:#000;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none}
+  .step-badge.done{background:var(--green)}
+  .card h2{font-family:'Archivo',sans-serif;font-size:17px;font-weight:700;color:var(--ink)}
+  .card p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .field input,.field textarea{width:100%;padding:10px 14px;background:var(--surface2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+  .field input:focus,.field textarea:focus{border-color:var(--amber)}
+  .field textarea{min-height:180px;font-family:'Courier New',monospace;font-size:12px;resize:vertical}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer;border:none;transition:all .2s;text-decoration:none}
+  .btn-primary{background:var(--amber);color:#000}
+  .btn-primary:hover{background:#fbbf24}
+  .btn-secondary{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}
+  .btn-full{width:100%;justify-content:center}
+  .btn-sm{padding:7px 14px;font-size:12.5px}
+  .step-list{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:10px}
+  .step-list li{counter-increment:step;display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:13px;line-height:1.5}
+  .step-list li::before{content:counter(step);width:22px;height:22px;border-radius:50%;background:var(--amber);color:#000;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px}
+  .step-list a{color:var(--amber);font-weight:600}
+  .code{background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:14px;font-family:'Courier New',monospace;font-size:12px;color:#94A3B8;white-space:pre-wrap;word-break:break-all;margin:10px 0;max-height:200px;overflow-y:auto}
+  .alert{padding:12px 16px;border-radius:8px;font-size:13px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+  .alert-success{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#34D399}
+  .alert-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#FCA5A5}
+  .alert-info{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--amber)}
+  .status-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:var(--surface2);border:1px solid var(--line);font-size:13px;margin-bottom:8px}
+  .dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .dot.green{background:var(--green)}
+  .dot.red{background:var(--red)}
+  .dot.amber{background:var(--amber)}
+  #toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;background:#fff;color:#000;border-radius:10px;font-weight:600;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.4);display:none;z-index:9999}
+  @media(max-width:600px){body{padding:16px 12px}}
+</style>
+</head>
+<body>
+<div class="logo">🔥 M N Enterprises — Setup</div>
+<div class="subtitle">Configure Firebase & Deploy to Vercel in 5 minutes</div>
+
+<div class="wizard">
+
+  <!-- STATUS CHECK -->
+  <div class="card" id="statusCard">
+    <div class="card-header">
+      <div class="step-badge">●</div>
+      <h2>Current Status</h2>
+    </div>
+    <div id="statusRows">
+      <div class="status-row"><div class="dot amber" id="fbDot"></div><span id="fbStatus">Checking Firebase...</span></div>
+      <div class="status-row"><div class="dot amber" id="authDot"></div><span id="authStatus">Checking Auth...</span></div>
+      <div class="status-row"><div class="dot amber" id="dbDot"></div><span id="dbStatus">Checking Firestore...</span></div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--muted)" id="modeLabel"></div>
+  </div>
+
+  <!-- STEP 1: CREATE FIREBASE PROJECT -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-badge">1</div>
+      <h2>Create Firebase Project</h2>
+    </div>
+    <ul class="step-list">
+      <li>Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> and sign in with your Google account</li>
+      <li>Click <strong>"Add project"</strong> → name it <strong>mn-enterprises</strong> → click Continue → Disable Google Analytics → Create Project</li>
+      <li>In the left sidebar: <strong>Build → Firestore Database → Create Database</strong> → choose <strong>Start in test mode</strong> → pick region <strong>asia-south1 (Mumbai)</strong> → Enable</li>
+      <li>In the left sidebar: <strong>Build → Authentication → Get Started → Email/Password → Enable</strong> → Save</li>
+      <li>Go to <strong>Project Settings (⚙️ gear icon) → Your Apps → Add App (web icon &lt;/&gt;)</strong> → Register app as "mn-enterprises-web" → Copy the config</li>
+    </ul>
+  </div>
+
+  <!-- STEP 2: PASTE CONFIG -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-badge">2</div>
+      <h2>Paste Your Firebase Config</h2>
+    </div>
+    <p>Copy the <code>firebaseConfig</code> object from Firebase and paste it below. It should look like this:</p>
+    <div class="code">const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc..."
+};</div>
+    <div class="field">
+      <label>Paste Firebase Config Here</label>
+      <textarea id="configInput" placeholder="Paste your firebaseConfig object here..."></textarea>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="applyConfig()">✅ Apply Config & Test Connection</button>
+    <div id="configResult" style="margin-top:12px"></div>
+  </div>
+
+  <!-- STEP 3: SEED ADMIN -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-badge">3</div>
+      <h2>Set Admin Credentials</h2>
+    </div>
+    <p>Set the username and password your admin will use to log into the dashboard.</p>
+    <div class="field"><label>Admin Username</label><input id="adminUser" value="admin" placeholder="admin"></div>
+    <div class="field"><label>Admin Password</label><input id="adminPass" type="password" value="mn2026" placeholder="Strong password"></div>
+    <button class="btn btn-primary btn-sm" onclick="saveAdminCreds()">💾 Save Admin Credentials to Firestore</button>
+    <div id="adminResult" style="margin-top:10px;font-size:13px"></div>
+  </div>
+
+  <!-- STEP 4: DEPLOY TO VERCEL -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-badge">4</div>
+      <h2>Deploy to Vercel (Free)</h2>
+    </div>
+    <ul class="step-list">
+      <li>Push this entire <strong>html/</strong> folder to a GitHub repository. If you don't have git installed, download <a href="https://desktop.github.com" target="_blank">GitHub Desktop</a></li>
+      <li>Go to <a href="https://vercel.com" target="_blank">vercel.com</a> → Sign in with GitHub → Click <strong>"Add New Project"</strong></li>
+      <li>Import your GitHub repository → Vercel will auto-detect it as a static site → Click <strong>"Deploy"</strong></li>
+      <li>Your site will be live at <strong>your-project.vercel.app</strong> in about 30 seconds 🎉</li>
+      <li>Add a custom domain (optional): <strong>Vercel Dashboard → Domains → Add your domain</strong></li>
+    </ul>
+    <div class="alert alert-info" style="margin-top:14px">
+      ⚡ <strong>Important:</strong> After deploying, add your Vercel domain to Firebase Authorized Domains: Firebase Console → Authentication → Settings → Authorized Domains → Add Domain
+    </div>
+  </div>
+
+  <!-- STEP 5: TEST -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-badge">5</div>
+      <h2>Test Everything</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button class="btn btn-secondary btn-sm btn-full" onclick="testFirestore()">🔥 Test Firestore Write</button>
+      <button class="btn btn-secondary btn-sm btn-full" onclick="testAuth()">🔑 Test Auth System</button>
+      <button class="btn btn-secondary btn-sm btn-full" onclick="window.open('index.html','_blank')">🏪 Open Shop</button>
+      <button class="btn btn-secondary btn-sm btn-full" onclick="window.open('admin/index.html','_blank')">🛠️ Open Admin</button>
+    </div>
+    <div id="testResult" style="margin-top:12px;font-size:13px"></div>
+  </div>
+
+  <!-- FIREBASE CONFIG FILE PREVIEW -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-badge">📄</div>
+      <h2>Generated Config File</h2>
+    </div>
+    <p>This is the content of <strong>assets/js/firebase-config.js</strong>. After applying your config above, download this and replace the file in your project.</p>
+    <div class="code" id="configPreview">Loading...</div>
+    <button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="downloadConfig()">⬇️ Download firebase-config.js</button>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script>
+
+let currentConfig = null;
+
+function toast(msg, ok=true) {
+  const t = document.getElementById("toast");
+  t.textContent = (ok ? "✅ " : "❌ ") + msg;
+  t.style.display = "block";
+  t.style.background = ok ? "#10B981" : "#EF4444";
+  t.style.color = "#fff";
+  setTimeout(() => t.style.display = "none", 3500);
+}
+
+function checkStatus() {
+  const fbDot = document.getElementById("fbDot");
+  const authDot = document.getElementById("authDot");
+  const dbDot = document.getElementById("dbDot");
+  const fbStatus = document.getElementById("fbStatus");
+  const authStatus = document.getElementById("authStatus");
+  const dbStatus = document.getElementById("dbStatus");
+  const modeLabel = document.getElementById("modeLabel");
+
+  if (typeof firebase !== "undefined" && firebase.apps.length) {
+    fbDot.className = "dot green";
+    fbStatus.textContent = "Firebase SDK loaded ✓";
+  } else {
+    fbDot.className = "dot red";
+    fbStatus.textContent = "Firebase SDK not loaded";
+  }
+
+  if (window._auth) {
+    authDot.className = "dot green";
+    authStatus.textContent = "Firebase Auth connected ✓";
+  } else {
+    authDot.className = "dot red";
+    authStatus.textContent = "Auth not configured — enter config below";
+  }
+
+  if (window._db) {
+    dbDot.className = "dot green";
+    dbStatus.textContent = "Firestore connected ✓ — Multi-device orders active!";
+    modeLabel.textContent = "🔥 Running in FIREBASE mode — orders are saved to the cloud";
+    modeLabel.style.color = "#10B981";
+  } else {
+    dbDot.className = "dot red";
+    dbStatus.textContent = "Firestore not configured — orders saved locally only";
+    modeLabel.textContent = "💾 Running in localStorage mode — enter config to go live";
+  }
+}
+
+function applyConfig() {
+  const raw = document.getElementById("configInput").value.trim();
+  const res = document.getElementById("configResult");
+
+  if (!raw) {
+    res.innerHTML = `<div class="alert alert-error">❌ Please paste your Firebase config first.</div>`;
+    return;
+  }
+
+  // Extract JSON from the pasted text
+  let cfg;
+  try {
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No object found");
+    // Replace JS object (no quotes on keys) with valid JSON
+    const cleaned = match[0]
+      .replace(/\/\/[^\n]*/g, "")
+      .replace(/(\w+):/g, '"$1":')
+      .replace(/'/g, '"');
+    cfg = JSON.parse(cleaned);
+  } catch(e) {
+    res.innerHTML = `<div class="alert alert-error">❌ Could not parse config. Make sure you pasted the full firebaseConfig object.</div>`;
+    return;
+  }
+
+  if (!cfg.apiKey || !cfg.projectId) {
+    res.innerHTML = `<div class="alert alert-error">❌ Config is missing apiKey or projectId.</div>`;
+    return;
+  }
+
+  currentConfig = cfg;
+  res.innerHTML = `<div class="alert alert-info">⏳ Connecting to Firebase...</div>`;
+
+  try {
+    if (firebase.apps.length) {
+      firebase.apps.forEach(app => app.delete());
+    }
+    firebase.initializeApp(cfg);
+    const testDb   = firebase.firestore();
+    const testAuth = firebase.auth();
+
+    testDb.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+
+    // Test Firestore with a simple read
+    testDb.collection("config").doc("setup_test").set({
+      testedAt: new Date().toISOString(),
+      ok: true
+    }).then(() => {
+      window._db   = testDb;
+      window._auth = testAuth;
+      res.innerHTML = `<div class="alert alert-success">✅ Connected successfully! Firebase + Firestore working perfectly.</div>`;
+      checkStatus();
+      updateConfigPreview(cfg);
+      toast("Firebase connected!");
+    }).catch(err => {
+      res.innerHTML = `<div class="alert alert-error">❌ Firestore write failed: ${err.message}<br><br>Make sure Firestore Database is enabled in your Firebase project (Build → Firestore Database)</div>`;
+    });
+  } catch(e) {
+    res.innerHTML = `<div class="alert alert-error">❌ Init error: ${e.message}</div>`;
+  }
+}
+
+function saveAdminCreds() {
+  if (!window._db) {
+    document.getElementById("adminResult").innerHTML = `<span style="color:#FCA5A5">⚠️ Connect Firebase first (Step 2)</span>`;
+    return;
+  }
+  const user = document.getElementById("adminUser").value.trim();
+  const pass = document.getElementById("adminPass").value.trim();
+  if (!user || !pass) {
+    document.getElementById("adminResult").innerHTML = `<span style="color:#FCA5A5">⚠️ Enter username and password</span>`;
+    return;
+  }
+  window._db.collection("config").doc("admin").set({
+    username: user, password: pass, updatedAt: new Date().toISOString()
+  }).then(() => {
+    document.getElementById("adminResult").innerHTML = `<span style="color:#34D399">✅ Admin credentials saved to Firestore!</span>`;
+    toast("Admin credentials saved!");
+  }).catch(e => {
+    document.getElementById("adminResult").innerHTML = `<span style="color:#FCA5A5">❌ ${e.message}</span>`;
+  });
+}
+
+async function testFirestore() {
+  const res = document.getElementById("testResult");
+  if (!window._db) {
+    res.innerHTML = `<span style="color:#FCA5A5">⚠️ No Firebase connection. Complete Step 2 first.</span>`;
+    return;
+  }
+  try {
+    const testId = "test_" + Date.now();
+    await window._db.collection("test").doc(testId).set({ value: "hello", ts: new Date().toISOString() });
+    const doc = await window._db.collection("test").doc(testId).get();
+    await window._db.collection("test").doc(testId).delete();
+    res.innerHTML = `<div class="alert alert-success">✅ Firestore write + read + delete — all working perfectly!</div>`;
+    toast("Firestore test passed!");
+  } catch(e) {
+    res.innerHTML = `<div class="alert alert-error">❌ Firestore error: ${e.message}</div>`;
+  }
+}
+
+function testAuth() {
+  const res = document.getElementById("testResult");
+  if (!window._auth) {
+    res.innerHTML = `<span style="color:#FCA5A5">⚠️ No Firebase Auth. Complete Step 2 first.</span>`;
+    return;
+  }
+  res.innerHTML = `<div class="alert alert-success">✅ Firebase Auth is initialized. Email/Password auth ready for customer signups!</div>`;
+  toast("Auth system OK!");
+}
+
+function updateConfigPreview(cfg) {
+  const preview = document.getElementById("configPreview");
+  preview.textContent = `const FIREBASE_CONFIG = ${JSON.stringify(cfg, null, 2)};
+
+const FIREBASE_READY = (
+  FIREBASE_CONFIG.apiKey &&
+  !FIREBASE_CONFIG.apiKey.includes("PLACEHOLDER")
+);
+
+if (FIREBASE_READY) {
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+    }
+    window._db   = firebase.firestore();
+    window._auth = firebase.auth();
+    window._db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+    console.log("✅ Firebase connected — M N Enterprises");
+  } catch (e) {
+    console.error("Firebase init error:", e);
+    window._db   = null;
+    window._auth = null;
+  }
+} else {
+  window._db   = null;
+  window._auth = null;
+}`;
+}
+
+function downloadConfig() {
+  const content = document.getElementById("configPreview").textContent;
+  if (!currentConfig) {
+    toast("Apply config first (Step 2)", false);
+    return;
+  }
+  const blob = new Blob([content], { type: "text/javascript" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = "firebase-config.js";
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("firebase-config.js downloaded!");
+}
+
+// Init
+document.addEventListener("DOMContentLoaded", () => {
+  checkStatus();
+  const existing = document.getElementById("configPreview");
+  if (existing) {
+    existing.textContent = `/* Paste your Firebase config in Step 2 and click Apply.
+The generated firebase-config.js content will appear here
+and you can download it to replace your current file. */`;
+  }
+});
+</script>
+</body>
+</html>
