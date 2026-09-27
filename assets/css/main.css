@@ -2135,7 +2135,7 @@ html, body {
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   /* Mobile Header Container — Sticky so products scroll underneath */
   .site-header {
     position: sticky !important;
@@ -2666,7 +2666,7 @@ html, body {
    10. DESKTOP VIEW PRESERVATION
    Ensures desktop and "Desktop site" mode display pristine layout
    ================================================================ */
-@media (min-width: 769px) {
+@media (min-width: 861px) {
   .mobile-bottom-bar,
   .mobile-app-search-wrap,
   .mobile-deliver-strip,
