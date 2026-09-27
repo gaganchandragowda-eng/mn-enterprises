@@ -378,14 +378,6 @@ const APP = {
         <a href="#" onclick="APP.openRequirementModal();return false;">📋 Build My Requirement</a>
         <a href="#" onclick="APP.openPhotoModal();return false;">📷 Send Photo to Identify</a>
         <a href="#" onclick="APP.openAskExpertModal();return false;">👨🔧 Ask Shop Expert</a>
-        
-        <div class="adh-section-title" style="margin-top:14px">Shop by Category</div>
-        <a href="${base}shop.html?cat=lighting">💡 Lighting &amp; Bulbs</a>
-        <a href="${base}shop.html?cat=plumbing">🚰 Pipes &amp; Fittings</a>
-        <a href="${base}shop.html?cat=electrical">⚡ Wires, Switches &amp; MCB</a>
-        <a href="${base}shop.html?cat=pumps">💧 Pumps &amp; Water Tanks</a>
-        <a href="${base}shop.html?cat=cctv">📹 CCTV &amp; Security</a>
-        <a href="${base}shop.html?cat=network">🌐 WiFi &amp; Networking</a>
 
         <div class="adh-section-title" style="margin-top:14px">Your Account &amp; Orders</div>
         ${user
@@ -1418,20 +1410,7 @@ const APP = {
        ========================================================== */
     if (this.cartStep === "cart") {
       body.innerHTML = `
-        <!-- Amazon Top Subtotal Bar -->
-        <div style="background:var(--surface-2);border-bottom:1px solid var(--line);padding:14px;margin:-14px -14px 14px -14px">
-          <div style="font-size:16px;font-weight:800;color:var(--ink);margin-bottom:3px">
-            Subtotal (${totalItems} item${totalItems === 1 ? '' : 's'}): <span style="color:var(--amber)">${this.inr(subTot)}</span>
-          </div>
-          <div style="font-size:12px;color:#15803d;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:12px">
-            <span>✓</span> Your order qualifies for <b>FREE store fulfillment</b> in Bangarapet
-          </div>
-          <button class="btn btn-amber btn-full" style="justify-content:center;font-weight:800;font-size:14.5px;padding:12px;box-shadow:var(--shadow-sm)" onclick="APP.proceedToBuy()">
-            Proceed to Buy (${totalItems} item${totalItems === 1 ? '' : 's'})
-          </button>
-        </div>
-
-        <!-- Amazon Itemized Products List -->
+        <!-- Itemized Products List -->
         <div style="display:flex;flex-direction:column;gap:12px">
           ${items.map(({ p, qty }) => {
             const pct = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
