@@ -6,7 +6,7 @@
 <title>Admin Dashboard — M N Enterprises</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="/assets/css/main.css?v=36">
+<link rel="stylesheet" href="/assets/css/main.css?v=38">
 <style>
 /* Admin mobile top bar */
 .admin-mobile-bar{display:none;align-items:center;gap:12px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto}
@@ -755,6 +755,331 @@
   color: #F87171 !important;
   border-color: rgba(239, 68, 68, 0.5) !important;
 }
+
+/* ================================================================
+   10. COMPLETE COMPREHENSIVE MOBILE OPTIMIZATION (PHONES & TABLETS)
+   ================================================================ */
+.admin-bottom-nav {
+  display: none;
+}
+.wa-back-btn {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  /* Layout & Viewport Adjustments */
+  .admin-layout {
+    grid-template-columns: 1fr !important;
+    min-height: calc(100vh - 56px);
+  }
+  .admin-sidebar {
+    display: none !important;
+  }
+  .admin-content {
+    padding: 12px 10px 84px 10px !important;
+    overflow-x: hidden !important;
+  }
+  .admin-content h1 {
+    font-size: 20px !important;
+    line-height: 1.25 !important;
+  }
+  .page-sub {
+    font-size: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Admin Header */
+  .admin-top-bar {
+    padding: 0 12px !important;
+    height: 54px !important;
+  }
+  .atb-brand {
+    font-size: 14px !important;
+  }
+  .atb-sub, .atb-live-badge, .atb-admin-pill {
+    display: none !important;
+  }
+  .atb-store-btn {
+    padding: 5px 9px !important;
+    font-size: 11px !important;
+  }
+  .atb-logout-btn {
+    padding: 5px 9px !important;
+    font-size: 11px !important;
+  }
+
+  /* Sticky Horizontal Sub-Tabs */
+  .admin-mobile-bar {
+    display: flex !important;
+    position: sticky !important;
+    top: 54px !important;
+    z-index: 95 !important;
+    background: var(--surface) !important;
+    border-bottom: 1px solid var(--line) !important;
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .admin-mobile-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .admin-mobile-bar button {
+    flex: none !important;
+    padding: 7px 12px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border: 1px solid var(--line) !important;
+    background: var(--surface-2) !important;
+    color: var(--muted) !important;
+    white-space: nowrap !important;
+  }
+  .admin-mobile-bar button.active {
+    background: var(--amber) !important;
+    color: var(--amber-ink) !important;
+    border-color: var(--amber) !important;
+    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.25) !important;
+  }
+
+  /* Fixed Bottom Nav Bar */
+  .admin-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60px !important;
+    background: var(--surface) !important;
+    border-top: 1px solid var(--line) !important;
+    z-index: 9999 !important;
+    padding: 4px 6px calc(env(safe-area-inset-bottom, 0px) + 4px) !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.12) !important;
+  }
+  [data-theme="dark"] .admin-bottom-nav {
+    background: #131C2E !important;
+    border-top-color: rgba(255, 255, 255, 0.12) !important;
+  }
+  .admin-bottom-tab {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    flex: 1 !important;
+    color: var(--muted) !important;
+    text-decoration: none !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    position: relative !important;
+    padding: 4px 0 !important;
+  }
+  .admin-bottom-tab svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  .admin-bottom-tab.active {
+    color: var(--amber) !important;
+  }
+  .admin-bottom-tab.active svg {
+    transform: scale(1.1);
+  }
+  .admin-bottom-badge {
+    position: absolute;
+    top: 2px;
+    right: calc(50% - 16px);
+    background: #ef4444;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 10px;
+    line-height: 1.2;
+  }
+
+  /* Stat Cards */
+  .stat-cards {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+  }
+  .stat-card {
+    padding: 12px !important;
+    border-radius: 12px !important;
+  }
+  .stat-val {
+    font-size: 20px !important;
+  }
+  .stat-label {
+    font-size: 11px !important;
+  }
+
+  /* Product Form on Mobile */
+  .add-panel {
+    padding: 16px 14px !important;
+    border-radius: 14px !important;
+    margin-bottom: 16px !important;
+  }
+  .input-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  .input-row .field {
+    width: 100% !important;
+    flex: none !important;
+    margin-bottom: 4px !important;
+  }
+  .form-media-section {
+    padding: 12px 14px !important;
+  }
+
+  /* Toolbar on Mobile */
+  .prod-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+  .prod-search-box {
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+  .prod-controls-right {
+    width: 100% !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+  .prod-filter-group {
+    flex: 1 !important;
+  }
+  .prod-filter-group select {
+    width: 100% !important;
+  }
+
+  /* Products Grid View on Mobile */
+  .prod-grid-view {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .admin-prod-card .apc-img-wrap {
+    height: 120px !important;
+  }
+  .apc-body {
+    padding: 10px !important;
+  }
+  .apc-name {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+  }
+  .apc-price {
+    font-size: 15px !important;
+  }
+  .apc-actions {
+    flex-direction: column !important;
+    gap: 4px !important;
+    margin-top: 8px !important;
+  }
+  .apc-actions button {
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 11.5px !important;
+    justify-content: center !important;
+  }
+
+  /* Order Status stats pills */
+  .order-status-stats {
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 6px !important;
+    scrollbar-width: none !important;
+    margin-bottom: 12px !important;
+  }
+  .order-status-stats::-webkit-scrollbar {
+    display: none;
+  }
+  .oss-card {
+    flex: 0 0 130px !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+  }
+  .oss-card .num {
+    font-size: 18px !important;
+  }
+  .oss-card .lbl {
+    font-size: 10.5px !important;
+  }
+
+  /* Tables on Mobile */
+  .table-wrap {
+    border-radius: 12px !important;
+    margin-bottom: 16px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .data-table th, .data-table td {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* WhatsApp Hub on Mobile: Master-Detail Toggle */
+  .wa-hub {
+    grid-template-columns: 1fr !important;
+    height: calc(100vh - 170px) !important;
+    min-height: 480px !important;
+    border-radius: 12px !important;
+  }
+  .wa-hub.chat-open .wa-thread-list {
+    display: none !important;
+  }
+  .wa-hub.chat-open .wa-chat-area {
+    display: flex !important;
+  }
+  .wa-hub:not(.chat-open) .wa-chat-area {
+    display: none !important;
+  }
+  .wa-back-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 5px 10px !important;
+    background: var(--surface-2) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 6px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
+    cursor: pointer !important;
+  }
+
+  /* Modals on Mobile */
+  .status-modal-overlay {
+    padding: 10px !important;
+    align-items: flex-end !important;
+  }
+  .status-modal-card {
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 20px 20px 12px 12px !important;
+    padding: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .modal {
+    width: 95% !important;
+    max-width: 95% !important;
+    padding: 18px 14px !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1235,6 +1560,35 @@
   </div><!-- /admin-content -->
 </div><!-- /admin-layout -->
 
+<!-- Admin Mobile Bottom App Bar -->
+<nav class="admin-bottom-nav" id="adminBottomNav">
+  <button class="admin-bottom-tab active" id="abn-dashboard" onclick="showPanel('dashboard', event)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span>Dashboard</span>
+  </button>
+  <button class="admin-bottom-tab" id="abn-products" onclick="showPanel('products', event)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <span>Products</span>
+  </button>
+  <button class="admin-bottom-tab" id="abn-orders" onclick="showPanel('orders', event)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <span>Orders</span>
+    <span class="admin-bottom-badge" id="abnOrdersBadge" style="display:none">0</span>
+  </button>
+  <button class="admin-bottom-tab" id="abn-banners" onclick="showPanel('banners', event)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span>Banners</span>
+  </button>
+  <button class="admin-bottom-tab" id="abn-whatsapp" onclick="showPanel('whatsapp', event)">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.86L2.05 22l5.36-1.4a9.87 9.87 0 004.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+    <span>WhatsApp</span>
+  </button>
+  <button class="admin-bottom-tab" id="abn-settings" onclick="showPanel('settings', event)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <span>Settings</span>
+  </button>
+</nav>
+
 <!-- Order Status Update & WhatsApp Notification Modal -->
 <div id="orderStatusModal" class="status-modal-overlay" style="display:none" onclick="if(event.target===this) closeStatusModal()">
   <div class="status-modal-card">
@@ -1326,7 +1680,7 @@
 <script src="/assets/js/products.js"></script>
 <script src="/assets/js/auth.js"></script>
 <script src="/assets/js/firebase-db.js"></script>
-<script src="/assets/js/app.js?v=36"></script>
+<script src="/assets/js/app.js?v=38"></script>
 <script src="/assets/js/whatsapp-engine.js"></script>
 <script>
 APP.init();
@@ -1344,22 +1698,47 @@ const inr = n => APP.inr(n);
 /* ---- Panel switching ---- */
 const panels = ["dashboard","products","orders","banners","whatsapp","settings"];
 function showPanel(name, e) {
-  if (e) e.preventDefault();
+  if (e && e.preventDefault) e.preventDefault();
   panels.forEach(p=>{
     document.getElementById("panel"+capitalize(p))?.classList.toggle("active", p===name);
     const sn=document.getElementById("sn-"+p); if(sn) sn.classList.toggle("active", p===name);
+    const abn=document.getElementById("abn-"+p); if(abn) abn.classList.toggle("active", p===name);
   });
-  // Mobile bar
-  const mbtns=document.getElementById("adminMobileBar").querySelectorAll("button");
-  mbtns.forEach((b,i)=>b.classList.toggle("active",panels[i]===name));
+  // Mobile top bar
+  const mbar = document.getElementById("adminMobileBar");
+  if (mbar) {
+    const mbtns = mbar.querySelectorAll("button");
+    mbtns.forEach((b,i)=>b.classList.toggle("active",panels[i]===name));
+  }
+
+  // Scroll smoothly to top
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
   // Render panel
   if(name==="dashboard")  renderDashboard();
   if(name==="products")   renderProductsTable();
   if(name==="orders")     renderOrders();
   if(name==="banners")    renderBannersManager();
   if(name==="whatsapp")   renderWAHub();
+  updateMobileOrderBadge();
 }
 function capitalize(s){ return s[0].toUpperCase()+s.slice(1); }
+
+function updateMobileOrderBadge() {
+  try {
+    const orders = getOrders();
+    const pending = orders.filter(o => !o.status || o.status === "placed").length;
+    const badge = document.getElementById("abnOrdersBadge");
+    if (badge) {
+      if (pending > 0) {
+        badge.textContent = pending;
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+    }
+  } catch(e){}
+}
 
 /* ---- Festival & Promo Banners Controller ---- */
 function getAdminBanners() {
@@ -2394,6 +2773,7 @@ function sendWhatsAppStatusDirect() {
 }
 
 function renderOrders(){
+  updateMobileOrderBadge();
   const allOrders = getOrders();
   const el = document.getElementById("ordersContainer");
   const statsEl = document.getElementById("orderStatusStats");
@@ -2816,6 +3196,10 @@ function selectWAThread(phone) {
   const chatArea = document.getElementById("waChatArea");
   if(!chatArea) return;
 
+  // On mobile, toggle chat-open class to show conversation
+  const hub = document.getElementById("waHub");
+  if (hub) hub.classList.add("chat-open");
+
   const badgeLabel = { auto_replied: "🤖 Auto-Pilot Active", needs_attention: "⚠️ Needs Staff Attention", handed_over: "👤 Staff Has Control", new: "🆕 New" };
 
   const draftList = thread.draftItems.length
@@ -2824,15 +3208,16 @@ function selectWAThread(phone) {
 
   chatArea.innerHTML = `
     <div class="wa-chat-header">
+      <button class="wa-back-btn" onclick="backToWAThreads()" title="Back to conversations">← Back</button>
       <div class="wa-avatar">${(thread.customerName||thread.phone)[0].toUpperCase()}</div>
       <div class="wch-info">
         <div class="wch-phone">${thread.customerName || thread.phone}</div>
-        <div class="wch-sub">${badgeLabel[thread.status]||thread.status} · Lang: ${thread.lang} · ${thread.messages.length} messages</div>
+        <div class="wch-sub">${badgeLabel[thread.status]||thread.status} · Lang: ${thread.lang} · ${thread.messages.length} msgs</div>
       </div>
       <div class="wch-actions">
-        <button onclick="WA_ENGINE.setAutoPilot('${phone}', ${!thread.autoPilot}); selectWAThread('${phone}')" class="${thread.autoPilot?'primary':''}">🤖 ${thread.autoPilot?"Pause Auto":"Enable Auto"}</button>
-        <button onclick="WA_ENGINE.handOver('${phone}'); selectWAThread('${phone}')">👤 Take Over</button>
-        <button class="danger" onclick="if(confirm('Delete this thread?')){WA_ENGINE.deleteThread('${phone}'); selectedWAPhone=null; renderWAHub(); document.getElementById('waChatArea').innerHTML='<div class=\'wa-empty-state\'><p>Select a conversation</p></div>';}">🗑️</button>
+        <button onclick="WA_ENGINE.setAutoPilot('${phone}', ${!thread.autoPilot}); selectWAThread('${phone}')" class="${thread.autoPilot?'primary':''}" title="Auto-pilot toggle">🤖 ${thread.autoPilot?"Auto On":"Auto Off"}</button>
+        <button onclick="WA_ENGINE.handOver('${phone}'); selectWAThread('${phone}')" title="Take over conversation">👤 Staff</button>
+        <button class="danger" onclick="if(confirm('Delete this thread?')){WA_ENGINE.deleteThread('${phone}'); selectedWAPhone=null; renderWAHub(); backToWAThreads(); document.getElementById('waChatArea').innerHTML='<div class=\\'wa-empty-state\\'><p>Select a conversation</p></div>';}" title="Delete thread">🗑️</button>
       </div>
     </div>
     <div class="wa-messages" id="waMsgs">
@@ -2855,6 +3240,11 @@ function selectWAThread(phone) {
 
   // Scroll to bottom
   setTimeout(() => { const msgs=document.getElementById("waMsgs"); if(msgs) msgs.scrollTop=msgs.scrollHeight; }, 50);
+}
+
+function backToWAThreads() {
+  const hub = document.getElementById("waHub");
+  if (hub) hub.classList.remove("chat-open");
 }
 
 function sendStaffReply(phone) {
