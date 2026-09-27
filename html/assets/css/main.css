@@ -2372,27 +2372,39 @@ html, body {
     -webkit-overflow-scrolling: touch !important;
     scroll-snap-type: x mandatory !important;
     scrollbar-width: none !important;
-    padding: 10px 14px 14px 14px !important;
-    margin-bottom: 8px !important;
+    padding: 8px 12px 12px 12px !important;
+    margin-bottom: 6px !important;
   }
   .promo-banner-carousel::-webkit-scrollbar {
     display: none !important;
   }
   .promo-banner-card {
-    flex: 0 0 88% !important;
+    flex: 0 0 92% !important;
     scroll-snap-align: center !important;
-    border-radius: 14px !important;
-    padding: 14px 16px !important;
+    border-radius: 16px !important;
+    padding: 16px 18px !important;
     color: #FFFFFF !important;
-    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
     position: relative !important;
     overflow: hidden !important;
     text-decoration: none !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    min-height: 104px !important;
+    min-height: 118px !important;
+    transition: transform 0.15s ease !important;
+  }
+  .promo-banner-card::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 100%) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+  .promo-banner-card > * {
+    position: relative !important;
+    z-index: 2 !important;
   }
   .pbc-badge {
     align-self: flex-start !important;
@@ -2400,23 +2412,29 @@ html, body {
     font-weight: 800 !important;
     letter-spacing: 0.5px !important;
     text-transform: uppercase !important;
-    padding: 2px 7px !important;
-    border-radius: 4px !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
     background: var(--amber) !important;
     color: var(--amber-ink) !important;
     margin-bottom: 6px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
   }
   .pbc-title {
-    font-size: 14px !important;
+    font-size: 15px !important;
     font-weight: 800 !important;
     line-height: 1.25 !important;
     margin-bottom: 3px !important;
     color: #FFFFFF !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important;
   }
   .pbc-sub {
-    font-size: 11.5px !important;
-    opacity: 0.85 !important;
+    font-size: 12px !important;
+    opacity: 0.95 !important;
     line-height: 1.3 !important;
+    color: rgba(255,255,255,0.92) !important;
+  }
+  .customer-action-ribbon {
+    display: none !important;
   }
 
   /* Amazon App Style Side Drawer Navigation */
@@ -2655,10 +2673,7 @@ html, body {
     height: 48px !important;
   }
   .cartbar {
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
-    left: 10px !important;
-    right: 10px !important;
-    border-radius: 14px !important;
+    display: none !important;
   }
 }
 

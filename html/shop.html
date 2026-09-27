@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/main.css?v=20">
+<link rel="stylesheet" href="assets/css/main.css?v=30">
 <style>
 @media (min-width: 861px) {
   html[data-page="shop"], body[data-page="shop"] {
@@ -166,13 +166,8 @@
 
 <div id="app-header"></div>
 
-<!-- Mobile Category Nav -->
-<nav class="catnav" id="catNavWrap">
-  <div class="catnav-in" id="catNav"></div>
-</nav>
-
-<!-- Festive & Promo Banners Carousel -->
-<div id="promoBannerWrap" style="max-width:1440px;margin:10px auto 0 auto;padding:0 24px"></div>
+<!-- Festive & Promo Banners Carousel (Amazon Ad Cards) -->
+<div id="promoBannerWrap" style="max-width:1440px;margin:8px auto 0 auto;padding:0 14px"></div>
 
 <div class="shop-layout">
   <!-- Desktop Sidebar -->
@@ -194,52 +189,32 @@
   <!-- Main Content -->
   <main class="shop-main">
     <div class="shop-main-controls">
-      <!-- Fast Action Ribbon -->
-      <div class="customer-action-ribbon" style="margin-bottom:12px">
-        <button class="ribbon-btn primary" onclick="APP.openRequirementModal()">
-          <span>📋</span> Build My Requirement (ಪಟ್ಟಿ)
-        </button>
-        <button class="ribbon-btn" onclick="APP.openPhotoModal()">
-          <span>📷</span> Send Photo to Identify
-        </button>
-        <button class="ribbon-btn" onclick="APP.openAskExpertModal()">
-          <span>👨🔧</span> Ask Shop Expert
-        </button>
-        <button class="ribbon-btn" onclick="APP.openWishlistModal()">
-          <span>❤️</span> Saved (<span id="ribbonWishlistCount">0</span>)
-        </button>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="shop-toolbar">
-        <div class="search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" id="shopSearch" placeholder="Search wires, GM bulbs, pipes, elbows, pumps, CCTV…" autocomplete="off">
+      <!-- Toolbar: Sort & Count (Search is handled by top Amazon header bar) -->
+      <div class="shop-toolbar" style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px;flex-wrap:wrap">
+          <div id="resultsCount" style="font-size:13px;color:var(--muted);font-weight:600">Showing all products</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+            <select class="sort-select" id="shopSort" onchange="filterAndRender()" style="padding:6px 10px;font-size:12.5px">
+              <option value="featured">Featured / Recommended</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A to Z</option>
+              <option value="rating">Top Rated</option>
+            </select>
+            <div class="view-toggle-btns">
+              <button class="view-btn active" id="viewGridBtn" onclick="setViewMode('grid')" title="Grid View" style="width:32px;height:32px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </button>
+              <button class="view-btn" id="viewListBtn" onclick="setViewMode('list')" title="List View" style="width:32px;height:32px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <select class="sort-select" id="shopSort" onchange="filterAndRender()">
-          <option value="featured">Featured / Recommended</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="name-asc">Name: A to Z</option>
-          <option value="rating">Top Rated</option>
-        </select>
-        <div class="view-toggle-btns">
-          <button class="view-btn active" id="viewGridBtn" onclick="setViewMode('grid')" title="Grid View">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          </button>
-          <button class="view-btn" id="viewListBtn" onclick="setViewMode('list')" title="List View">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px">
-        <div id="resultsCount" style="font-size:13.5px;color:var(--muted);font-weight:600">Showing all products</div>
-        <div id="activeFilterPill" style="display:none"></div>
       </div>
     </div>
 
-    <!-- Product Grid: Scrolls independently while everything else remains fixed -->
+    <!-- Product Grid: Scrolls smoothly beneath sticky header -->
     <div class="product-grid" id="productGrid"></div>
   </main>
 </div>
@@ -254,7 +229,7 @@
 <script src="assets/js/products.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/firebase-db.js"></script>
-<script src="assets/js/app.js?v=20"></script>
+<script src="assets/js/app.js?v=30"></script>
 <script>
 let currentCat = "all";
 let currentSearch = "";
