@@ -357,6 +357,9 @@ const APP = {
           <span>Identify</span>
         </a>
       </div>
+
+      <!-- Amazon Festival & Sale Promo Cards Carousel (Sticky on Mobile) -->
+      <div id="promoBannerWrap" class="promo-banner-wrap-header"></div>
     </header>
     <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="document.getElementById('mobileNav').classList.remove('show');this.classList.remove('show')"></div>
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
@@ -841,7 +844,7 @@ const APP = {
   getPromoBanners() {
     try {
       const stored = JSON.parse(localStorage.getItem("mn_promo_banners") || "[]");
-      if (stored && stored.length) return stored;
+      if (stored && stored.length && stored.every(b => b.img && !b.img.includes("gm-led-bulb-9w.jpg") || b.id !== "b1")) return stored;
     } catch(e){}
     return [
       {
@@ -851,7 +854,7 @@ const APP = {
         sub: "GM Modular Switches & KEI 90m Copper Wires at Counter Rates",
         link: "shop.html?cat=electrical",
         bg: "linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)",
-        img: "assets/img/products/gm-led-bulb-9w.jpg",
+        img: "assets/img/products/modular-switch.jpg",
         off: "35% OFF",
         active: true
       },
@@ -862,7 +865,7 @@ const APP = {
         sub: "CPVC & PVC Pipes with Solvent & Fittings Free Delivery in Bangarapet",
         link: "shop.html?cat=plumbing",
         bg: "linear-gradient(135deg, #064E3B 0%, #047857 100%)",
-        img: "assets/img/products/supreme-cpvc-pipe-1in.jpg",
+        img: "assets/img/products/cpvc-pipes.jpg",
         off: "40% OFF",
         active: true
       },
@@ -873,8 +876,19 @@ const APP = {
         sub: "Complete Dome + DVR + 500GB HDD Security Package with Store Guarantee",
         link: "shop.html?cat=cctv",
         bg: "linear-gradient(135deg, #701A75 0%, #86198F 100%)",
-        img: "assets/img/products/hikvision-2mp-dome.jpg",
+        img: "assets/img/products/cctv-camera.jpg",
         off: "30% OFF",
+        active: true
+      },
+      {
+        id: "b4",
+        badge: "💧 20% OFF • PUMP SALE",
+        title: "Crompton & Kirloskar Water Pumps",
+        sub: "1.0 HP & 1.5 HP Openwell & Borewell Submersible Pumps at Store Rates",
+        link: "shop.html?cat=pumps",
+        bg: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)",
+        img: "assets/img/products/water-pump.jpg",
+        off: "20% OFF",
         active: true
       }
     ];
@@ -1441,6 +1455,53 @@ const APP = {
             `;
           }).join("")}
         </div>
+
+        <!-- Structured Itemized Table View -->
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px">
+          <div style="padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:space-between">
+            <span>📊 Structured Bill Breakdown</span>
+            <span style="font-size:11px;color:var(--muted)">${totalItems} items</span>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:11.5px;text-align:left">
+              <thead>
+                <tr style="background:var(--surface-2);color:var(--muted);border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase">
+                  <th style="padding:8px 10px">Item</th>
+                  <th style="padding:8px 6px;text-align:center">Qty</th>
+                  <th style="padding:8px 8px;text-align:right">Rate</th>
+                  <th style="padding:8px 8px;text-align:right">Discount</th>
+                  <th style="padding:8px 10px;text-align:right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${items.map(({ p, qty }, idx) => {
+                  const pct = p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0;
+                  const lineTot = p.price * qty;
+                  return `
+                    <tr style="border-bottom:1px solid var(--line)">
+                      <td style="padding:8px 10px;color:var(--ink);font-weight:600">
+                        <div style="line-height:1.2">${idx + 1}. ${p.name}</div>
+                        <div style="font-size:9.5px;color:var(--muted)">${p.brand || 'Genuine'}</div>
+                      </td>
+                      <td style="padding:8px 6px;text-align:center;font-weight:700;color:var(--ink)">${qty}</td>
+                      <td style="padding:8px 8px;text-align:right;color:var(--muted)">${this.inr(p.price)}</td>
+                      <td style="padding:8px 8px;text-align:right">
+                        ${pct > 0 ? `<span style="color:#DC2626;font-weight:700">${pct}% off</span>` : `<span style="color:var(--muted)">—</span>`}
+                      </td>
+                      <td style="padding:8px 10px;text-align:right;font-weight:800;color:var(--amber)">${this.inr(lineTot)}</td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+              <tfoot>
+                <tr style="background:var(--surface-2);font-weight:800">
+                  <td colspan="4" style="padding:8px 10px;text-align:right;color:var(--ink)">Subtotal:</td>
+                  <td style="padding:8px 10px;text-align:right;color:var(--amber)">${this.inr(subTot)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
       `;
 
       if (foot) {
@@ -1519,6 +1580,38 @@ const APP = {
           </div>
         </div>
         <div class="field"><label style="font-size:11.5px">Delivery note (optional)</label><input id="custNote" placeholder="e.g. call before store pickup" style="padding:8px 10px;font-size:12.5px"></div>
+      </div>
+
+      <!-- Structured Items Table in Checkout -->
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px">
+        <div style="padding:9px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12px;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:space-between">
+          <span>📋 Reviewed Items (${totalItems})</span>
+          <span style="font-size:11px;color:var(--muted)">Counter Rates</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:11.5px;text-align:left">
+            <thead>
+              <tr style="background:var(--surface-2);color:var(--muted);border-bottom:1px solid var(--line);font-size:10px;text-transform:uppercase">
+                <th style="padding:6px 10px">Item</th>
+                <th style="padding:6px 6px;text-align:center">Qty</th>
+                <th style="padding:6px 8px;text-align:right">Rate</th>
+                <th style="padding:6px 10px;text-align:right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map(({ p, qty }, idx) => `
+                <tr style="border-bottom:1px solid var(--line)">
+                  <td style="padding:6px 10px;color:var(--ink);font-weight:600">
+                    <div style="line-height:1.2">${idx + 1}. ${p.name}</div>
+                  </td>
+                  <td style="padding:6px 6px;text-align:center;font-weight:700;color:var(--ink)">${qty}</td>
+                  <td style="padding:6px 8px;text-align:right;color:var(--muted)">${this.inr(p.price)}</td>
+                  <td style="padding:6px 10px;text-align:right;font-weight:800;color:var(--amber)">${this.inr(p.price * qty)}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Full Cost Breakdown (Amazon Style) -->
