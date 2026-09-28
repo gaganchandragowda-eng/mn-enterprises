@@ -355,11 +355,6 @@ const APP = {
       <!-- Desktop & Tablet Sub-Navigation Category Bar -->
       <div class="desktop-cat-strip" id="desktopCatStrip">
         <div class="dcs-inner">
-          <button class="dcs-link dcs-menu-trigger" onclick="APP.toggleMenu()" title="Open Main Menu" style="background:transparent;border:none;cursor:pointer;font-family:inherit;font-size:inherit;display:inline-flex;align-items:center;gap:6px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:16px;height:16px"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-            <span>All Menu</span>
-          </button>
-          <span class="dcs-divider"></span>
           <a href="${base}shop.html" class="dcs-link ${page==='shop'?'active':''}">🛍️ All Products</a>
           <a href="${base}shop.html?cat=lighting" class="dcs-link">💡 Lighting</a>
           <a href="${base}shop.html?cat=plumbing" class="dcs-link">🚰 Plumbing</a>
@@ -458,14 +453,6 @@ const APP = {
         <a href="${base}shop.html" class="${page==='shop'?'active':''}" onclick="APP.closeMenu()">🛍️ Shop / All Products</a>
         <a href="${base}about.html" class="${page==='about'?'active':''}" onclick="APP.closeMenu()">🏢 About Us</a>
         <a href="${base}contact.html" class="${page==='contact'?'active':''}" onclick="APP.closeMenu()">📞 Contact Us</a>
-
-        <div class="adh-section-title" style="margin-top:14px">Shop by Category</div>
-        <a href="${base}shop.html?cat=lighting" onclick="APP.closeMenu()">💡 Lighting &amp; LED Bulbs</a>
-        <a href="${base}shop.html?cat=plumbing" onclick="APP.closeMenu()">🚰 Plumbing &amp; CPVC Pipes</a>
-        <a href="${base}shop.html?cat=electrical" onclick="APP.closeMenu()">⚡ Wires &amp; Cables</a>
-        <a href="${base}shop.html?cat=pumps" onclick="APP.closeMenu()">💧 Water Pumps &amp; Motors</a>
-        <a href="${base}shop.html?cat=cctv" onclick="APP.closeMenu()">📹 CCTV Security</a>
-        <a href="${base}shop.html?cat=network" onclick="APP.closeMenu()">🌐 WiFi &amp; Networking</a>
 
         <div class="adh-section-title" style="margin-top:14px">Customer Tools</div>
         <a href="#" onclick="APP.closeMenu();APP.openWishlistModal();return false;">❤️ Saved Items (<span id="mobWishlistCount">0</span>)</a>
