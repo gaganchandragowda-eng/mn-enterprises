@@ -401,10 +401,51 @@ h1.hero-title{font-size:clamp(22px,3.8vw,36px);font-weight:700;line-height:1.2;m
 .wa-float:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(37,211,102,.5)}
 .wa-float svg{width:28px;height:28px}
 
-#toastStack{position:fixed;top:80px;right:20px;z-index:90;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow-lg);max-width:300px;display:flex;align-items:center;gap:10px;animation:toastIn .3s ease;pointer-events:auto}
-.toast.success{border-left:3px solid var(--success)} .toast.error{border-left:3px solid var(--danger)} .toast.info{border-left:3px solid var(--ink)}
-.toast svg{width:16px;height:16px;flex:none}
+/* ---- Toast Notifications (Always Above ALL Navigation & UI) ---- */
+#toastStack {
+  position: fixed !important;
+  top: 24px !important;
+  right: 24px !important;
+  z-index: 999999 !important; /* Above ALL headers, navbars, drawers, modals */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  pointer-events: none !important;
+  max-width: calc(100vw - 32px) !important;
+}
+
+@media (max-width: 768px) {
+  #toastStack {
+    top: 16px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: max-content !important;
+    max-width: 92vw !important;
+    align-items: center !important;
+  }
+}
+
+.toast {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-lg, 12px) !important;
+  padding: 12px 18px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22), 0 3px 10px rgba(0, 0, 0, 0.1) !important;
+  max-width: 360px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  pointer-events: auto !important;
+  z-index: 999999 !important;
+}
+.toast.success { border-left: 4px solid var(--success) !important; }
+.toast.error { border-left: 4px solid var(--danger) !important; }
+.toast.info { border-left: 4px solid var(--teal) !important; }
+.toast svg { width: 18px !important; height: 18px !important; flex: none !important; }
 
 /* ---- Section heads ----------------------------------------- */
 .sec-head{margin-bottom:28px}
@@ -2702,19 +2743,13 @@ html, body {
    category sub-navigation, promo banners, and expanded table view
    ================================================================ */
 
-/* Desktop Deliver-to Button */
-.desktop-deliver-btn {
-  display: none;
-}
-
-/* Desktop Search Box */
-.desktop-search-wrap {
-  display: none;
-}
-
-/* Desktop Sub-Nav Category Strip */
-.desktop-cat-strip {
-  display: none;
+/* Desktop Elements Hidden by Default (Pure Mobile App Mode on Phones) */
+.desktop-deliver-btn,
+.desktop-firstline-nav,
+.desktop-search-wrap,
+.desktop-cat-strip,
+.desk-cart-label {
+  display: none !important;
 }
 
 /* Promo Banner Defaults (Desktop & Base) */
@@ -2797,44 +2832,58 @@ html, body {
 }
 
 @media (min-width: 861px) {
+  /* Hide pure mobile widgets on desktop */
   .mobile-bottom-bar,
   .mobile-app-search-wrap,
   .mobile-deliver-strip,
   .mobile-cat-pill-strip,
-  .mobile-nav-backdrop {
+  .mobile-nav-backdrop,
+  .hamburger {
     display: none !important;
   }
   body:not([data-page="admin"]) {
     padding-bottom: 0 !important;
   }
 
-  /* Desktop Header enhancements */
+  /* Desktop Master Header */
   .site-header {
     border-bottom: none !important;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 500 !important;
+    background: var(--surface) !important;
   }
   .header-inner {
-    height: 70px !important;
-    gap: 14px !important;
+    height: 72px !important;
+    gap: 16px !important;
     padding: 0 24px !important;
     max-width: 1440px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+  .header-inner .brand {
+    flex: none !important;
   }
 
   /* Desktop Deliver-to Button */
   .desktop-deliver-btn {
     display: flex !important;
     align-items: center !important;
-    gap: 7px !important;
-    padding: 6px 10px !important;
+    gap: 8px !important;
+    padding: 6px 12px !important;
     border-radius: 8px !important;
     cursor: pointer !important;
-    border: 1px solid transparent !important;
+    border: 1px solid var(--line) !important;
+    background: var(--surface-2) !important;
     transition: all 0.15s ease !important;
     user-select: none !important;
+    flex-shrink: 0 !important;
   }
   .desktop-deliver-btn:hover {
-    background: var(--surface-2) !important;
-    border-color: var(--line) !important;
+    background: var(--surface) !important;
+    border-color: var(--amber) !important;
   }
   .dd-pin {
     width: 18px !important;
@@ -2846,6 +2895,7 @@ html, body {
     display: flex !important;
     flex-direction: column !important;
     line-height: 1.15 !important;
+    text-align: left !important;
   }
   .dd-label {
     font-size: 10px !important;
@@ -2857,17 +2907,49 @@ html, body {
     font-weight: 700 !important;
     color: var(--ink) !important;
     white-space: nowrap !important;
-    max-width: 140px !important;
+    max-width: 130px !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+  }
+
+  /* Desktop First-Line Main Navigation (Home, Shop, About Us, Contact) */
+  .desktop-firstline-nav {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin: 0 8px !important;
+    flex-shrink: 0 !important;
+  }
+  .dfn-link {
+    font-family: var(--font-body) !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: var(--ink) !important;
+    text-decoration: none !important;
+    padding: 7px 12px !important;
+    border-radius: 8px !important;
+    transition: all 0.16s ease !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .dfn-link:hover {
+    background: var(--surface-2) !important;
+    color: var(--amber) !important;
+  }
+  .dfn-link.active {
+    background: var(--surface-2) !important;
+    color: var(--teal) !important;
+    font-weight: 700 !important;
   }
 
   /* Desktop Central Search Bar */
   .desktop-search-wrap {
     display: flex !important;
-    flex: 1 !important;
-    max-width: 580px !important;
-    margin: 0 10px !important;
+    flex: 1 1 auto !important;
+    max-width: 620px !important;
+    min-width: 240px !important;
+    margin: 0 12px !important;
   }
   .desktop-search-box {
     display: flex !important;
@@ -2876,9 +2958,9 @@ html, body {
     background: var(--surface) !important;
     border: 1.5px solid var(--line) !important;
     border-radius: 10px !important;
-    height: 42px !important;
-    padding: 0 4px 0 10px !important;
-    gap: 6px !important;
+    height: 44px !important;
+    padding: 0 4px 0 14px !important;
+    gap: 8px !important;
     box-shadow: 0 1.5px 6px rgba(0, 0, 0, 0.04) !important;
     transition: border-color 0.15s, box-shadow 0.15s !important;
   }
@@ -2888,21 +2970,7 @@ html, body {
   }
   .desktop-search-box:focus-within {
     border-color: var(--amber) !important;
-    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.16) !important;
-  }
-  .dsb-search-btn {
-    background: none !important;
-    border: none !important;
-    padding: 4px !important;
-    color: var(--muted) !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  .dsb-search-btn svg {
-    width: 18px !important;
-    height: 18px !important;
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18) !important;
   }
   .dsb-input {
     flex: 1 !important;
@@ -2925,7 +2993,7 @@ html, body {
     background: var(--surface-2) !important;
     border: 1px solid var(--line) !important;
     border-radius: 7px !important;
-    padding: 5px 10px !important;
+    padding: 6px 10px !important;
     font-size: 11.5px !important;
     font-weight: 700 !important;
     color: var(--ink) !important;
@@ -2941,6 +3009,113 @@ html, body {
   .dsb-photo-btn svg {
     width: 15px !important;
     height: 15px !important;
+  }
+  .dsb-search-btn {
+    background: var(--amber) !important;
+    border: none !important;
+    color: var(--amber-ink) !important;
+    border-radius: 8px !important;
+    width: 38px !important;
+    height: 36px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.15s ease !important;
+    flex-shrink: 0 !important;
+  }
+  .dsb-search-btn:hover {
+    filter: brightness(1.08) !important;
+  }
+  .dsb-search-btn svg {
+    width: 17px !important;
+    height: 17px !important;
+    stroke: var(--amber-ink) !important;
+  }
+
+  /* Desktop Header Actions (Theme, Wishlist, User, Cart) */
+  .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-shrink: 0 !important;
+  }
+  .header-actions #cartBtn {
+    display: inline-flex !important;
+  }
+  .header-actions #wishlistBtn {
+    display: inline-flex !important;
+  }
+  .desk-cart-label {
+    display: inline-block !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
+    margin-left: 6px !important;
+  }
+  .cart-header-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    padding: 6px 12px !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 8px !important;
+    background: var(--surface) !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    width: auto !important;
+    height: 40px !important;
+  }
+  .cart-header-btn:hover {
+    background: var(--surface-2) !important;
+    border-color: var(--amber) !important;
+  }
+  .cart-header-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  .cart-header-btn .badge {
+    position: static !important;
+    margin-left: 4px !important;
+    background: var(--amber) !important;
+    color: var(--amber-ink) !important;
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    padding: 2px 6px !important;
+    border-radius: 8px !important;
+  }
+  .user-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 6px 12px !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 8px !important;
+    background: var(--surface) !important;
+    color: var(--ink) !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+    height: 40px !important;
+  }
+  .user-btn:hover {
+    background: var(--surface-2) !important;
+    border-color: var(--amber) !important;
+  }
+  .user-btn-text {
+    display: flex !important;
+    flex-direction: column !important;
+    line-height: 1.15 !important;
+    text-align: left !important;
+  }
+  .user-btn-greeting {
+    font-size: 10.5px !important;
+    color: var(--muted) !important;
+    font-weight: 500 !important;
+  }
+  .user-btn-label {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
   }
 
   /* Desktop Sub-Navigation & Category Strip */
@@ -2961,7 +3136,7 @@ html, body {
     gap: 4px !important;
     max-width: 1440px !important;
     margin: 0 auto !important;
-    padding: 6px 24px !important;
+    padding: 5px 24px !important;
     overflow-x: auto !important;
     scrollbar-width: none !important;
   }
@@ -2972,7 +3147,7 @@ html, body {
     display: inline-flex !important;
     align-items: center !important;
     gap: 5px !important;
-    padding: 5px 10px !important;
+    padding: 6px 11px !important;
     border-radius: 6px !important;
     color: var(--ink) !important;
     text-decoration: none !important;
@@ -2981,10 +3156,6 @@ html, body {
     transition: all 0.15s ease !important;
     font-size: 12.5px !important;
   }
-  .dcs-link svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
   .dcs-link:hover {
     background: var(--surface) !important;
     color: var(--amber) !important;
@@ -2992,6 +3163,9 @@ html, body {
   .dcs-link.active {
     background: var(--amber) !important;
     color: var(--amber-ink) !important;
+  }
+  .dcs-all {
+    font-weight: 700 !important;
   }
   .dcs-divider {
     display: inline-block !important;
@@ -3020,9 +3194,10 @@ html, body {
 
   /* Cart Drawer Desktop Expansion for Tables & Checkout */
   .drawer {
-    width: min(520px, 92vw) !important;
+    width: min(540px, 92vw) !important;
   }
 }
+
 
 
 

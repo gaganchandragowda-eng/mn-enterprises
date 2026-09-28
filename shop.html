@@ -10,68 +10,127 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css?v=42">
 <style>
+/* ========================================================
+   DESKTOP FIXED SINGLE-VIEWPORT LAYOUT
+   Header, Category Sub-bar, Sidebar & Toolbar REMAIN STILL
+   ONLY #productGrid SCROLLS INTERNALLY
+   ======================================================== */
 @media (min-width: 861px) {
-  html[data-page="shop"], body[data-page="shop"] {
-    height: 100vh;
-    height: 100dvh;
-    max-height: 100vh;
-    max-height: 100dvh;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-}
-@media (max-width: 860px) {
-  html[data-page="shop"], body[data-page="shop"] {
-    height: auto !important;
-    min-height: 100% !important;
+  html,
+  html[data-page="shop"],
+  body,
+  body[data-page="shop"] {
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
     overflow-x: hidden !important;
-    overflow-y: auto !important;
-    display: block !important;
+    overflow-y: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
-}
 
-#app-header {
-  flex-shrink: 0;
-  position: relative;
-  z-index: 50;
-}
+  body,
+  body[data-page="shop"] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    width: 100vw !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
 
-.catnav {
-  flex-shrink: 0;
-  position: relative;
-  z-index: 40;
-}
-@media (min-width: 861px) {
+  #app-header {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    width: 100% !important;
+  }
+
   .catnav {
     display: none !important;
   }
-}
 
-.shop-layout {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 16px 24px 0 24px;
-  width: 100%;
-  overflow: hidden;
-  box-sizing: border-box;
-  min-height: 0;
-}
+  .shop-layout {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    max-height: 100% !important;
+    display: grid !important;
+    grid-template-columns: 260px 1fr !important;
+    gap: 20px !important;
+    max-width: 1440px !important;
+    margin: 0 auto !important;
+    padding: 12px 24px 0 24px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
 
-.shop-sidebar {
-  height: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-bottom: 24px;
-  flex-shrink: 0;
+  .shop-sidebar {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding-bottom: 24px !important;
+    flex-shrink: 0 !important;
+    scrollbar-width: thin !important;
+  }
+  .shop-sidebar::-webkit-scrollbar { width: 5px; }
+  .shop-sidebar::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+  .shop-main {
+    min-width: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+    flex: 1 1 0% !important;
+  }
+
+  .shop-main-controls {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    padding-bottom: 8px !important;
+  }
+
+  .promo-banner-wrap-header {
+    display: none !important;
+  }
+
+  .product-grid {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-right: 6px !important;
+    padding-bottom: 32px !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    grid-auto-rows: max-content !important;
+    align-content: start !important;
+  }
+
+  #shared-ui {
+    flex: 0 0 0px !important;
+    height: 0 !important;
+    overflow: visible !important;
+  }
 }
 
 .sidebar-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
@@ -83,20 +142,6 @@
 .sidebar-cat-item .cat-cnt { font-size:11px; font-weight:700; background:var(--surface-3); padding:2px 7px; border-radius:12px; color:var(--muted); }
 .sidebar-cat-item.active .cat-cnt { background:var(--amber); color:var(--amber-ink); }
 
-.shop-main {
-  min-width: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-}
-
-.shop-main-controls {
-  flex-shrink: 0;
-  padding-bottom: 4px;
-}
-
 .shop-toolbar { display:flex; align-items:center; gap:14px; margin-bottom:12px; flex-wrap:wrap; background:var(--surface); padding:12px 16px; border-radius:var(--radius-lg); border:1px solid var(--line); box-shadow:var(--shadow-sm); }
 .shop-toolbar .search-wrap { flex:1; min-width:240px; position:relative; }
 .shop-toolbar .search-wrap input { width:100%; padding:10px 14px 10px 38px; border:1px solid var(--line); border-radius:var(--radius); font-size:14px; background:var(--bg); color:var(--ink); font-family:inherit; }
@@ -107,15 +152,7 @@
 .view-btn.active { background:var(--teal); color:#fff; border-color:var(--teal); }
 .view-btn svg { width:16px; height:16px; }
 
-/* Product Grid: Dedicated Scroll Container */
-.product-grid {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 6px;
-  padding-bottom: 96px;
-  scroll-behavior: smooth;
-  min-height: 0;
-}
+/* Product Grid Scrollbars */
 .product-grid::-webkit-scrollbar { width: 7px; }
 .product-grid::-webkit-scrollbar-track { background: transparent; }
 .product-grid::-webkit-scrollbar-thumb { background: var(--line); border-radius: 6px; }
@@ -128,25 +165,45 @@
 .product-grid.list-view .card-body { padding:0; display:flex; flex-direction:column; gap:6px; }
 .product-grid.list-view .card-foot { margin-top:0; }
 
+/* Mobile & Tablet App View */
 @media(max-width:860px){
+  html,
+  html[data-page="shop"],
+  body,
+  body[data-page="shop"] {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+  }
   .shop-layout { 
     grid-template-columns: 1fr !important; 
     padding: 8px 12px 0 12px !important; 
     gap: 0 !important;
     height: auto !important;
+    max-height: none !important;
     overflow: visible !important;
     display: block !important;
+    flex: none !important;
   }
   .shop-sidebar { display:none !important; }
   .shop-main {
     height: auto !important;
+    max-height: none !important;
     overflow: visible !important;
     display: block !important;
+    flex: none !important;
   }
   .product-grid {
     height: auto !important;
+    max-height: none !important;
     overflow: visible !important;
     padding-bottom: 120px !important;
+    flex: none !important;
   }
   .product-grid.list-view .product-card { grid-template-columns:90px 1fr; gap:12px; padding:10px; }
   .shop-toolbar { padding:8px 10px; gap:8px; margin-bottom:8px; }
@@ -162,7 +219,7 @@
 }
 </style>
 </head>
-<body>
+<body data-page="shop">
 
 <div id="app-header"></div>
 
@@ -186,16 +243,32 @@
   <!-- Main Content -->
   <main class="shop-main">
     <div class="shop-main-controls">
-      <!-- Toolbar: Search & Count -->
-      <div class="shop-toolbar" style="margin-bottom:8px">
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:12px;flex-wrap:wrap">
-          <div class="search-wrap" style="flex:1;min-width:240px;position:relative">
+      <!-- Toolbar: Search, Count, Sort & View Toggle -->
+      <div class="shop-toolbar" style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:260px">
+          <div class="search-wrap" style="flex:1;position:relative">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <input type="search" id="shopSearch" placeholder="Filter current items by name, brand, or specs..." style="width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;background:var(--bg);color:var(--ink)">
+            <input type="search" id="shopSearch" placeholder="Filter items by name, brand, or specs..." style="width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;background:var(--bg);color:var(--ink)">
           </div>
           <div id="resultsCount" style="font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap">Showing all products</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <select id="shopSort" class="sort-select" onchange="filterAndRender()">
+            <option value="featured">Featured / Best Deals</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A to Z</option>
+          </select>
+          <div class="view-toggle-btns">
+            <button class="view-btn active" id="viewGridBtn" onclick="setViewMode('grid')" title="Grid View" aria-label="Grid view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            </button>
+            <button class="view-btn" id="viewListBtn" onclick="setViewMode('list')" title="List View" aria-label="List view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -409,6 +482,21 @@ filterAndRender();
 if (typeof APP !== 'undefined' && typeof APP.renderPromoBanners === 'function') {
   APP.renderPromoBanners("promoBannerWrap");
 }
+
+// Smart wheel forwarding on desktop: scrolling over toolbar/header/sidebar smoothly scrolls productGrid
+window.addEventListener("wheel", (e) => {
+  if (window.innerWidth <= 860) return;
+  const grid = document.getElementById("productGrid");
+  if (!grid) return;
+  // If user is inside an open drawer or modal, don't hijack
+  if (e.target.closest(".drawer, .modal, .cmodal, .customer-modal")) return;
+  // If cursor is on shop toolbar, controls, sidebar or header, scroll the product grid
+  if (e.target.closest(".shop-layout, #app-header, .shop-main-controls, .shop-toolbar, .shop-sidebar")) {
+    if (!grid.contains(e.target)) {
+      grid.scrollTop += e.deltaY;
+    }
+  }
+}, { passive: true });
 </script>
 </body>
 </html>

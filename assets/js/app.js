@@ -85,20 +85,34 @@ const APP = {
       : `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`;
   },
 
-  /* ---- Toast ---- */
-  toast(msg, type="info", dur=3200) {
+  /* ---- Toast Notification (High Priority, Above All UI) ---- */
+  toast(msg, type="info", dur=2500) {
     let stack = document.getElementById("toastStack");
     if (!stack) { stack=document.createElement("div"); stack.id="toastStack"; document.body.appendChild(stack); }
     const icons = {
-      success:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--success)"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>`,
-      error:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--danger)"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>`,
-      info:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--teal)"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16v.01"/></svg>`
+      success:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--success)"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>`,
+      error:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--danger)"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>`,
+      info:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--teal)"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16v.01"/></svg>`
     };
     const t = document.createElement("div");
     t.className = `toast ${type}`;
     t.innerHTML = (icons[type]||icons.info) + `<span>${msg}</span>`;
     stack.appendChild(t);
-    setTimeout(() => { t.style.transition=".3s"; t.style.opacity="0"; t.style.transform="translateX(110%)"; setTimeout(()=>t.remove(),320); }, dur);
+    // Smooth entrance
+    t.style.opacity = "0";
+    t.style.transform = "translateY(-6px) scale(0.96)";
+    t.style.transition = "all 0.22s ease-out";
+    requestAnimationFrame(() => {
+      t.style.opacity = "1";
+      t.style.transform = "translateY(0) scale(1)";
+    });
+    // Disappear above all
+    setTimeout(() => {
+      t.style.transition = "all 0.25s ease-in";
+      t.style.opacity = "0";
+      t.style.transform = "translateY(-10px) scale(0.92)";
+      setTimeout(() => t.remove(), 260);
+    }, dur);
   },
 
   /* ---- Real-Time Dynamic Shop Open/Closed Status ---- */
@@ -277,27 +291,32 @@ const APP = {
           </div>
         </div>
 
+        <!-- First Line Main Navigation: Home, Shop, About Us, Contact -->
+        <nav class="desktop-firstline-nav" aria-label="Main Navigation">
+          <a href="${base}index.html" class="dfn-link ${page==='home'?'active':''}">Home</a>
+          <a href="${base}shop.html" class="dfn-link ${page==='shop'?'active':''}">Shop</a>
+          <a href="${base}about.html" class="dfn-link ${page==='about'?'active':''}">About Us</a>
+          <a href="${base}contact.html" class="dfn-link ${page==='contact'?'active':''}">Contact</a>
+        </nav>
+
         <!-- Amazon Style Desktop Global Search Bar with Visual Photo Search -->
         <div class="desktop-search-wrap">
           <form class="desktop-search-box" action="${base}shop.html" method="GET" onsubmit="if(!this.search.value.trim()){window.location.href='${base}shop.html';return false;}">
-            <button type="submit" class="dsb-search-btn" aria-label="Search products">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-            </button>
             <input type="search" name="search" id="headerSearchInput" class="dsb-input" placeholder="Search genuine KEI wires, GM bulbs, PVC pipes, water pumps, CCTV..." autocomplete="off" aria-label="Search products">
-            <button type="button" class="dsb-photo-btn" onclick="APP.openPhotoModal()" title="Identify by Photo" aria-label="Visual photo search">
+            <button type="button" class="dsb-photo-btn" onclick="APP.openPhotoModal()" title="Search / Identify by Photo" aria-label="Visual photo search">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>
               </svg>
               <span>Photo</span>
             </button>
+            <button type="submit" class="dsb-search-btn" aria-label="Search catalogue" title="Search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </button>
           </form>
         </div>
 
-        <nav class="nav-links" aria-label="Main navigation">
-          ${links.map(l=>`<a href="${base}${l.href}" class="${l.id===page?'active':''}">${l.label}</a>`).join("")}
-        </nav>
         <div class="header-actions">
           <button class="iconbtn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
             <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
@@ -309,15 +328,26 @@ const APP = {
           ${user ? `
             <a href="${base}account.html" class="user-btn" title="My account">
               ${user.photoURL ? `<img src="${user.photoURL}" class="user-avatar" style="object-fit:cover;width:28px;height:28px;border-radius:50%" alt="User">` : `<div class="user-avatar">${(user.name||"U")[0].toUpperCase()}</div>`}
-              <span>${user.name||"Account"}</span>
+              <div class="user-btn-text">
+                <span class="user-btn-greeting">Hello, ${(user.name||"User").split(" ")[0]}</span>
+                <span class="user-btn-label">Account &amp; Orders</span>
+              </div>
             </a>
-          ` : `<a href="${base}login.html" class="btn btn-ghost btn-sm">Sign in</a>`}
-          <button class="iconbtn" id="cartBtn" aria-label="Open cart" title="View order">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
-              <path d="M2 3h2l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.6L21 7H6"/>
-            </svg>
-            <span class="badge hidden" id="cartBadge">0</span>
+          ` : `<a href="${base}login.html" class="user-btn user-btn-signin" title="Sign in to your account">
+                 <div class="user-btn-text">
+                   <span class="user-btn-greeting">Hello, Sign in</span>
+                   <span class="user-btn-label">Account &amp; Orders</span>
+                 </div>
+               </a>`}
+          <button class="iconbtn cart-header-btn" id="cartBtn" aria-label="Open cart" title="View order">
+            <div style="position:relative;display:inline-flex;align-items:center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
+                <path d="M2 3h2l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.6L21 7H6"/>
+              </svg>
+              <span class="badge hidden" id="cartBadge">0</span>
+            </div>
+            <span class="desk-cart-label">Cart</span>
           </button>
           <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
@@ -328,22 +358,22 @@ const APP = {
       <!-- Desktop & Tablet Sub-Navigation Category Bar -->
       <div class="desktop-cat-strip" id="desktopCatStrip">
         <div class="dcs-inner">
-          <a href="${base}shop.html" class="dcs-link ${page==='shop'?'active':''}">
+          <a href="${base}shop.html" class="dcs-link dcs-all ${page==='shop'?'active':''}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            <span>All Categories</span>
+            <span>All Products</span>
           </a>
           <span class="dcs-divider"></span>
           <a href="${base}shop.html?cat=lighting" class="dcs-link">💡 Lighting</a>
           <a href="${base}shop.html?cat=plumbing" class="dcs-link">🚰 Plumbing</a>
           <a href="${base}shop.html?cat=electrical" class="dcs-link">⚡ Wires &amp; Cables</a>
           <a href="${base}shop.html?cat=pumps" class="dcs-link">💧 Water Pumps</a>
-          <a href="${base}shop.html?cat=cctv" class="dcs-link">📹 CCTV Cameras</a>
+          <a href="${base}shop.html?cat=cctv" class="dcs-link">📹 CCTV Security</a>
           <a href="${base}shop.html?cat=network" class="dcs-link">🌐 WiFi &amp; Networking</a>
           <span class="dcs-divider"></span>
           <a href="#" onclick="APP.openRequirementModal();return false;" class="dcs-link dcs-highlight" title="Build My Requirement">📋 Build Requirement</a>
           <a href="#" onclick="APP.openPhotoModal();return false;" class="dcs-link dcs-highlight" title="Identify Broken Parts">📷 Visual Search</a>
           <a href="#" onclick="APP.openAskExpertModal();return false;" class="dcs-link" title="Ask Hardware Specialist">👨‍🔧 Ask Expert</a>
-          <a href="${base}admin/login.html" class="dcs-link dcs-admin" title="Store Staff &amp; Billing Portal">🛠️ Admin Portal</a>
+          <a href="${base}admin/login.html" class="dcs-link dcs-admin" title="Store Staff &amp; Billing Portal">🛠️ Admin Portal &rarr;</a>
         </div>
       </div>
 
