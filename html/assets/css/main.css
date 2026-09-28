@@ -2697,9 +2697,105 @@ html, body {
 }
 
 /* ================================================================
-   10. DESKTOP VIEW PRESERVATION
-   Ensures desktop and "Desktop site" mode display pristine layout
+   10. DESKTOP VIEW & WEB EXPERIENCE ENHANCEMENTS
+   Delivers full feature parity with mobile: header search, deliver-to,
+   category sub-navigation, promo banners, and expanded table view
    ================================================================ */
+
+/* Desktop Deliver-to Button */
+.desktop-deliver-btn {
+  display: none;
+}
+
+/* Desktop Search Box */
+.desktop-search-wrap {
+  display: none;
+}
+
+/* Desktop Sub-Nav Category Strip */
+.desktop-cat-strip {
+  display: none;
+}
+
+/* Promo Banner Defaults (Desktop & Base) */
+.promo-banner-wrap-header {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.promo-banner-carousel {
+  display: flex;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.promo-banner-carousel::-webkit-scrollbar {
+  display: none;
+}
+.promo-banner-card {
+  flex: 1 1 360px;
+  min-width: 300px;
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 108px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.promo-banner-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+}
+.promo-banner-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.05) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.promo-banner-card > * {
+  position: relative;
+  z-index: 2;
+}
+.pbc-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--amber);
+  color: var(--amber-ink);
+  margin-bottom: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.pbc-title {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 3px;
+  color: #FFFFFF;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.pbc-sub {
+  font-size: 12px;
+  opacity: 0.95;
+  line-height: 1.3;
+  color: rgba(255,255,255,0.92);
+}
+
 @media (min-width: 861px) {
   .mobile-bottom-bar,
   .mobile-app-search-wrap,
@@ -2711,7 +2807,223 @@ html, body {
   body:not([data-page="admin"]) {
     padding-bottom: 0 !important;
   }
+
+  /* Desktop Header enhancements */
+  .site-header {
+    border-bottom: none !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05) !important;
+  }
+  .header-inner {
+    height: 70px !important;
+    gap: 14px !important;
+    padding: 0 24px !important;
+    max-width: 1440px !important;
+  }
+
+  /* Desktop Deliver-to Button */
+  .desktop-deliver-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    padding: 6px 10px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    border: 1px solid transparent !important;
+    transition: all 0.15s ease !important;
+    user-select: none !important;
+  }
+  .desktop-deliver-btn:hover {
+    background: var(--surface-2) !important;
+    border-color: var(--line) !important;
+  }
+  .dd-pin {
+    width: 18px !important;
+    height: 18px !important;
+    color: var(--amber) !important;
+    flex-shrink: 0 !important;
+  }
+  .dd-text-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    line-height: 1.15 !important;
+  }
+  .dd-label {
+    font-size: 10px !important;
+    color: var(--muted) !important;
+    font-weight: 500 !important;
+  }
+  .dd-loc {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
+    white-space: nowrap !important;
+    max-width: 140px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Desktop Central Search Bar */
+  .desktop-search-wrap {
+    display: flex !important;
+    flex: 1 !important;
+    max-width: 580px !important;
+    margin: 0 10px !important;
+  }
+  .desktop-search-box {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    background: var(--surface) !important;
+    border: 1.5px solid var(--line) !important;
+    border-radius: 10px !important;
+    height: 42px !important;
+    padding: 0 4px 0 10px !important;
+    gap: 6px !important;
+    box-shadow: 0 1.5px 6px rgba(0, 0, 0, 0.04) !important;
+    transition: border-color 0.15s, box-shadow 0.15s !important;
+  }
+  [data-theme="dark"] .desktop-search-box {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(255, 255, 255, 0.14) !important;
+  }
+  .desktop-search-box:focus-within {
+    border-color: var(--amber) !important;
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.16) !important;
+  }
+  .dsb-search-btn {
+    background: none !important;
+    border: none !important;
+    padding: 4px !important;
+    color: var(--muted) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .dsb-search-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .dsb-input {
+    flex: 1 !important;
+    border: none !important;
+    background: transparent !important;
+    font-family: inherit !important;
+    font-size: 13.5px !important;
+    color: var(--ink) !important;
+    outline: none !important;
+    padding: 0 4px !important;
+  }
+  .dsb-input::placeholder {
+    color: var(--muted) !important;
+    font-size: 12.5px !important;
+  }
+  .dsb-photo-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    background: var(--surface-2) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 7px !important;
+    padding: 5px 10px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    flex-shrink: 0 !important;
+  }
+  .dsb-photo-btn:hover {
+    background: var(--amber) !important;
+    color: var(--amber-ink) !important;
+    border-color: var(--amber) !important;
+  }
+  .dsb-photo-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  /* Desktop Sub-Navigation & Category Strip */
+  .desktop-cat-strip {
+    display: block !important;
+    background: var(--surface-2) !important;
+    border-top: 1px solid var(--line) !important;
+    border-bottom: 1px solid var(--line) !important;
+    font-size: 12.5px !important;
+  }
+  [data-theme="dark"] .desktop-cat-strip {
+    background: #111A2E !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .dcs-inner {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    max-width: 1440px !important;
+    margin: 0 auto !important;
+    padding: 6px 24px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+  }
+  .dcs-inner::-webkit-scrollbar {
+    display: none !important;
+  }
+  .dcs-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 5px 10px !important;
+    border-radius: 6px !important;
+    color: var(--ink) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    transition: all 0.15s ease !important;
+    font-size: 12.5px !important;
+  }
+  .dcs-link svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  .dcs-link:hover {
+    background: var(--surface) !important;
+    color: var(--amber) !important;
+  }
+  .dcs-link.active {
+    background: var(--amber) !important;
+    color: var(--amber-ink) !important;
+  }
+  .dcs-divider {
+    display: inline-block !important;
+    width: 1px !important;
+    height: 16px !important;
+    background: var(--line) !important;
+    margin: 0 4px !important;
+  }
+  .dcs-highlight {
+    color: var(--amber) !important;
+    font-weight: 700 !important;
+  }
+  .dcs-highlight:hover {
+    background: rgba(217, 119, 6, 0.15) !important;
+    color: var(--amber) !important;
+  }
+  .dcs-admin {
+    margin-left: auto !important;
+    color: var(--muted) !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+  }
+  .dcs-admin:hover {
+    color: var(--amber) !important;
+  }
+
+  /* Cart Drawer Desktop Expansion for Tables & Checkout */
+  .drawer {
+    width: min(520px, 92vw) !important;
+  }
 }
+
 
 
 

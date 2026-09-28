@@ -186,10 +186,16 @@
   <!-- Main Content -->
   <main class="shop-main">
     <div class="shop-main-controls">
-      <!-- Toolbar: Count Only -->
+      <!-- Toolbar: Search & Count -->
       <div class="shop-toolbar" style="margin-bottom:8px">
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px">
-          <div id="resultsCount" style="font-size:13px;color:var(--muted);font-weight:600">Showing all products</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:12px;flex-wrap:wrap">
+          <div class="search-wrap" style="flex:1;min-width:240px;position:relative">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="search" id="shopSearch" placeholder="Filter current items by name, brand, or specs..." style="width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;background:var(--bg);color:var(--ink)">
+          </div>
+          <div id="resultsCount" style="font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap">Showing all products</div>
         </div>
       </div>
     </div>
@@ -209,7 +215,7 @@
 <script src="assets/js/products.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/firebase-db.js"></script>
-<script src="assets/js/app.js?v=42"></script>
+<script src="assets/js/app.js?v=43"></script>
 <script>
 let currentCat = "all";
 let currentSearch = "";
@@ -222,13 +228,27 @@ APP.init();
 const params = new URLSearchParams(window.location.search);
 if (params.get("cat")) currentCat = params.get("cat");
 if (params.get("q")) currentSearch = params.get("q");
+if (params.get("search")) currentSearch = params.get("search");
 
-// Setup search input
+// Setup shop search input
 const searchInput = document.getElementById("shopSearch");
 if (searchInput) {
   searchInput.value = currentSearch;
   searchInput.addEventListener("input", (e) => {
     currentSearch = e.target.value.trim().toLowerCase();
+    const hdr = document.getElementById("headerSearchInput");
+    if (hdr && hdr.value !== currentSearch) hdr.value = currentSearch;
+    filterAndRender();
+  });
+}
+
+// Hook desktop header search input to live-filter shop page
+const hdrSearch = document.getElementById("headerSearchInput");
+if (hdrSearch) {
+  if (currentSearch) hdrSearch.value = currentSearch;
+  hdrSearch.addEventListener("input", (e) => {
+    currentSearch = e.target.value.trim().toLowerCase();
+    if (searchInput && searchInput.value !== currentSearch) searchInput.value = currentSearch;
     filterAndRender();
   });
 }

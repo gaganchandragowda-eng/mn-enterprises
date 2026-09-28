@@ -266,6 +266,35 @@ const APP = {
             <div class="brand-sub">Plumbing &amp; Electrical, Bangarapet</div>
           </div>
         </a>
+        <!-- Amazon Style Desktop Deliver To Widget -->
+        <div class="desktop-deliver-btn" onclick="APP.openDeliveryModal()" title="Choose delivery location in Bangarapet" role="button" tabindex="0">
+          <svg class="dd-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <div class="dd-text-wrap">
+            <span class="dd-label">Deliver to</span>
+            <span class="dd-loc" id="deskDeliverLoc">${localStorage.getItem("mn_delivery_loc") || "Bangarapet 563114"}</span>
+          </div>
+        </div>
+
+        <!-- Amazon Style Desktop Global Search Bar with Visual Photo Search -->
+        <div class="desktop-search-wrap">
+          <form class="desktop-search-box" action="${base}shop.html" method="GET" onsubmit="if(!this.search.value.trim()){window.location.href='${base}shop.html';return false;}">
+            <button type="submit" class="dsb-search-btn" aria-label="Search products">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </button>
+            <input type="search" name="search" id="headerSearchInput" class="dsb-input" placeholder="Search genuine KEI wires, GM bulbs, PVC pipes, water pumps, CCTV..." autocomplete="off" aria-label="Search products">
+            <button type="button" class="dsb-photo-btn" onclick="APP.openPhotoModal()" title="Identify by Photo" aria-label="Visual photo search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Photo</span>
+            </button>
+          </form>
+        </div>
+
         <nav class="nav-links" aria-label="Main navigation">
           ${links.map(l=>`<a href="${base}${l.href}" class="${l.id===page?'active':''}">${l.label}</a>`).join("")}
         </nav>
@@ -293,6 +322,28 @@ const APP = {
           <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
           </button>
+        </div>
+      </div>
+
+      <!-- Desktop & Tablet Sub-Navigation Category Bar -->
+      <div class="desktop-cat-strip" id="desktopCatStrip">
+        <div class="dcs-inner">
+          <a href="${base}shop.html" class="dcs-link ${page==='shop'?'active':''}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <span>All Categories</span>
+          </a>
+          <span class="dcs-divider"></span>
+          <a href="${base}shop.html?cat=lighting" class="dcs-link">💡 Lighting</a>
+          <a href="${base}shop.html?cat=plumbing" class="dcs-link">🚰 Plumbing</a>
+          <a href="${base}shop.html?cat=electrical" class="dcs-link">⚡ Wires &amp; Cables</a>
+          <a href="${base}shop.html?cat=pumps" class="dcs-link">💧 Water Pumps</a>
+          <a href="${base}shop.html?cat=cctv" class="dcs-link">📹 CCTV Cameras</a>
+          <a href="${base}shop.html?cat=network" class="dcs-link">🌐 WiFi &amp; Networking</a>
+          <span class="dcs-divider"></span>
+          <a href="#" onclick="APP.openRequirementModal();return false;" class="dcs-link dcs-highlight" title="Build My Requirement">📋 Build Requirement</a>
+          <a href="#" onclick="APP.openPhotoModal();return false;" class="dcs-link dcs-highlight" title="Identify Broken Parts">📷 Visual Search</a>
+          <a href="#" onclick="APP.openAskExpertModal();return false;" class="dcs-link" title="Ask Hardware Specialist">👨‍🔧 Ask Expert</a>
+          <a href="${base}admin/login.html" class="dcs-link dcs-admin" title="Store Staff &amp; Billing Portal">🛠️ Admin Portal</a>
         </div>
       </div>
 
@@ -833,6 +884,8 @@ const APP = {
     } catch(e){}
     const el = document.getElementById("hdrDeliverLoc");
     if (el) el.textContent = loc;
+    const deskEl = document.getElementById("deskDeliverLoc");
+    if (deskEl) deskEl.textContent = loc;
     this.toast(`Delivery set to: ${loc}`, "success");
     closeAll();
   },
