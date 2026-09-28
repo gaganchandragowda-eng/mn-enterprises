@@ -268,7 +268,12 @@ const APP = {
     ];
     el.innerHTML = `
     <header class="site-header">
-      <div class="header-inner">
+        <!-- Web Compatible Menu Button in Header Line 1 -->
+        <button class="desk-menu-btn" onclick="APP.toggleMenu()" aria-label="Open menu" title="Open Main Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          <span>Menu</span>
+        </button>
+
         <a href="${base}index.html" class="brand">
           <div class="brand-mark">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -280,6 +285,7 @@ const APP = {
             <div class="brand-sub">Plumbing &amp; Electrical, Bangarapet</div>
           </div>
         </a>
+
         <!-- Amazon Style Desktop Deliver To Widget -->
         <div class="desktop-deliver-btn" onclick="APP.openDeliveryModal()" title="Choose delivery location in Bangarapet" role="button" tabindex="0">
           <svg class="dd-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -290,14 +296,6 @@ const APP = {
             <span class="dd-loc" id="deskDeliverLoc">${localStorage.getItem("mn_delivery_loc") || "Bangarapet 563114"}</span>
           </div>
         </div>
-
-        <!-- First Line Main Navigation: Home, Shop, About Us, Contact -->
-        <nav class="desktop-firstline-nav" aria-label="Main Navigation">
-          <a href="${base}index.html" class="dfn-link ${page==='home'?'active':''}">Home</a>
-          <a href="${base}shop.html" class="dfn-link ${page==='shop'?'active':''}">Shop</a>
-          <a href="${base}about.html" class="dfn-link ${page==='about'?'active':''}">About Us</a>
-          <a href="${base}contact.html" class="dfn-link ${page==='contact'?'active':''}">Contact</a>
-        </nav>
 
         <!-- Amazon Style Desktop Global Search Bar with Visual Photo Search -->
         <div class="desktop-search-wrap">
@@ -358,11 +356,12 @@ const APP = {
       <!-- Desktop & Tablet Sub-Navigation Category Bar -->
       <div class="desktop-cat-strip" id="desktopCatStrip">
         <div class="dcs-inner">
-          <a href="${base}shop.html" class="dcs-link dcs-all ${page==='shop'?'active':''}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            <span>All Products</span>
-          </a>
+          <button class="dcs-link dcs-menu-trigger" onclick="APP.toggleMenu()" title="Open Main Menu" style="background:transparent;border:none;cursor:pointer;font-family:inherit;font-size:inherit;display:inline-flex;align-items:center;gap:6px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:16px;height:16px"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            <span>All Menu</span>
+          </button>
           <span class="dcs-divider"></span>
+          <a href="${base}shop.html" class="dcs-link ${page==='shop'?'active':''}">🛍️ All Products</a>
           <a href="${base}shop.html?cat=lighting" class="dcs-link">💡 Lighting</a>
           <a href="${base}shop.html?cat=plumbing" class="dcs-link">🚰 Plumbing</a>
           <a href="${base}shop.html?cat=electrical" class="dcs-link">⚡ Wires &amp; Cables</a>
@@ -455,13 +454,25 @@ const APP = {
         </button>
       </div>
       <div class="amazon-drawer-body">
-        <div class="adh-section-title">Trending &amp; Fast Actions</div>
-        <a href="${base}index.html" class="${page==='home'?'active':''}">🏠 Home</a>
-        <a href="${base}shop.html" class="${page==='shop'?'active':''}">🛍️ Browse All Products</a>
-        <a href="#" onclick="APP.openWishlistModal();return false;">❤️ Saved Items (<span id="mobWishlistCount">0</span>)</a>
-        <a href="#" onclick="APP.openRequirementModal();return false;">📋 Build My Requirement</a>
-        <a href="#" onclick="APP.openPhotoModal();return false;">📷 Send Photo to Identify</a>
-        <a href="#" onclick="APP.openAskExpertModal();return false;">👨🔧 Ask Shop Expert</a>
+        <div class="adh-section-title">Navigation Menu</div>
+        <a href="${base}index.html" class="${page==='home'?'active':''}" onclick="APP.closeMenu()">🏠 Home</a>
+        <a href="${base}shop.html" class="${page==='shop'?'active':''}" onclick="APP.closeMenu()">🛍️ Shop / All Products</a>
+        <a href="${base}about.html" class="${page==='about'?'active':''}" onclick="APP.closeMenu()">🏢 About Us</a>
+        <a href="${base}contact.html" class="${page==='contact'?'active':''}" onclick="APP.closeMenu()">📞 Contact Us</a>
+
+        <div class="adh-section-title" style="margin-top:14px">Shop by Category</div>
+        <a href="${base}shop.html?cat=lighting" onclick="APP.closeMenu()">💡 Lighting &amp; LED Bulbs</a>
+        <a href="${base}shop.html?cat=plumbing" onclick="APP.closeMenu()">🚰 Plumbing &amp; CPVC Pipes</a>
+        <a href="${base}shop.html?cat=electrical" onclick="APP.closeMenu()">⚡ Wires &amp; Cables</a>
+        <a href="${base}shop.html?cat=pumps" onclick="APP.closeMenu()">💧 Water Pumps &amp; Motors</a>
+        <a href="${base}shop.html?cat=cctv" onclick="APP.closeMenu()">📹 CCTV Security</a>
+        <a href="${base}shop.html?cat=network" onclick="APP.closeMenu()">🌐 WiFi &amp; Networking</a>
+
+        <div class="adh-section-title" style="margin-top:14px">Customer Tools</div>
+        <a href="#" onclick="APP.closeMenu();APP.openWishlistModal();return false;">❤️ Saved Items (<span id="mobWishlistCount">0</span>)</a>
+        <a href="#" onclick="APP.closeMenu();APP.openRequirementModal();return false;">📋 Build My Requirement</a>
+        <a href="#" onclick="APP.closeMenu();APP.openPhotoModal();return false;">📷 Visual Search (Identify Broken Parts)</a>
+        <a href="#" onclick="APP.closeMenu();APP.openAskExpertModal();return false;">👨‍🔧 Ask Shop Expert</a>
 
         <div class="adh-section-title" style="margin-top:14px">Your Account &amp; Orders</div>
         ${user
@@ -480,17 +491,26 @@ const APP = {
     document.getElementById("themeToggle").onclick = () => this.toggleTheme();
     this._updateThemeIcon();
     const ham = document.getElementById("hamburger");
-    const mob = document.getElementById("mobileNav");
-    const backdrop = document.getElementById("mobileNavBackdrop");
-    ham && mob && (ham.onclick = () => {
-      mob.classList.toggle("show");
-      backdrop && backdrop.classList.toggle("show", mob.classList.contains("show"));
-      ham.setAttribute("aria-expanded", mob.classList.contains("show"));
-    });
+    ham && (ham.onclick = () => this.toggleMenu());
     const cartBtn = document.getElementById("cartBtn");
     cartBtn && (cartBtn.onclick = openCart);
     const mLogout = document.getElementById("mobileLogout");
     mLogout && (mLogout.onclick = (e) => { e.preventDefault(); AUTH.logoutCustomer(); });
+  },
+
+  /* ---- Universal Web & Mobile Menu Toggle ---- */
+  toggleMenu(force) {
+    const mob = document.getElementById("mobileNav");
+    const backdrop = document.getElementById("mobileNavBackdrop");
+    const ham = document.getElementById("hamburger");
+    if (!mob) return;
+    const shouldOpen = typeof force === "boolean" ? force : !mob.classList.contains("show");
+    mob.classList.toggle("show", shouldOpen);
+    if (backdrop) backdrop.classList.toggle("show", shouldOpen);
+    if (ham) ham.setAttribute("aria-expanded", String(shouldOpen));
+  },
+  closeMenu() {
+    this.toggleMenu(false);
   },
 
   /* ---- Shared UI ---- */
