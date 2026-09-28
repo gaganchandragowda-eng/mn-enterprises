@@ -268,12 +268,7 @@ const APP = {
     ];
     el.innerHTML = `
     <header class="site-header">
-        <!-- Web Compatible Menu Button in Header Line 1 -->
-        <button class="desk-menu-btn" onclick="APP.toggleMenu()" aria-label="Open menu" title="Open Main Menu">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-          <span>Menu</span>
-        </button>
-
+      <div class="header-inner">
         <a href="${base}index.html" class="brand">
           <div class="brand-mark">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -347,8 +342,12 @@ const APP = {
             </div>
             <span class="desk-cart-label">Cart</span>
           </button>
-          <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          <!-- Web-Compatible Menu Button Next to Cart -->
+          <button class="iconbtn menu-header-btn" id="headerMenuBtn" onclick="APP.toggleMenu()" aria-label="Open navigation menu" title="Open Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12h18M3 6h18M3 18h18"/>
+            </svg>
+            <span class="desk-menu-label">Menu</span>
           </button>
         </div>
       </div>
@@ -492,6 +491,8 @@ const APP = {
     this._updateThemeIcon();
     const ham = document.getElementById("hamburger");
     ham && (ham.onclick = () => this.toggleMenu());
+    const menuBtn = document.getElementById("headerMenuBtn");
+    menuBtn && (menuBtn.onclick = () => this.toggleMenu());
     const cartBtn = document.getElementById("cartBtn");
     cartBtn && (cartBtn.onclick = openCart);
     const mLogout = document.getElementById("mobileLogout");
