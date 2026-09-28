@@ -401,22 +401,27 @@ h1.hero-title{font-size:clamp(22px,3.8vw,36px);font-weight:700;line-height:1.2;m
 .wa-float:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(37,211,102,.5)}
 .wa-float svg{width:28px;height:28px}
 
-/* ---- Toast Notifications (Always Above ALL Navigation & UI) ---- */
+/* ---- Toast Notifications (Always Above ALL Navigation & UI — Centered on TOP) ---- */
 #toastStack {
   position: fixed !important;
-  top: 24px !important;
-  right: 24px !important;
+  top: 20px !important;
+  bottom: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
   z-index: 999999 !important; /* Above ALL headers, navbars, drawers, modals */
   display: flex !important;
   flex-direction: column !important;
+  align-items: center !important;
   gap: 10px !important;
   pointer-events: none !important;
+  width: max-content !important;
   max-width: calc(100vw - 32px) !important;
 }
 
 @media (max-width: 768px) {
   #toastStack {
-    top: 16px !important;
+    top: 14px !important;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
@@ -526,24 +531,25 @@ h1.hero-title{font-size:clamp(22px,3.8vw,36px);font-weight:700;line-height:1.2;m
 .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--line)}
 
 /* ---- Admin layout ------------------------------------------ */
-.admin-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - var(--header-h));max-width:1600px;margin:0 auto}
-.admin-sidebar{background:var(--surface);border-right:1px solid var(--line);padding:20px 0;position:sticky;top:var(--header-h);height:calc(100vh - var(--header-h));overflow-y:auto}
+.admin-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 64px);width:100%;max-width:100%;margin:0}
+.admin-sidebar{background:var(--surface);border-right:1px solid var(--line);padding:20px 0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto}
 .sidebar-section{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--subtle);padding:14px 20px 5px}
 .sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;transition:color .15s,background .15s;border-right:2px solid transparent}
 .sidebar-nav a:hover{color:var(--ink);background:var(--surface-2)}
 .sidebar-nav a.active{color:var(--ink);font-weight:700;background:var(--surface-2);border-right-color:var(--amber)}
 .sidebar-nav a svg{width:16px;height:16px;flex:none}
-.admin-content{padding:28px 36px;overflow-y:auto}
+.admin-content{padding:24px 32px;overflow-y:auto;max-width:100%}
 .admin-content h1{font-size:24px;margin-bottom:4px}
 .page-sub{font-size:14px;color:var(--muted);margin-bottom:22px}
 .admin-panel{display:none} .admin-panel.active{display:block}
 
-.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
-.stat-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm)}
-.stat-card .sc-icon{width:44px;height:44px;border-radius:10px;background:rgba(217,119,6,.1);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;transition:transform .15s,box-shadow .15s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.stat-card .sc-icon{width:46px;height:46px;border-radius:12px;background:rgba(217,119,6,.12);display:flex;align-items:center;justify-content:center;flex:none}
 .stat-card .sc-icon svg{width:22px;height:22px;color:var(--amber)}
-.stat-card .sc-val  {font-family:var(--font-head);font-size:28px;font-weight:800;line-height:1;color:var(--ink)}
-.stat-card .sc-label{font-size:13px;color:var(--muted);margin-top:4px}
+.stat-card .sc-val  {font-family:var(--font-head);font-size:26px;font-weight:800;line-height:1.1;color:var(--ink)}
+.stat-card .sc-label{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
 
 .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-sm)}
 .data-table{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -1849,18 +1855,37 @@ html, body {
   border-color: var(--amber);
 }
 
-/* 4. Real-time Customer Status Pop-up — Mobile Positioning */
+/* 4. Real-time Customer Status Pop-up — Show on TOP */
+#customerStatusNotification {
+  position: fixed !important;
+  top: 20px !important;
+  bottom: auto !important;
+  right: 20px !important;
+  z-index: 999999 !important;
+}
+
 @media (max-width: 640px) {
   #customerStatusNotification {
     left: 12px !important;
     right: 12px !important;
-    bottom: 86px !important;
+    top: 14px !important;
+    bottom: auto !important;
     max-width: none !important;
     width: auto !important;
     padding: 13px 15px !important;
     border-radius: 14px !important;
     box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35) !important;
   }
+}
+
+/* Hide customer floating widgets on Admin Page */
+[data-page="admin"] .wa-float,
+[data-page="admin"] .cartbar,
+[data-page="admin"] #cartDrawer,
+[data-page="admin"] .site-header,
+[data-page="admin"] .mobile-bottom-bar,
+[data-page="admin"] #customerStatusNotification {
+  display: none !important;
 }
 
 /* 5. Mobile 2-Column Product Grid — Amazon Mobile App Experience */

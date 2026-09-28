@@ -652,8 +652,8 @@ const APP = {
         </div>
       </div>
 
-      <!-- Real-Time Customer Order Status Pop-up Notification -->
-      <div id="customerStatusNotification" style="position:fixed;bottom:24px;right:24px;z-index:99999;max-width:390px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.28);padding:16px 18px;display:none;align-items:flex-start;gap:12px;transition:all 0.35s cubic-bezier(0.16,1,0.3,1);backdrop-filter:blur(8px)">
+      <!-- Real-Time Customer Order Status Pop-up Notification (TOP Positioned) -->
+      <div id="customerStatusNotification" style="position:fixed;top:20px;right:20px;z-index:999999;max-width:390px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.28);padding:16px 18px;display:none;align-items:flex-start;gap:12px;transition:all 0.35s cubic-bezier(0.16,1,0.3,1);backdrop-filter:blur(8px)">
         <div id="csnIcon" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;background:rgba(59,130,246,0.15)">
           🔵
         </div>
@@ -1926,14 +1926,23 @@ const APP = {
       <div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;padding-top:6px;border-top:1px solid var(--line);margin-top:4px;color:var(--amber)"><span>Total (incl. GST)</span><span>${this.inr(gstD.total)}</span></div>
     </div>`;
     
+    // Close cart drawer, checkout, and modal immediately
     closeAll();
-    document.getElementById("overlay")?.classList.add("show");
-    document.getElementById("successModal")?.classList.add("show");
+    const cartDraw = document.getElementById("cartDrawer");
+    if (cartDraw) cartDraw.classList.remove("open");
+    const ov = document.getElementById("overlay");
+    if (ov) ov.classList.remove("show");
+    const sm = document.getElementById("successModal");
+    if (sm) sm.classList.remove("show");
+
     this.saveCart({});
     this._updateCartUI();
     if(typeof renderProducts==="function") renderProducts();
     this.renderCartDrawer();
-    this.toast("Order placed! Admin notified instantly.", "success");
+
+    // Show message notification on top and trigger status notification pop-up
+    this.toast(`🎉 Order #${orderId.slice(-6).toUpperCase()} placed! Staff at M N Enterprises APMC Road notified.`, "success", 5000);
+    this.showCustomerStatusPopUp(orderData, "placed");
   },
 
   shareLastOrderWhatsApp() {
@@ -2048,13 +2057,22 @@ const APP = {
       ${gstD2.rate > 0 ? `<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)"><span>CGST (${gstD2.rate/2}%)</span><span>${this.inr(gstD2.cgst)}</span></div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)"><span>SGST (${gstD2.rate/2}%)</span><span>${this.inr(gstD2.sgst)}</span></div>` : `<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)"><span>GST</span><span>Exempted</span></div>`}
       <div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;padding-top:6px;border-top:1px solid var(--line);margin-top:4px;color:var(--amber)"><span>Total (incl. GST)</span><span>${this.inr(gstD2.total)}</span></div>
     </div>`;
+    // Close cart drawer, checkout, and modal immediately
     closeAll();
-    document.getElementById("overlay")?.classList.add("show");
-    document.getElementById("successModal")?.classList.add("show");
+    const cartDraw2 = document.getElementById("cartDrawer");
+    if (cartDraw2) cartDraw2.classList.remove("open");
+    const ov2 = document.getElementById("overlay");
+    if (ov2) ov2.classList.remove("show");
+    const sm2 = document.getElementById("successModal");
+    if (sm2) sm2.classList.remove("show");
+
     this.saveCart({});
     this._updateCartUI();
     if(typeof renderProducts==="function") renderProducts();
     this.renderCartDrawer();
+
+    this.toast(`✅ Order #${orderId.slice(-6).toUpperCase()} sent! WhatsApp opened with your formatted bill.`, "success", 5000);
+    this.showCustomerStatusPopUp(orderData, "placed");
   },
 
   /* ---- Wishlist Modal Handlers ---- */
